@@ -1,3 +1,5 @@
+import { Button } from "@yomu/ui/components/button"
+
 export default function Home() {
-  return <div></div>
+  return <div><Button>Test</Button></div>
 }

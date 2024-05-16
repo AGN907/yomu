@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+
 import Providers from '../../providers'
-import '../globals.css'
+
+import '@yomu/ui/styles.css'
 
 export const metadata: Metadata = {
   title: 'Yomu',

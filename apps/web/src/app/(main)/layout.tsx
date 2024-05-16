@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
+
 import Providers from '../../providers'
-import '../globals.css'
+
+import '@yomu/ui/styles.css'
+
 
 export const metadata: Metadata = {
   title: 'Yomu',
@@ -15,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <main>{children}</main>
+          <main className='flex'>{children}</main>
         </Providers>
       </body>
     </html>
