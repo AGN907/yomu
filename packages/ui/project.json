@@ -1,0 +1,13 @@
+{
+  "name": "ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "maxWarnings": 0,
+        "lintFilePatterns": ["packages/ui/src/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}

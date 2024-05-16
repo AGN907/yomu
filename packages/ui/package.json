@@ -1,0 +1,52 @@
+{
+  "name": "@yomu/ui",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
+    "lint": "nx lint",
+    "dev": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
+    "add:shadcn": "pnpm dlx shadcn-ui@latest add"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8",
+    "react": "^18",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@radix-ui/react-accordion": "^1.1.2",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
+    "@radix-ui/react-checkbox": "^1.0.4",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-progress": "^1.0.3",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-separator": "^1.0.3",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toggle": "^1.0.3",
+    "@radix-ui/react-toggle-group": "^1.0.4",
+    "@types/node": "^20",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.378.0",
+    "next-themes": "^0.3.0",
+    "sonner": "^1.4.41",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "exports": {
+    "./components/*": "./src/components/ui/*.tsx",
+    "./utils/*": "./src/lib/utils.ts",
+    "./styles.css": "./src/styles.css",
+    "./postcss.config": "./postcss.config.js",
+    "./tailwind.config": "./tailwind.config.ts"
+  }
+}
