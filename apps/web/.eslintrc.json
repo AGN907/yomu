@@ -1,11 +1,18 @@
 {
   "extends": ["plugin:@nx/react-typescript", "next", "next/core-web-vitals"],
-  "ignorePatterns": ["!**/*", ".next/**/*"],
+  "ignorePatterns": [".next/**/*", "**/node_modules/**"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@next/next/no-html-link-for-pages": ["error", "apps/org-web/pages"]
+        "@next/next/no-html-link-for-pages": ["off"]
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": "off"
       }
     },
     {
@@ -15,12 +22,6 @@
     {
       "files": ["*.js", "*.jsx"],
       "rules": {}
-    },
-    {
-      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
-      "env": {
-        "jest": true
-      }
     }
   ]
 }
