@@ -1,0 +1,7 @@
+coverage
+public
+dist
+pnpm-lock.yaml
+pnpm-workspace.yaml
+.husky
+/.nx/cache
