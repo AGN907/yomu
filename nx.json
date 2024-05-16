@@ -1,6 +1,16 @@
 {
   "extends": "nx/presets/npm.json",
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "cache": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "cache": true
+    }
+  },
   "plugins": [
     {
       "plugin": "@nx/eslint/plugin",
