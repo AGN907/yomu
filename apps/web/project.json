@@ -1,6 +1,17 @@
 {
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "name": "web",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/web",
-  "targets": {}
+  "targets": {
+    "build": {
+      "options": {
+        "outputPath": "dist/web"
+      }
+    },
+    "lint": {
+      "options": {
+        "maxWarnings": 0
+      }
+    }
+  }
 }
