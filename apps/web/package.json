@@ -12,11 +12,15 @@
     "studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@lucia-auth/adapter-drizzle": "^1.0.7",
+    "@node-rs/argon2": "^1.8.3",
     "@yomu/core": "workspace:^",
     "@yomu/ui": "workspace:^",
     "better-sqlite3": "^10.0.0",
+    "lucia": "^3.2.0",
     "next": "14.2.3",
     "next-themes": "^0.3.0",
+    "oslo": "^1.2.0",
     "react": "^18",
     "react-dom": "^18"
   },
