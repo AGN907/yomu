@@ -1,3 +1,3 @@
-import { drizzle as BetterSqliteDrizzle } from 'drizzle-orm/better-sqlite3'
+import { drizzle as betterSqliteDrizzle } from 'drizzle-orm/better-sqlite3'
 
-export { BetterSqliteDrizzle }
+export { betterSqliteDrizzle }
