@@ -12,8 +12,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
     "autoprefixer": "^10.4.19",
     "postcss": "^8",
     "react": "^18",
@@ -33,7 +31,6 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
-    "@types/node": "^20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.378.0",
