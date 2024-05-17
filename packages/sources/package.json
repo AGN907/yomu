@@ -9,6 +9,7 @@
     "@types/node": "^20"
   },
   "dependencies": {
+    "@yomu/core": "workspace:^",
     "cheerio": "1.0.0-rc.12",
     "ky": "^1.2.4"
   },

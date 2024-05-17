@@ -1,0 +1,23 @@
+[
+  {
+    "id": "WuxiaWorldSite",
+    "name": "Wuxia World Site",
+    "baseUrl": "https://wuxiaworldsite.com",
+    "lang": "EN",
+    "icon": "https://wuxiaworldsite.com/favicon.ico"
+  },
+  {
+    "id": "BoxNovel",
+    "name": "Box Novel",
+    "baseUrl": "https://boxnovel.com",
+    "lang": "EN",
+    "icon": "https://boxnovel.com/favicon.ico"
+  },
+  {
+    "id": "FirstKissNovel",
+    "name": "First Kiss Novel",
+    "baseUrl": "https://1stkissnovel.org",
+    "lang": "EN",
+    "icon": "https://1stkissnovel.org/favicon.ico"
+  }
+]

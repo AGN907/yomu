@@ -127,6 +127,9 @@ importers:
 
   packages/sources:
     dependencies:
+      '@yomu/core':
+        specifier: workspace:^
+        version: link:../core
       cheerio:
         specifier: 1.0.0-rc.12
         version: 1.0.0-rc.12

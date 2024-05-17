@@ -3,7 +3,12 @@
   "compilerOptions": {
     "outDir": "../../dist/packages/sources",
     "strict": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@sources/*": ["./src/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
