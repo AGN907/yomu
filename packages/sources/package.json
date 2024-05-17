@@ -1,0 +1,19 @@
+{
+  "name": "@yomu/sources",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "tsc",
+    "lint": "nx lint"
+  },
+  "devDependencies": {
+    "@types/node": "^20"
+  },
+  "dependencies": {
+    "cheerio": "1.0.0-rc.12",
+    "ky": "^1.2.4"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/index.ts"
+  }
+}
