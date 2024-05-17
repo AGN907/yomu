@@ -2,18 +2,19 @@
   "name": "@yomu/core",
   "version": "0.0.0",
   "private": true,
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "lint": "nx lint"
   },
   "dependencies": {
+    "chrono-node": "^2.7.5",
+    "dayjs": "^1.11.11",
     "drizzle-orm": "^0.30.10"
   },
   "exports": {
     "./database": "./src/database/index.ts",
     "./database/helpers": "./src/database/helpers.ts",
-    "./database/schema/*": "./src/database/schemas/*.ts"
+    "./database/schema/*": "./src/database/schemas/*.ts",
+    "./date-helpers": "./src/date-helpers/index.ts"
   }
 }
