@@ -1,0 +1,14 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name:": "core",
+  "sourceRoot": "packages/core",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "maxWarnings": 0,
+        "lintFilePatterns": ["{projectRoot}/src/**/*.{ts,js}"]
+      }
+    }
+  }
+}

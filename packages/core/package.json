@@ -1,0 +1,31 @@
+{
+  "name": "@yomu/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --build",
+    "lint": "nx lint"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.30.10"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  },
+  "exports": {
+    "./database": {
+      "types": "./dist/database/index.d.ts",
+      "import": "./dist/database/index.js.js"
+    },
+    "./database/helpers": {
+      "types": "./dist/database/helpers/index.d.ts",
+      "import": "./dist/database/helpers/index.js"
+    },
+    "./database/schema/web": {
+      "types": "./dist/database/schemas/web.d.ts",
+      "import": "./dist/database/schemas/web.js"
+    }
+  }
+}
