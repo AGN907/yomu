@@ -5,24 +5,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc",
     "lint": "nx lint"
   },
   "dependencies": {
     "drizzle-orm": "^0.30.10"
   },
   "exports": {
-    "./database": {
-      "types": "./dist/database/index.d.ts",
-      "import": "./dist/database/index.js.js"
-    },
-    "./database/helpers": {
-      "types": "./dist/database/helpers/index.d.ts",
-      "import": "./dist/database/helpers/index.js"
-    },
-    "./database/schema/web": {
-      "types": "./dist/database/schemas/web.d.ts",
-      "import": "./dist/database/schemas/web.js"
-    }
+    "./database": "./src/database/index.ts",
+    "./database/helpers": "./src/database/helpers.ts",
+    "./database/schema/*": "./src/database/schemas/*.ts"
   }
 }
