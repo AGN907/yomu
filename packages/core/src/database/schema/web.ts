@@ -3,6 +3,7 @@ import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
 export const users = sqliteTable('users', {
   id: text('id').primaryKey(),
+  username: text('username').notNull().unique(),
   firstName: text('first_name', { length: 255 }).notNull(),
   lastName: text('last_name', { length: 255 }).notNull(),
   hashedPassword: text('hashed_password').notNull(),
@@ -26,7 +27,7 @@ export const novels = sqliteTable('novels', {
   id: integer('id').primaryKey(),
   userId: text('user_id')
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
   title: text('title').notNull(),
   url: text('url', { length: 255 }).notNull(),
   author: text('author').notNull(),
