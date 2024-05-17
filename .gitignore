@@ -43,3 +43,10 @@ Thumbs.db
 # Next.js
 .next
 out
+
+
+# Drizzle migrations
+drizzle
+
+# Sqlite database
+*.db
