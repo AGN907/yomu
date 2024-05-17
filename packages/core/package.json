@@ -11,9 +11,6 @@
   "dependencies": {
     "drizzle-orm": "^0.30.10"
   },
-  "devDependencies": {
-    "typescript": "^5"
-  },
   "exports": {
     "./database": {
       "types": "./dist/database/index.d.ts",
