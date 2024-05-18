@@ -15,47 +15,42 @@ import { redirect } from 'next/navigation'
 
 import { users } from '@yomu/core/database/schema/web'
 
-export const signup = action(
-  signupSchema,
-  async ({ username, password, firstName, lastName }) => {
-    const hashedPassword = await hash(password, {
-      memoryCost: 19456,
-      timeCost: 2,
-      outputLen: 32,
-      parallelism: 1,
-    })
+export const signup = action(signupSchema, async ({ username, password }) => {
+  const hashedPassword = await hash(password, {
+    memoryCost: 19456,
+    timeCost: 2,
+    outputLen: 32,
+    parallelism: 1,
+  })
 
-    const userId = generateIdFromEntropySize(10)
+  const userId = generateIdFromEntropySize(10)
 
-    const existingUser = await db.query.users.findFirst({
-      where: (table, { eq }) => eq(table.username, username),
-    })
+  const existingUser = await db.query.users.findFirst({
+    where: (table, { eq }) => eq(table.username, username),
+  })
 
-    if (!existingUser)
-      return {
-        failure: 'Invaild username',
-      }
+  if (!existingUser)
+    return {
+      failure: 'Invaild username',
+    }
 
-    await db.insert(users).values({
-      id: userId,
-      username: username,
-      firstName: firstName,
-      lastName: lastName,
-      hashedPassword: hashedPassword,
-    })
+  await db.insert(users).values({
+    id: userId,
+    username: username,
+    hashedPassword: hashedPassword,
+  })
 
-    const session = await lucia.createSession(userId, {})
-    const sessionCookie = lucia.createSessionCookie(session.id)
+  const session = await lucia.createSession(userId, {})
+  const sessionCookie = lucia.createSessionCookie(session.id)
 
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    )
+  cookies().set(
+    sessionCookie.name,
+    sessionCookie.value,
+    sessionCookie.attributes,
+  )
 
-    redirect('/')
-  },
-)
+  redirect('/')
+})
 
 export const login = action(loginSchema, async ({ username, password }) => {
   const existingUser = await db.query.users.findFirst({
