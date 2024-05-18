@@ -1,7 +1,14 @@
+import { NavigationSidebar } from './_components/navigation-sidebar'
+
 export default function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <main className="flex">{children}</main>
+  return (
+    <>
+      <NavigationSidebar />
+      <main>{children}</main>
+    </>
+  )
 }
