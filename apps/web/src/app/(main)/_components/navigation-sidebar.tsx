@@ -77,7 +77,7 @@ function NavigationSidebar() {
       />
       <div
         className={cn(
-          'bg-background fixed z-20 flex h-screen w-60 flex-col gap-4 p-2 md:border-r',
+          'bg-background fixed z-20 flex h-full w-60 flex-col gap-4 p-2 md:border-r',
           'transition-transform duration-300 peer-data-[state=closed]:ease-out peer-data-[state=open]:ease-in peer-data-[state=closed]:max-md:-translate-x-full peer-data-[state=open]:max-md:translate-x-0',
         )}
       >
@@ -114,7 +114,7 @@ function NavigationSidebar() {
           <ThemeToggle />
         </div>
       </div>
-      <div className="p-4">
+      <div className="px-2 pt-2">
         <Button
           onClick={() => setIsSidebarOpen(true)}
           className="md:hidden"
