@@ -41,7 +41,7 @@
   },
   "exports": {
     "./components/*": "./src/components/ui/*.tsx",
-    "./utils/*": "./src/lib/utils.ts",
+    "./utils": "./src/lib/utils.ts",
     "./styles.css": "./src/styles.css",
     "./postcss.config": "./postcss.config.js",
     "./tailwind.config": "./tailwind.config.ts"
