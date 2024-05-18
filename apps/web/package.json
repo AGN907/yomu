@@ -17,6 +17,7 @@
     "@yomu/core": "workspace:^",
     "@yomu/ui": "workspace:^",
     "better-sqlite3": "^10.0.0",
+    "geist": "^1.3.0",
     "lucia": "^3.2.0",
     "next": "14.2.3",
     "next-safe-action": "^6.2.0",
