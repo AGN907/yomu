@@ -20,8 +20,6 @@ import Link from 'next/link'
 function LoginForm() {
   const { execute, result } = useAction(login)
 
-  console.log(result)
-
   return (
     <Card className="w-full">
       <CardHeader>

@@ -13,8 +13,8 @@ import {
 } from '@yomu/ui/components/card'
 import { Input } from '@yomu/ui/components/input'
 import { Label } from '@yomu/ui/components/label'
-import { useAction } from 'next-safe-action/hooks'
 
+import { useAction } from 'next-safe-action/hooks'
 import Link from 'next/link'
 
 function SignupForm() {
