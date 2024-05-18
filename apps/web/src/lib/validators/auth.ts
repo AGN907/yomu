@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const signupSchema = z.object({
   username: z
     .string()
-    .min(4, 'Please provider your username')
+    .min(4, 'Please provide your username')
     .max(31, 'Username is too long. Maximum length is 31 characters')
     .regex(
       /^[a-zA-Z0-9_-]+$/,
