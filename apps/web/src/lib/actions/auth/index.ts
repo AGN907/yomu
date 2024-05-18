@@ -29,7 +29,7 @@ export const signup = action(signupSchema, async ({ username, password }) => {
     where: (table, { eq }) => eq(table.username, username),
   })
 
-  if (!existingUser)
+  if (existingUser)
     return {
       failure: 'Invaild username',
     }
