@@ -17,7 +17,7 @@ export const sessions = sqliteTable('sessions', {
   id: text('id').primaryKey(),
   userId: text('user_id')
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
   expiresAt: integer('expires_at').notNull(),
 })
 
@@ -31,7 +31,10 @@ export const novels = sqliteTable('novels', {
   author: text('author').notNull(),
   thumbnail: text('thumbnail').notNull(),
   summary: text('summary').notNull(),
-  genres: text('genres', { mode: 'json' }).notNull().default(''),
+  genres: text('genres', { mode: 'json' })
+    .notNull()
+    .default([])
+    .$type<string[]>(),
   status: text('status', { length: 255 }).notNull(),
   sourceId: text('source_id').notNull(),
   inLibrary: integer('in_library', { mode: 'boolean' })
@@ -47,7 +50,12 @@ export const novels = sqliteTable('novels', {
 
 export const chapters = sqliteTable('chapters', {
   id: integer('id').primaryKey(),
-  novelId: integer('novel_id').references(() => novels.id),
+  novelId: integer('novel_id')
+    .notNull()
+    .references(() => novels.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
   title: text('title').notNull(),
   url: text('url', { length: 255 }).notNull(),
   number: integer('number').notNull(),
@@ -56,23 +64,52 @@ export const chapters = sqliteTable('chapters', {
   downloaded: integer('downloaded', { mode: 'boolean' })
     .notNull()
     .default(false),
-  releaseDate: text('release_date').notNull(),
+  releaseDate: integer('release_date', { mode: 'timestamp' }).notNull(),
 })
 
 export const history = sqliteTable('history', {
   id: integer('id').primaryKey(),
-  novelId: integer('novel_id').references(() => novels.id),
-  chapterId: integer('chapter_id').references(() => chapters.id),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  novelId: integer('novel_id')
+    .notNull()
+    .unique()
+    .references(() => novels.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  chapterId: integer('chapter_id')
+    .notNull()
+    .references(() => chapters.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
 })
 
 export const updatedChapters = sqliteTable('updated_chapters', {
   id: integer('id').primaryKey(),
-  chapterId: integer('chapter_id').notNull(),
-  novelId: integer('novel_id').notNull(),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  chapterId: integer('chapter_id')
+    .notNull()
+    .references(() => chapters.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  novelId: integer('novel_id')
+    .notNull()
+    .references(() => novels.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
 })
 
 export const userRelations = relations(users, ({ many }) => ({
