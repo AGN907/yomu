@@ -21,11 +21,26 @@ export const sessions = sqliteTable('sessions', {
   expiresAt: integer('expires_at').notNull(),
 })
 
+export const categories = sqliteTable('categories', {
+  id: integer('id').primaryKey(),
+  name: text('name').notNull(),
+  userId: text('user_id')
+    .references(() => users.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    })
+    .notNull(),
+})
+
 export const novels = sqliteTable('novels', {
   id: integer('id').primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  categoryId: integer('category_id').references(() => categories.id, {
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  }),
   title: text('title').notNull(),
   url: text('url', { length: 255 }).notNull(),
   author: text('author').notNull(),
@@ -157,12 +172,14 @@ export const updatedChaptersRelations = relations(
 )
 
 export type NewUser = typeof users.$inferInsert
+export type NewCategory = typeof categories.$inferInsert
 export type NewNovel = typeof novels.$inferInsert
 export type NewChapter = typeof chapters.$inferInsert
 export type NewHistory = typeof history.$inferInsert
 export type NewUpdatedChapter = typeof updatedChapters.$inferInsert
 
 export type User = typeof users.$inferSelect
+export type Category = typeof categories.$inferSelect
 export type Novel = typeof novels.$inferSelect
 export type Chapter = typeof chapters.$inferSelect
 export type History = typeof history.$inferSelect
