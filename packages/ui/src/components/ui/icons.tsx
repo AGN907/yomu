@@ -13,6 +13,7 @@ import {
   Moon,
   Settings,
   Sun,
+  Tag,
 } from 'lucide-react'
 
 export {
@@ -30,4 +31,5 @@ export {
   Moon,
   Settings,
   Sun,
+  Tag,
 }

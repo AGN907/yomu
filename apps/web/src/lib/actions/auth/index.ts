@@ -105,3 +105,12 @@ export const logout = async () => {
 
   return redirect('/login')
 }
+
+export const getUserOrRedirect = async () => {
+  const { user } = await validateRequest()
+  if (!user) {
+    redirect('/log-in')
+  }
+
+  return user
+}
