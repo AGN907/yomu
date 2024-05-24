@@ -1,6 +1,7 @@
 'use server'
 
 import { and, db, desc, eq } from '@/lib/database'
+import { sourceManager } from '@/lib/source-manager'
 import { getUserOrRedirect } from '../auth'
 
 import {
@@ -43,4 +44,32 @@ export const getLatestReadNovels = async () => {
       {} as Record<string, { novel: Novel; chapters: { read: boolean }[] }>,
     ),
   ).slice(0, 4)
+}
+
+export const fetchNovelsByFilter = async (
+  sourceId: string,
+  page: number,
+  latest = true,
+) => {
+  const source = sourceManager.getSource(sourceId)
+
+  if (!source) {
+    throw new Error('Source not found')
+  }
+
+  return await source.fetchNovels(page, latest)
+}
+
+export const fetchNovelsByQuery = async (
+  sourceId: string,
+  page: number,
+  query: string,
+) => {
+  const source = sourceManager.getSource(sourceId)
+
+  if (!source) {
+    throw new Error('Source not found')
+  }
+
+  return await source.searchNovels(page, query)
 }
