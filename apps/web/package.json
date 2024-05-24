@@ -15,6 +15,7 @@
     "@lucia-auth/adapter-drizzle": "^1.0.7",
     "@node-rs/argon2": "^1.8.3",
     "@yomu/core": "workspace:^",
+    "@yomu/sources": "workspace:^",
     "@yomu/ui": "workspace:^",
     "better-sqlite3": "^10.0.0",
     "geist": "^1.3.0",

@@ -96,6 +96,9 @@ importers:
       '@yomu/core':
         specifier: workspace:^
         version: link:../../packages/core
+      '@yomu/sources':
+        specifier: workspace:^
+        version: link:../../packages/sources
       '@yomu/ui':
         specifier: workspace:^
         version: link:../../packages/ui
