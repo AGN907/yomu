@@ -15,15 +15,15 @@ function NovelCard({ title, thumbnail, query }: NovelCardProps) {
         query,
       }}
     >
-      <div className="space-y-2">
+      <div className="flex max-w-48 flex-col space-y-2">
         <Image
-          className="rounded transition-opacity duration-300 hover:opacity-80"
+          className="h-[230px] w-[160px] rounded border border-neutral-400 object-fill transition-opacity duration-300 hover:opacity-80 dark:border-neutral-800 dark:brightness-90"
           src={thumbnail}
-          alt="lord of the mysteries 2"
+          alt={title}
           width={160}
-          height={200}
+          height={230}
         />
-        <p className="truncate text-lg">{title}</p>
+        <p className="w-11/12 truncate pr-4 text-lg">{title}</p>
       </div>
     </Link>
   )
