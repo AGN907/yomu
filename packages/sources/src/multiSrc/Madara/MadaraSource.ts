@@ -67,6 +67,7 @@ export class MadaraSource extends BaseSource {
           url: url || '',
           genres: [],
           status: NovelStatus.UNKNOWN,
+          sourceId: this.id,
         })
       })
 
@@ -110,6 +111,7 @@ export class MadaraSource extends BaseSource {
           summary: '',
           author: 'Unknown',
           status: NovelStatus.UNKNOWN,
+          sourceId: this.id,
         })
       })
 
@@ -158,6 +160,7 @@ export class MadaraSource extends BaseSource {
         summary,
         genres: [],
         status: NovelStatus.UNKNOWN,
+        sourceId: this.id,
       }
 
       doc('.post-content_item, .post-content').each(function () {

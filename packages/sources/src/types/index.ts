@@ -8,6 +8,7 @@ export interface NovelItem {
   summary?: string
   author?: string
   status: NovelStatus
+  sourceId: string
 }
 
 export interface NovelItemData extends NovelItem {
