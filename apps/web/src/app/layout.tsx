@@ -18,7 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn('min-h-screen', GeistSans.className)}>
+      <body
+        className={cn(
+          'flex min-h-screen flex-col md:flex-row',
+          GeistSans.className,
+        )}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

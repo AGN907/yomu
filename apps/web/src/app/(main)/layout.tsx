@@ -8,7 +8,7 @@ export default function MainLayout({
   return (
     <>
       <NavigationSidebar />
-      <main className="flex py-4 md:ml-60 md:py-6">{children}</main>
+      <main className="flex flex-1 py-4 md:ml-60 md:py-6">{children}</main>
     </>
   )
 }

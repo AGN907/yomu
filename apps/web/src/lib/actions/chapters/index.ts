@@ -1,6 +1,7 @@
 'use server'
 
 import { and, db, desc, eq } from '@/lib/database'
+import { sourceManager } from '@/lib/source-manager'
 import { getUserOrRedirect } from '../auth'
 
 import {
@@ -36,4 +37,25 @@ export const getLatestUpdatedChapters = async (limit?: number) => {
   }
 
   return await result
+}
+export const getChapterFromDatabase = async (
+  chapterId: number,
+  chapterNumber: number,
+) => {
+  return await db.query.chapters.findFirst({
+    where: (table, { and, eq }) =>
+      and(eq(table.id, chapterId), eq(table.number, chapterNumber)),
+    with: {
+      novel: true,
+    },
+  })
+}
+
+export const fetchChapterContent = async (
+  sourceId: string,
+  chapterUrl: string,
+) => {
+  const source = sourceManager.getSource(sourceId)
+
+  return await source.fetchChapter(chapterUrl)
 }
