@@ -1,19 +1,18 @@
 'use server'
 
+import { lucia } from '@/lib/auth'
+import { validateRequest } from '@/lib/auth/validate-request'
 import { db } from '@/lib/database'
 import { action } from '@/lib/safe-action'
 import { loginSchema, signupSchema } from '@/lib/validators/auth'
 
-import { lucia } from '@/lib/auth'
-import { validateRequest } from '@/lib/auth/validate-request'
+import { users } from '@yomu/core/database/schema/web'
 
 import { hash, verify } from '@node-rs/argon2'
 import { generateIdFromEntropySize } from 'lucia'
 
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-
-import { users } from '@yomu/core/database/schema/web'
 
 export const signup = action(signupSchema, async ({ username, password }) => {
   const hashedPassword = await hash(password, {
@@ -36,8 +35,8 @@ export const signup = action(signupSchema, async ({ username, password }) => {
 
   await db.insert(users).values({
     id: userId,
-    username: username,
-    hashedPassword: hashedPassword,
+    username,
+    hashedPassword,
   })
 
   const session = await lucia.createSession(userId, {})

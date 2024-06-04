@@ -1,9 +1,8 @@
-import { cookies } from 'next/headers'
-import { cache } from 'react'
+import { lucia } from '.'
 
 import type { Session, User } from 'lucia'
-
-import { lucia } from '.'
+import { cookies } from 'next/headers'
+import { cache } from 'react'
 
 export const validateRequest = cache(
   async (): Promise<
@@ -36,7 +35,9 @@ export const validateRequest = cache(
           sessionCookie.attributes,
         )
       }
-    } catch {}
+    } catch {
+      // do nothing
+    }
     return result
   },
 )
