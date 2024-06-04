@@ -1,12 +1,15 @@
-import { getUserOrRedirect } from './actions/auth'
-
 import { createSafeActionClient } from 'next-safe-action'
+import { validateRequest } from './auth/validate-request'
 
 export const action = createSafeActionClient()
 
-export const actionWithAuth = createSafeActionClient({
+export const authAction = createSafeActionClient({
   async middleware() {
-    const user = await getUserOrRedirect()
+    const { user } = await validateRequest()
+
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
 
     return { userId: user.id }
   },

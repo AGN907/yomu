@@ -1,7 +1,6 @@
 'use server'
-
 import { and, db, desc, eq } from '@/lib/database'
-import { actionWithAuth } from '@/lib/safe-action'
+import { authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
 import { AddToLibraryScehma } from '@/lib/validators/novels'
 import { getUserOrRedirect } from '../auth'
@@ -154,7 +153,7 @@ const saveNovelToDatabase = async (
   })
 }
 
-export const addNovelToLibrary = actionWithAuth(
+export const addNovelToLibrary = authAction(
   AddToLibraryScehma,
   async ({ novelId, inLibrary }, { userId }) => {
     try {
