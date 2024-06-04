@@ -16,7 +16,7 @@ type CardContainerProps = {
 
 function CardContainer(props: CardContainerProps) {
   return (
-    <Card>
+    <Card className="h-full w-full">
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
         <CardDescription>{props.description}</CardDescription>
