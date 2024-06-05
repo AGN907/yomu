@@ -19,7 +19,7 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
   const novelInfo = await getNovelInfo(sourceId, novelUrl)
 
   if (!novelInfo) {
-    return null
+    throw new Error('Novel not found')
   }
 
   const { chapters, ...novel } = novelInfo
