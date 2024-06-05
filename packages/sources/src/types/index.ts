@@ -4,14 +4,12 @@ export interface NovelItem {
   title: string
   url: string
   thumbnail: string
-  genres: string[]
-  summary?: string
-  author?: string
-  status: NovelStatus
   sourceId: string
 }
 
 export interface NovelItemData extends NovelItem {
+  genres: string[]
+  status: NovelStatus
   summary: string
   author: string
 }
@@ -29,9 +27,8 @@ export interface ChapterItemWithoutContent {
   releaseDate: Date
 }
 
-export interface ChapterItemWithContent
-  extends Omit<ChapterItemWithoutContent, 'releaseDate'> {
-  content: string
+export interface ChapterItemContent {
+  content: string[]
 }
 
 export interface HistoryItem {
@@ -78,5 +75,5 @@ export interface Source {
   ) => Promise<SourceNovelsFetchResponse>
   fetchNovel: (url: string) => Promise<SourceNovelFetchResponse>
 
-  fetchChapter: (url: string) => Promise<ChapterItemWithContent | null>
+  fetchChapterContent: (url: string) => Promise<ChapterItemContent | null>
 }

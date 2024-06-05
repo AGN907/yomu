@@ -18,7 +18,7 @@ export class SourceManager {
     const source = this.sources.get(id)
 
     if (!source) {
-      return null
+      throw new Error('Source not found')
     }
 
     return new source()

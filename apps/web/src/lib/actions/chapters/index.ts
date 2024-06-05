@@ -57,5 +57,5 @@ export const fetchChapterContent = async (
 ) => {
   const source = sourceManager.getSource(sourceId)
 
-  return await source.fetchChapter(chapterUrl)
+  return await source.fetchChapterContent(chapterUrl)
 }

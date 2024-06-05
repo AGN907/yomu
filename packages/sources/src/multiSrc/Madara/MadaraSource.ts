@@ -61,12 +61,14 @@ export class MadaraSource extends BaseSource {
           ?.attr('href')
           ?.split('/')[4]
 
+        if (!title || !url) {
+          return
+        }
+
         novels.push({
           title,
           thumbnail: this.getHighQualtiyThumbnail(thumbnail),
-          url: url || '',
-          genres: [],
-          status: NovelStatus.UNKNOWN,
+          url: url,
           sourceId: this.id,
         })
       })
@@ -107,10 +109,6 @@ export class MadaraSource extends BaseSource {
           title,
           thumbnail,
           url,
-          genres: [],
-          summary: '',
-          author: 'Unknown',
-          status: NovelStatus.UNKNOWN,
           sourceId: this.id,
         })
       })
@@ -150,7 +148,7 @@ export class MadaraSource extends BaseSource {
         doc('rating-post-id').attr('value') ||
         doc('#manga-chapters-holder').attr('data-id')
 
-      if (!novelId) throw new Error('Novel ID not found')
+      if (!novelId) throw new Error('Failed to extract novel id')
 
       const novel: NovelItemData = {
         title,
@@ -224,7 +222,9 @@ export class MadaraSource extends BaseSource {
           const url = this.extractPathname(doc(chapter).find('a').attr('href'))
             .slice(1, 3)
             .join('/')
+
           const title = doc(chapter).find('a').text().trim()
+
           const releaseDate = doc(chapter)
             .find('.chapter-release-date')
             .text()
@@ -249,18 +249,13 @@ export class MadaraSource extends BaseSource {
     }
   }
 
-  override async fetchChapter(url: string) {
+  override async fetchChapterContent(url: string) {
     const chapterUrl = `${this.chapterSubString}/${url}`
 
     try {
       const body = await this.httpClient.get(chapterUrl).text()
 
       const doc = cheerio.load(body)
-
-      const title =
-        doc('.text-center').text().trim() ||
-        doc('#chapter-heading').text().trim() ||
-        doc('ol.breadcrumb .active').text().trim()
 
       if (doc('.text-right')) {
         doc('.text-right div').remove()
@@ -271,10 +266,7 @@ export class MadaraSource extends BaseSource {
       }
 
       const content =
-        doc('.text-left') ||
-        doc('.text-right') ||
-        doc('.entry-content') ||
-        'No content was extracted from the website. Check if there is any content on the original website, and create an issue on the github page.'
+        doc('.text-left') || doc('.text-right') || doc('.entry-content')
 
       const contentLines: string[] = []
       content.find('p').each(function () {
@@ -283,13 +275,11 @@ export class MadaraSource extends BaseSource {
         contentLines.push(line)
       })
 
-      const chapterNumber = title?.match(/(c|C)hapter?(\s|-)(\d+)/)?.[3]
+      if (content.length === 0)
+        throw new Error('Could not extract chapter content')
 
       return {
-        title,
-        url,
-        content: JSON.stringify(contentLines),
-        number: parseInt(chapterNumber || '0'),
+        content: contentLines,
       }
     } catch (error) {
       if (error instanceof Error) {

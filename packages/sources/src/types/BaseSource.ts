@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import ky from 'ky'
 import {
-  ChapterItemWithContent,
+  ChapterItemContent,
   ChapterItemWithoutContent,
   Source,
   SourceNovelFetchResponse,
@@ -69,7 +69,7 @@ export abstract class BaseSource implements Source {
     throw new Error('Method not implemented.')
   }
 
-  async fetchChapter(url: string): Promise<ChapterItemWithContent | null> {
+  async fetchChapterContent(url: string): Promise<ChapterItemContent | null> {
     throw new Error('Method not implemented.')
   }
 }
