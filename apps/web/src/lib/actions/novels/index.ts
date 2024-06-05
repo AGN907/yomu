@@ -179,3 +179,16 @@ export const addNovelToLibrary = authAction(
     }
   },
 )
+
+export const getNovelsByCategory = async (categoryId: number) => {
+  const user = await getUserOrRedirect()
+  const userId = user.id
+
+  return await db.query.novels.findMany({
+    where: and(
+      eq(novels.inLibrary, true),
+      eq(novels.userId, userId),
+      eq(novels.categoryId, categoryId),
+    ),
+  })
+}
