@@ -1,6 +1,6 @@
 'use client'
 
-function ChapterErrorPage({ error }: { error: Error & { digest?: string } }) {
+function MainErrorBoundary({ error }: { error: Error & { digest?: string } }) {
   return (
     <div className="container flex h-screen flex-col items-center md:justify-center">
       <h1 className="text-2xl">{error.message}</h1>
@@ -18,4 +18,4 @@ function ChapterErrorPage({ error }: { error: Error & { digest?: string } }) {
   )
 }
 
-export default ChapterErrorPage
+export default MainErrorBoundary
