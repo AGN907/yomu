@@ -27,7 +27,7 @@ function LibrarySection(props: LibrarySectionProps) {
         />
       </div>
       {isLoading || isFetching ? <Spinner size={40} /> : null}
-      <div className="xs:grid-cols-2 grid grid-cols-1 gap-8 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+      <div className="grid grid-cols-1 place-items-center gap-8 sm:grid-cols-2 md:place-items-start lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
         {}
         {data ? <LibraryList novels={data} /> : null}
       </div>
