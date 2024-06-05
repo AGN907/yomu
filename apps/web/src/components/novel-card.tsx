@@ -15,12 +15,12 @@ function NovelCard({ title, thumbnail, query }: NovelCardProps) {
         query,
       }}
     >
-      <div className="flex max-w-48 flex-col space-y-2">
+      <div className="flex max-w-48 flex-col items-center space-y-2">
         <Image
-          className="h-[230px] w-[160px] rounded border border-neutral-400 object-fill transition-opacity duration-300 hover:opacity-80 dark:border-neutral-800 dark:brightness-90"
+          className="h-[230px] w-[180px] rounded border border-neutral-400 object-fill transition-opacity duration-300 hover:opacity-80 dark:border-neutral-800 dark:brightness-90"
           src={thumbnail}
           alt={title}
-          width={160}
+          width={180}
           height={230}
         />
         <p className="w-11/12 truncate pr-4 text-lg">{title}</p>
