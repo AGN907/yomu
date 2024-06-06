@@ -9,7 +9,9 @@
     "lint": "next lint",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
-    "studio": "drizzle-kit studio"
+    "studio": "drizzle-kit studio",
+    "push": "drizzle-kit push",
+    "drop": "drizzle-kit drop"
   },
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.7",
