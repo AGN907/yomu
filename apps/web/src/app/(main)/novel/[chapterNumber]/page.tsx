@@ -35,13 +35,13 @@ export async function generateMetadata({
 }
 
 async function ChapterPage({ params, searchParams }: ChapterPageProps) {
-  const { chapterNumber } = params
-  const { chapterId } = searchParams
+  const { chapterNumber: chapterNumberString } = params
+  const { chapterId: chapterIdString } = searchParams
 
-  const selectedChapter = await getChapterFromDatabase(
-    parseInt(chapterId),
-    parseInt(chapterNumber),
-  )
+  const chapterNumber = parseInt(chapterNumberString)
+  const chapterId = parseInt(chapterIdString)
+
+  const selectedChapter = await getChapterFromDatabase(chapterId, chapterNumber)
 
   if (!selectedChapter) {
     throw new Error('Chapter not found')
@@ -50,7 +50,6 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
   const novelId = selectedChapter.novel.id
   const novelUrl = selectedChapter.novel.url
   const sourceId = selectedChapter.novel.sourceId
-  const chapterUrl = selectedChapter.url
 
   return (
     <div className="container relative flex h-auto flex-col items-center">
@@ -63,12 +62,12 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
         </h1>
 
         <Suspense fallback={<Spinner size={48} />}>
-          <ChapterContent sourceId={sourceId} chapterUrl={chapterUrl} />
+          <ChapterContent sourceId={sourceId} chapter={selectedChapter} />
         </Suspense>
       </div>
       <BottomChapterSection
         novelId={novelId}
-        currentChapterNumber={parseInt(chapterNumber)}
+        currentChapterNumber={chapterNumber}
       />
     </div>
   )

@@ -1,12 +1,16 @@
 import { fetchChapterContent } from '@/lib/actions/chapters'
+import { addChapterToHistory } from '@/lib/actions/history'
+
+import type { Chapter } from '@yomu/core/database/schema/web'
 
 type ChapterContentProps = {
   sourceId: string
-  chapterUrl: string
+  chapter: Chapter
 }
 
-async function ChapterContent({ sourceId, chapterUrl }: ChapterContentProps) {
-  const fetchedChapter = await fetchChapterContent(sourceId, chapterUrl)
+async function ChapterContent({ sourceId, chapter }: ChapterContentProps) {
+  const { id, novelId, url } = chapter
+  const fetchedChapter = await fetchChapterContent(sourceId, url)
   if (!fetchedChapter) {
     return (
       <div className="space-y-4">
@@ -27,6 +31,8 @@ async function ChapterContent({ sourceId, chapterUrl }: ChapterContentProps) {
   }
 
   const content = fetchedChapter.content
+
+  await addChapterToHistory(novelId, id)
 
   return (
     <div className="space-y-4">
