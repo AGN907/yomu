@@ -1,9 +1,10 @@
 import { GoBack } from '@/components/go-back'
+import { getCategories } from '@/lib/actions/categories'
 import { getNovelInfo } from '@/lib/actions/novels'
-import { AddToLibrary } from './add-to-library'
 import { ChaptersList } from './chapters-list'
 import { NovelMetadata } from './novel-metadata'
 import { NovelSummary } from './novel-summary'
+import { ToggleInLibrary } from './toggle-in-library'
 
 import { Badge } from '@yomu/ui/components/badge'
 import { Card, CardContent, CardFooter } from '@yomu/ui/components/card'
@@ -17,6 +18,7 @@ type NovelOverviewProps = {
 
 async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
   const novelInfo = await getNovelInfo(sourceId, novelUrl)
+  const categories = await getCategories()
 
   if (!novelInfo) {
     throw new Error('Novel not found')
@@ -67,7 +69,11 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
 
           {/* Top right side */}
           <div className="ml-auto flex gap-2">
-            <AddToLibrary novelId={novel.id} inLibrary={novel.inLibrary} />
+            <ToggleInLibrary
+              novelId={novel.id}
+              inLibrary={novel.inLibrary}
+              categories={categories}
+            />
             {/* TODO: Add button to view the novel in the source website */}
             {/* TODO: Add button to update novel data */}
           </div>

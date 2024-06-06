@@ -2,7 +2,7 @@
 import { and, db, desc, eq } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
-import { AddToLibraryScehma } from '@/lib/validators/novels'
+import { AddToLibrarySchema } from '@/lib/validators/novels'
 import { getUserOrRedirect } from '../auth'
 
 import {
@@ -154,24 +154,24 @@ const saveNovelToDatabase = async (
 }
 
 export const addNovelToLibrary = authAction(
-  AddToLibraryScehma,
-  async ({ novelId, inLibrary }, { userId }) => {
+  AddToLibrarySchema,
+  async ({ novelId, inLibrary, categoryId = null }, { userId }) => {
     try {
       const [{ isAdded }] = await db
         .update(novels)
-        .set({ inLibrary: !inLibrary, updatedAt: new Date() })
+        .set({ inLibrary, updatedAt: new Date(), categoryId })
         .where(and(eq(novels.userId, userId), eq(novels.id, novelId)))
         .returning({ isAdded: novels.inLibrary })
 
       return {
-        success: isAdded
-          ? 'Added novel to library'
-          : 'Removed novel from library',
+        success: isAdded ? 'Added novel to library' : 'Removed from library',
       }
     } catch (error) {
       if (error instanceof Error) {
         return {
-          error: "Couldn't add to library. Please try again",
+          error: inLibrary
+            ? "Couldn't remove novel from library. Please try again"
+            : "Couldn't add novel to library. Please try again",
         }
       }
     } finally {
