@@ -7,10 +7,10 @@ export const users = sqliteTable('users', {
   hashedPassword: text('hashed_password').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
-    .default(sql`(CURRENT_TIMESTAMP)`),
+    .default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' })
     .notNull()
-    .default(sql`(CURRENT_TIMESTAMP)`),
+    .default(sql`(unixepoch())`),
 })
 
 export const sessions = sqliteTable('sessions', {
@@ -57,10 +57,10 @@ export const novels = sqliteTable('novels', {
     .default(false),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
-    .default(sql`(CURRENT_TIMESTAMP)`),
+    .default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' })
     .notNull()
-    .default(sql`(CURRENT_TIMESTAMP)`),
+    .default(sql`(unixepoch())`),
 })
 
 export const chapters = sqliteTable('chapters', {
@@ -99,10 +99,10 @@ export const history = sqliteTable('history', {
     }),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
-    .default(sql`(CURRENT_TIMESTAMP)`),
+    .default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' })
     .notNull()
-    .default(sql`(CURRENT_TIMESTAMP)`),
+    .default(sql`(unixepoch())`),
 })
 
 export const updatedChapters = sqliteTable('updated_chapters', {
@@ -121,10 +121,10 @@ export const updatedChapters = sqliteTable('updated_chapters', {
     }),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
-    .default(sql`(CURRENT_TIMESTAMP)`),
+    .default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' })
     .notNull()
-    .default(sql`(CURRENT_TIMESTAMP)`),
+    .default(sql`(unixepoch())`),
 })
 
 export const userRelations = relations(users, ({ many }) => ({
