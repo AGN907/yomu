@@ -11,7 +11,7 @@ async function LibraryPage() {
 
   return (
     <div className="container flex flex-col">
-      <div className="mb-6 flex items-center justify-between gap-8 md:justify-start">
+      <div className="mb-4 flex items-center justify-between gap-8 md:justify-start">
         <h1 className="text-2xl font-semibold md:text-3xl">Library</h1>
         <CreateNewCategory />
       </div>

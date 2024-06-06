@@ -53,11 +53,11 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
 
   return (
     <div className="container relative flex h-auto flex-col items-center">
-      <div className="self-start">
+      <div className="mb-4 self-start">
         <GoBack href={`/novel?sourceId=${sourceId}&novelUrl=${novelUrl}`} />
       </div>
       <div className="h-full max-w-3xl">
-        <h1 className="mb-4 self-start text-2xl font-medium">
+        <h1 className="mb-4 self-start text-2xl font-medium md:text-3xl">
           {selectedChapter.title}
         </h1>
 
