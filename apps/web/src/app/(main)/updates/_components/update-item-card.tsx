@@ -7,7 +7,7 @@ type ChapterUpdateCardProps = {
 }
 
 function UpdateItemCard({ item }: ChapterUpdateCardProps) {
-  const { chapterTitle, chapterId, chapterNumber } = item
+  const { chapterId, chapterNumber } = item
 
   return (
     <div className="border-b p-4">
@@ -21,7 +21,7 @@ function UpdateItemCard({ item }: ChapterUpdateCardProps) {
           }}
           className="hover:underline"
         >
-          <p>{chapterTitle}</p>
+          Chapter {chapterNumber}
         </Link>
       </div>
     </div>

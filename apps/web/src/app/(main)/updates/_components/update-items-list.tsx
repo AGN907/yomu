@@ -57,7 +57,9 @@ const renderNovelUpdates = ({ title, chapters }: GroupedItem) => {
         </Link>
         <div className="flex min-w-0 flex-col gap-4 text-left">
           <p className="truncate">{title}</p>
-          <span className="text-muted-foreground">{totalChapters} updates</span>
+          <span className="text-muted-foreground text-sm font-normal">
+            {totalChapters} updates
+          </span>
         </div>
       </AccordionTrigger>
       <AccordionContent>
