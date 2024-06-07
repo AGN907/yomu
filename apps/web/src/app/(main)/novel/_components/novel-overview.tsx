@@ -5,6 +5,7 @@ import { ChaptersList } from './chapters-list'
 import { NovelMetadata } from './novel-metadata'
 import { NovelSummary } from './novel-summary'
 import { ToggleInLibrary } from './toggle-in-library'
+import { UpdateNovelData } from './update-novel-data'
 
 import { Badge } from '@yomu/ui/components/badge'
 import { Card, CardContent, CardFooter } from '@yomu/ui/components/card'
@@ -75,7 +76,7 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
               categories={categories}
             />
             {/* TODO: Add button to view the novel in the source website */}
-            {/* TODO: Add button to update novel data */}
+            <UpdateNovelData novelId={novel.id} />
           </div>
         </CardContent>
 
