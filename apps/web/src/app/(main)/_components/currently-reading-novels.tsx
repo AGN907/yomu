@@ -19,10 +19,7 @@ async function CurrentlyReadingNovels() {
     const query = { novelUrl: novel.url, sourceId: novel.sourceId }
 
     return (
-      <div
-        key={`${novel.title}-${novel.sourceId}`}
-        className="max-w-36 space-y-2"
-      >
+      <div key={novel.id} className="space-y-2">
         <NovelCard
           title={novel.title}
           thumbnail={novel.thumbnail}
