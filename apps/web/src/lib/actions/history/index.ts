@@ -4,6 +4,7 @@ import { and, db, desc, eq } from '@/lib/database'
 import { getUserOrRedirect } from '../auth'
 
 import { chapters, history, novels } from '@yomu/core/database/schema/web'
+import type { HistoryItem } from '@yomu/sources/types'
 
 export const addChapterToHistory = async (
   novelId: number,
@@ -28,7 +29,13 @@ export const addChapterToHistory = async (
   }
 }
 
-export const getHistoryChapters = async () => {
+export type HistoryItemWithTimestamps = HistoryItem & {
+  createdAt: Date
+  updatedAt: Date
+}
+export const getHistoryChapters = async (): Promise<
+  HistoryItemWithTimestamps[]
+> => {
   const user = await getUserOrRedirect()
   const userId = user.id
 
