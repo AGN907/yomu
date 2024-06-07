@@ -22,7 +22,7 @@ function GenresGraph({ data }: GenreGraphProps) {
   const currentTheme = theme === 'system' ? systemTheme : theme
 
   return (
-    <div className="">
+    <div>
       {memoizedData.length === 0 ? (
         <div className="flex flex-col pt-12">
           <p className="text-muted-foreground text-center text-sm">

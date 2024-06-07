@@ -33,7 +33,7 @@ function NovelMetadataItem(props: NovelMetadataItemProps) {
   return (
     <div className="flex items-center gap-2 px-2 py-1">
       <Icon className="stroke-muted-foreground size-6" />
-      <span className="">{value}</span>
+      <span>{value}</span>
     </div>
   )
 }

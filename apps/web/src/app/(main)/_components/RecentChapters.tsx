@@ -12,7 +12,7 @@ export async function RecentChapters() {
   const isRecentChaptersEmpty = recentChapters.length === 0
 
   return (
-    <div className="">
+    <div>
       <CardContainer title={'Recent Chapters'}>
         <div className="divide-border h-full divide-y">
           {isRecentChaptersEmpty ? (
