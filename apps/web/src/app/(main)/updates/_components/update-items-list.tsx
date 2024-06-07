@@ -38,13 +38,14 @@ function UpdatesList({ items, listName }: UpdatesListProps) {
 
 const renderNovelUpdates = ({ title, chapters }: GroupedItem) => {
   const sourceId = chapters[0].sourceId
+  const novelId = chapters[0].novelId
   const novelUrl = chapters[0].novelUrl
   const thumbnail = chapters[0].novelThumbnail
 
   const totalChapters = chapters.length
 
   return (
-    <AccordionItem value={title}>
+    <AccordionItem key={novelId} value={title}>
       <AccordionTrigger className="grid grid-cols-[50px_1fr_40px] gap-4">
         <Link href={{ pathname: '/novel', query: { novelUrl, sourceId } }}>
           <Image
