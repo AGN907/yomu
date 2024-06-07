@@ -1,6 +1,8 @@
 'use server'
 
-import { db, eq } from '@/lib/database'
+import { db, desc, eq } from '@/lib/database'
+import { getUserOrRedirect } from '../auth'
+import { fetchNovelInfo } from '../novels'
 
 import {
   chapters,
@@ -9,8 +11,6 @@ import {
 } from '@yomu/core/database/schema/web'
 
 import { revalidatePath } from 'next/cache'
-import { getUserOrRedirect } from '../auth'
-import { fetchNovelInfo } from '../novels'
 
 export const updateNovel = async (novelId: number) => {
   const user = await getUserOrRedirect()
@@ -90,4 +90,30 @@ export const updateNovel = async (novelId: number) => {
   } finally {
     revalidatePath('/novel')
   }
+}
+
+export const getUpdatedChapters = async () => {
+  const user = await getUserOrRedirect()
+  const userId = user.id
+
+  return await db
+    .select({
+      novelId: novels.id,
+      novelTitle: novels.title,
+      novelUrl: novels.url,
+      novelThumbnail: novels.thumbnail,
+      sourceId: novels.sourceId,
+      chapterId: chapters.id,
+      chapterTitle: chapters.title,
+      chapterUrl: chapters.url,
+      chapterNumber: chapters.number,
+      id: updatedChapters.id,
+      createdAt: updatedChapters.createdAt,
+      updatedAt: updatedChapters.updatedAt,
+    })
+    .from(novels)
+    .where(eq(novels.userId, userId))
+    .innerJoin(chapters, eq(novels.id, chapters.novelId))
+    .innerJoin(updatedChapters, eq(chapters.id, updatedChapters.chapterId))
+    .orderBy(desc(updatedChapters.updatedAt), desc(chapters.number))
 }
