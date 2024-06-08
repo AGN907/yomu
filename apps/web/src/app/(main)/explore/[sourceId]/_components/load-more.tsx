@@ -1,20 +1,18 @@
 'use client'
 
 import Spinner from '@/components/spinner'
-import { useIntersectionObserver } from '@/lib/hooks/use-intersection-observer'
+import { useInView } from 'react-intersection-observer'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 
 function LoadMore({ onIntersection }: { onIntersection: () => void }) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  const { isIntersecting } = useIntersectionObserver(ref, { threshold: 0.8 })
+  const { ref, inView } = useInView({ threshold: 0.8 })
 
   useEffect(() => {
-    if (isIntersecting) {
+    if (inView) {
       onIntersection()
     }
-  }, [isIntersecting, onIntersection])
+  }, [inView, onIntersection])
 
   return (
     <div ref={ref} className="flex justify-center">
