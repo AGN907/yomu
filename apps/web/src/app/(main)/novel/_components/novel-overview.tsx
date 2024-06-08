@@ -1,11 +1,13 @@
 import { GoBack } from '@/components/go-back'
 import { getCategories } from '@/lib/actions/categories'
 import { getNovelInfo } from '@/lib/actions/novels'
+import { sourceManager } from '@/lib/source-manager'
 import { ChaptersList } from './chapters-list'
 import { NovelMetadata } from './novel-metadata'
 import { NovelSummary } from './novel-summary'
 import { ToggleInLibrary } from './toggle-in-library'
 import { UpdateNovelData } from './update-novel-data'
+import { ViewInSource } from './view-in-source'
 
 import { Badge } from '@yomu/ui/components/badge'
 import { Card, CardContent, CardFooter } from '@yomu/ui/components/card'
@@ -28,6 +30,7 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
   const { chapters, ...novel } = novelInfo
 
   const genres = novel?.genres || []
+  const currentSource = sourceManager.getSource(sourceId)
 
   return (
     <div className="space-y-4">
@@ -75,8 +78,8 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
               inLibrary={novel.inLibrary}
               categories={categories}
             />
-            {/* TODO: Add button to view the novel in the source website */}
             <UpdateNovelData novelId={novel.id} />
+            <ViewInSource url={currentSource?.getOriginalNovelUrl(novel.url)} />
           </div>
         </CardContent>
 
