@@ -15,6 +15,7 @@ function useLibraryQuery(initialCategoryId: number) {
     data,
     isLoading,
     isFetching,
+    categoryId,
     setCategoryId,
   }
 }

@@ -4,6 +4,7 @@ import { authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
 import { AddToLibrarySchema } from '@/lib/validators/novels'
 import { getUserOrRedirect } from '../auth'
+import { updateNovel } from '../updates'
 
 import {
   NewNovel,
@@ -191,4 +192,38 @@ export const getNovelsByCategory = async (categoryId: number) => {
       eq(novels.categoryId, categoryId),
     ),
   })
+}
+
+export const updateNovelsByCategory = async (categoryId: number) => {
+  const user = await getUserOrRedirect()
+  const userId = user.id
+
+  try {
+    const novels = await db.query.novels.findMany({
+      where: (table, { and, eq }) =>
+        and(
+          eq(table.inLibrary, true),
+          eq(table.userId, userId),
+          eq(table.categoryId, categoryId),
+        ),
+    })
+
+    if (novels.length === 0) {
+      return {
+        success: 'Tried to update but no novels were found in the library',
+      }
+    }
+
+    await Promise.all(novels.map((novel) => updateNovel(novel.id)))
+
+    return {
+      success: `${novels.length} novel${novels.length > 1 ? 's' : ''} was updated`,
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      return {
+        error: 'Something went wrong. Please try again',
+      }
+    }
+  }
 }
