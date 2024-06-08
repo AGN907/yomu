@@ -29,7 +29,17 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
 
   const { chapters, ...novel } = novelInfo
 
-  const genres = novel?.genres || []
+  const {
+    id,
+    title,
+    url,
+    thumbnail,
+    summary,
+    genres,
+    author,
+    status,
+    inLibrary,
+  } = novel
   const currentSource = sourceManager.getSource(sourceId)
 
   return (
@@ -40,8 +50,8 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
           <div className="flex-shrink-0 self-center lg:self-start">
             <Image
               className="w-[200px] rounded border border-neutral-400 transition-opacity duration-300 hover:opacity-80 dark:border-neutral-800 dark:brightness-90"
-              src={novel.thumbnail}
-              alt={novel.title}
+              src={thumbnail}
+              alt={title}
               width={200}
               height={160}
             />
@@ -49,15 +59,15 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
 
           <div className="flex max-w-3xl flex-col gap-4">
             <h1
-              title={novel.title}
+              title={title}
               className="text-lg font-semibold sm:text-xl md:text-2xl"
             >
-              {novel.title}
+              {title}
             </h1>
             <NovelMetadata
-              author={novel.author}
-              status={novel.status}
-              sourceId={novel.sourceId}
+              author={author}
+              status={status}
+              sourceId={sourceId}
               totalChapters={chapters.length}
             />
             <div className="mt-auto">
@@ -74,12 +84,12 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
           {/* Top right side */}
           <div className="ml-auto flex gap-2">
             <ToggleInLibrary
-              novelId={novel.id}
-              inLibrary={novel.inLibrary}
+              novelId={id}
+              inLibrary={inLibrary}
               categories={categories}
             />
-            <UpdateNovelData novelId={novel.id} />
-            <ViewInSource url={currentSource?.getOriginalNovelUrl(novel.url)} />
+            <UpdateNovelData novelId={id} />
+            <ViewInSource url={currentSource.getOriginalNovelUrl(url)} />
           </div>
         </CardContent>
 
@@ -90,7 +100,7 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
           </div>
           <div className="w-full space-y-4 xl:sticky xl:top-4 xl:max-w-md">
             <h3 className="text-2xl font-medium">Summary</h3>
-            <NovelSummary summary={novel.summary} />
+            <NovelSummary summary={summary} />
           </div>
         </CardFooter>
       </Card>
