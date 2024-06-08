@@ -1,7 +1,9 @@
 'use server'
 
 import { and, db, desc, eq } from '@/lib/database'
+import { authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
+import { MarkChapterAsReadSchema } from '@/lib/validators/chapters'
 import { getUserOrRedirect } from '../auth'
 
 import {
@@ -59,3 +61,14 @@ export const fetchChapterContent = async (
 
   return await source.fetchChapterContent(chapterUrl)
 }
+
+export const markChapterAsRead = authAction(
+  MarkChapterAsReadSchema,
+  async ({ chapterId }) => {
+    console.log('hit')
+    await db
+      .update(chapters)
+      .set({ read: true })
+      .where(eq(chapters.id, chapterId))
+  },
+)

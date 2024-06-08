@@ -57,10 +57,6 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
         <GoBack href={`/novel?sourceId=${sourceId}&novelUrl=${novelUrl}`} />
       </div>
       <div className="h-full max-w-3xl">
-        <h1 className="mb-4 self-start text-2xl font-medium md:text-3xl">
-          {selectedChapter.title}
-        </h1>
-
         <Suspense fallback={<Spinner size={48} />}>
           <ChapterContent sourceId={sourceId} chapter={selectedChapter} />
         </Suspense>

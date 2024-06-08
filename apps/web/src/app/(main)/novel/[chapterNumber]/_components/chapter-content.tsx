@@ -1,5 +1,6 @@
 import { fetchChapterContent } from '@/lib/actions/chapters'
 import { addChapterToHistory } from '@/lib/actions/history'
+import { TrackReadingState } from './track-reading-state'
 
 import type { Chapter } from '@yomu/core/database/schema/web'
 
@@ -35,10 +36,16 @@ async function ChapterContent({ sourceId, chapter }: ChapterContentProps) {
   await addChapterToHistory(novelId, id)
 
   return (
-    <div className="space-y-4">
-      {content.map((paragraph, i) => (
-        <p key={i}>{paragraph}</p>
-      ))}
+    <div>
+      <h1 className="mb-4 self-start text-2xl font-medium md:text-3xl">
+        {chapter.title}
+      </h1>
+      <div className="space-y-4">
+        {content.map((paragraph, i) => (
+          <p key={i}>{paragraph}</p>
+        ))}
+      </div>
+      <TrackReadingState chapterId={id} />
     </div>
   )
 }
