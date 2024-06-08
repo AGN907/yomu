@@ -294,6 +294,14 @@ export class MadaraSource extends BaseSource {
     return image?.match(regex) ? image.replace(regex, '$3') : image
   }
 
+  getOriginalNovelUrl(url: string) {
+    return `${this.baseUrl}/${this.novelSubString}/${url}`
+  }
+
+  getOriginalChapterUrl(url: string): string {
+    return `${this.baseUrl}/${this.chapterSubString}/${url}`
+  }
+
   extractPathname(url: string | undefined) {
     if (!url) return []
 

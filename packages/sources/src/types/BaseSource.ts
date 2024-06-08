@@ -72,4 +72,12 @@ export abstract class BaseSource implements Source {
   async fetchChapterContent(url: string): Promise<ChapterItemContent | null> {
     throw new Error('Method not implemented.')
   }
+
+  getOriginalNovelUrl(url: string): string {
+    throw new Error('Method not implemented.')
+  }
+
+  getOriginalChapterUrl(url: string): string {
+    throw new Error('Method not implemented.')
+  }
 }

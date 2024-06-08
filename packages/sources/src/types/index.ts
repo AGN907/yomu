@@ -76,4 +76,6 @@ export interface Source {
   fetchNovel: (url: string) => Promise<SourceNovelFetchResponse>
 
   fetchChapterContent: (url: string) => Promise<ChapterItemContent | null>
+  getOriginalNovelUrl: (url: string) => string
+  getOriginalChapterUrl: (url: string) => string
 }
