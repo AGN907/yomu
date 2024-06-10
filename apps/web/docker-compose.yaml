@@ -1,0 +1,15 @@
+name: yomu
+
+services:
+  web:
+    container_name: web
+    image: agn907/yomu
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: './database/yomu.db'
+    volumes:
+      - yomu-web-sqlite:/app/database
+
+volumes:
+  yomu-web-sqlite:
