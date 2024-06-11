@@ -1,4 +1,4 @@
-import { MadaraSource } from '@sources/multiSrc/Madara/MadaraSource'
+import { MadaraSource } from '../../multiSrc/Madara/MadaraSource'
 
 export class FirstKissNovel extends MadaraSource {
   constructor() {

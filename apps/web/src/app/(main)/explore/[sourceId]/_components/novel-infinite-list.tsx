@@ -2,7 +2,8 @@
 
 import { NovelCard } from '@/components/novel-card'
 import { fetchNovelsByFilter, fetchNovelsByQuery } from '@/lib/actions/novels'
-import { NovelItem } from '@sources/types'
+
+import type { NovelItem } from '@yomu/sources/types'
 
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { LoadMore } from './load-more'

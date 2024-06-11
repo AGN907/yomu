@@ -1,8 +1,10 @@
 'use client'
+
 import { SubmitButton } from '@/components/submit-button'
 import { updateNovelsByCategory } from '@/lib/actions/novels'
-import { RefreshCw } from '@ui/components/ui/icons'
-import { toast } from '@ui/components/ui/sonner'
+
+import { RefreshCw } from '@yomu/ui/components/icons'
+import { toast } from '@yomu/ui/components/sonner'
 
 export function UpdateCategoryNovels({ categoryId }: { categoryId: number }) {
   const handleNovelsUpdate = async () => {

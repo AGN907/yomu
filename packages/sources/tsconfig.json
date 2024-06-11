@@ -4,11 +4,7 @@
     "outDir": "../../dist/packages/sources",
     "strict": true,
     "resolveJsonModule": true,
-    "moduleResolution": "Bundler",
-    "baseUrl": ".",
-    "paths": {
-      "@sources/*": ["./src/*"]
-    }
+    "moduleResolution": "Bundler"
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
