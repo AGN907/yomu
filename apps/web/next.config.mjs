@@ -2,7 +2,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: 'standalone',
-    transpilePackages: ['@yomu/ui'],
+    transpilePackages: ['@yomu/ui', '@yomu/core', '@yomu/sources'],
     images: {
         remotePatterns: [
             {
