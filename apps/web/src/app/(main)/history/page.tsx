@@ -1,7 +1,8 @@
-import { getHistoryChapters } from '@/lib/actions/history'
+import {
+  getHistoryChapters,
+  type HistoryItemWithTimestamps,
+} from '@/lib/actions/history'
 import { HistoryItemsList } from './_components/history-items-list'
-
-import type { HistoryItem } from '@yomu/sources/types'
 
 async function HistoryPage() {
   const historyChapters = await getHistoryChapters()
@@ -16,7 +17,7 @@ async function HistoryPage() {
         acc?.[date]?.push(chapter)
         return acc
       },
-      {} as Record<string, HistoryItem[]>,
+      {} as Record<string, HistoryItemWithTimestamps[]>,
     ),
   )
 

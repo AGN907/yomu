@@ -1,13 +1,13 @@
+import { type HistoryItemWithTimestamps } from '@/lib/actions/history'
 import { HistoryItemCard } from './history-item-card'
 
 import { toCalendar } from '@yomu/core/date-helpers'
-import type { HistoryItem } from '@yomu/sources/types'
 
 function HistoryItemsList({
   items,
   listName,
 }: {
-  items: HistoryItem[]
+  items: HistoryItemWithTimestamps[]
   listName: string
 }) {
   const sectionName = toCalendar(listName)
