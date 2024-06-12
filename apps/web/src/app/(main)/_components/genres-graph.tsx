@@ -23,9 +23,9 @@ function GenresGraph({ data }: GenreGraphProps) {
 
   return (
     <div>
-      {memoizedData.length === 0 ? (
-        <div className="flex flex-col pt-12">
-          <p className="text-muted-foreground text-center text-sm">
+      {memoizedData.length <= 3 ? (
+        <div className="flex flex-col">
+          <p className="text-muted-foreground text-center">
             We would need more data to show you some cool graphs
           </p>
         </div>
