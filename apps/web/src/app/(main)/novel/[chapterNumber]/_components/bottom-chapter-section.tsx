@@ -37,7 +37,7 @@ async function BottomChapterSection(props: BottomChapterBarProps) {
   ])
 
   return (
-    <div className="sticky bottom-4 mt-8 flex w-full md:mt-0">
+    <div className="sticky bottom-4 mt-8 flex gap-10 md:mt-0">
       <div className="mr-auto">
         {previousChapter ? (
           <ChapterNavigationButton chapter={previousChapter} Icon={ArrowLeft} />
