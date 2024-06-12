@@ -11,7 +11,9 @@
     "migrate": "drizzle-kit migrate",
     "studio": "drizzle-kit studio",
     "push": "drizzle-kit push",
-    "drop": "drizzle-kit drop"
+    "drop": "drizzle-kit drop",
+    "docker-up": "docker compose up",
+    "docker-push": "docker push agn907/yomu:latest"
   },
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.7",
