@@ -3,11 +3,6 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/web",
   "targets": {
-    "build": {
-      "options": {
-        "outputPath": "dist/web"
-      }
-    },
     "lint": {
       "options": {
         "maxWarnings": 0
