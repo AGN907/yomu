@@ -5,6 +5,7 @@ import { validateRequest } from '@/lib/auth/validate-request'
 import { db } from '@/lib/database'
 import { action } from '@/lib/safe-action'
 import { loginSchema, signupSchema } from '@/lib/validators/auth'
+import { createDefaultCategory } from '../categories'
 
 import { users } from '@yomu/core/database/schema/web'
 
@@ -15,39 +16,59 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export const signup = action(signupSchema, async ({ username, password }) => {
-  const hashedPassword = await hash(password, {
-    memoryCost: 19456,
-    timeCost: 2,
-    outputLen: 32,
-    parallelism: 1,
-  })
+  try {
+    const hashedPassword = await hash(password, {
+      memoryCost: 19456,
+      timeCost: 2,
+      outputLen: 32,
+      parallelism: 1,
+    })
 
-  const userId = generateIdFromEntropySize(10)
+    const userId = generateIdFromEntropySize(10)
 
-  const existingUser = await db.query.users.findFirst({
-    where: (table, { eq }) => eq(table.username, username),
-  })
+    const existingUser = await db.query.users.findFirst({
+      where: (table, { eq }) => eq(table.username, username),
+    })
 
-  if (existingUser)
+    if (existingUser)
+      return {
+        failure: 'Invaild username',
+      }
+
+    await db.transaction(async (tx) => {
+      const [{ id }] = await tx
+        .insert(users)
+        .values({
+          id: userId,
+          username,
+          hashedPassword,
+        })
+        .returning({ id: users.id })
+
+      const createdDefaultCategory = await createDefaultCategory(id)
+
+      if (!createdDefaultCategory) {
+        tx.rollback()
+        return {
+          failure: 'Something went wrong, please try again',
+        }
+      }
+    })
+
+    const session = await lucia.createSession(userId, {})
+    const sessionCookie = lucia.createSessionCookie(session.id)
+
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes,
+    )
+  } catch (error) {
+    console.error(error)
     return {
-      failure: 'Invaild username',
+      failure: 'Something went wrong, please try again',
     }
-
-  await db.insert(users).values({
-    id: userId,
-    username,
-    hashedPassword,
-  })
-
-  const session = await lucia.createSession(userId, {})
-  const sessionCookie = lucia.createSessionCookie(session.id)
-
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  )
-
+  }
   redirect('/')
 })
 

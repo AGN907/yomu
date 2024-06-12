@@ -54,3 +54,26 @@ export const createCategory = authAction(
     }
   },
 )
+
+export const createDefaultCategory = async (userId: string) => {
+  try {
+    const categoryExist = await db.query.categories.findFirst({
+      where: (table, { and, eq }) =>
+        and(eq(table.userId, userId), eq(table.name, 'default')),
+    })
+
+    if (categoryExist) {
+      return true
+    }
+
+    await db.insert(categories).values({
+      name: 'default',
+      userId,
+    })
+
+    return true
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
