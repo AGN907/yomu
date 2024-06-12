@@ -1,6 +1,7 @@
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowUp,
   BadgeAlert,
   BookOpen,
   BookOpenCheck,
@@ -28,6 +29,7 @@ import {
 export {
   ArrowLeft,
   ArrowRight,
+  ArrowUp,
   BadgeAlert,
   BookOpen,
   BookOpenCheck,

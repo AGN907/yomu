@@ -1,3 +1,4 @@
+import { ScrollToTop } from '@/components/scroll-to-top'
 import Providers from '../providers'
 
 import '@yomu/ui/styles.css'
@@ -25,6 +26,7 @@ export default function RootLayout({
         )}
       >
         <Providers>{children}</Providers>
+        <ScrollToTop />
       </body>
     </html>
   )
