@@ -12,12 +12,15 @@ export async function RecentChapters() {
   const isRecentChaptersEmpty = recentChapters.length === 0
 
   return (
-    <div>
+    <div className="h-full">
       <CardContainer title={'Recent Chapters'}>
-        <div className="divide-border h-full divide-y">
+        <div className="divide-border divide-y">
           {isRecentChaptersEmpty ? (
-            <div className="flex items-center justify-center">
-              <p>No recent chapters</p>
+            <div className="flex flex-col items-center justify-center md:pt-14">
+              <p className="text-xl">There&apos;s no recent updates</p>
+              <p className="text-muted-foreground">
+                Check back after updating novels
+              </p>
             </div>
           ) : (
             recentChapters.map((chapter) => (

@@ -44,7 +44,7 @@ async function CurrentlyReadingNovels() {
     <div className="xl:col-span-3">
       <CardContainer title={'Currently Reading'}>
         {isEmpty ? (
-          <div className="flex h-full flex-1 flex-col items-center justify-center pt-12">
+          <div className="flex flex-col items-center justify-center md:pt-14">
             <p className="text-xl">You didn&apos;t read any novels</p>
             <span className="text-muted-foreground">
               Start reading and they will appear here
