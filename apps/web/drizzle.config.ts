@@ -5,7 +5,7 @@ export default defineConfig({
   schema: '../../packages/core/src/database/schema/web.ts',
   out: './drizzle',
   dbCredentials: {
-    url: 'yomu.db',
+    url: './database/yomu.db',
   },
   migrations: {
     table: 'migrations',
