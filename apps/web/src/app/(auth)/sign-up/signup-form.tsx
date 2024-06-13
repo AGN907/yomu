@@ -1,5 +1,7 @@
 'use client'
 
+import { FormErrorsField } from '@/components/form-errors-field'
+import { PasswordInput } from '@/components/password-input'
 import { SubmitButton } from '@/components/submit-button'
 import { signup } from '@/lib/actions/auth'
 
@@ -20,6 +22,13 @@ import Link from 'next/link'
 function SignupForm() {
   const { execute, result } = useAction(signup)
 
+  const handleSignup = (formData: FormData) => {
+    const username = formData.get('username') as string
+    const password = formData.get('password') as string
+
+    execute({ username, password })
+  }
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -27,15 +36,7 @@ function SignupForm() {
         <CardDescription>Create an account to get started</CardDescription>
       </CardHeader>
       <CardContent>
-        <form
-          action={(formData) => {
-            const username = formData.get('username') as string
-            const password = formData.get('password') as string
-
-            execute({ username, password })
-          }}
-          className="grid gap-4"
-        >
+        <form action={handleSignup} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="username">Username</Label>
             <Input
@@ -51,21 +52,9 @@ function SignupForm() {
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
             </div>
-            <Input id="password" type="password" name="password" required />
+            <PasswordInput id="password" name="password" required />
           </div>
-          {result?.validationErrors ? (
-            <ul className="bg-destructive/10 text-destructive list-disc space-y-1 rounded-lg border p-2 text-[0.8rem] font-medium">
-              {Object.values(result.validationErrors).map((err, index) => (
-                <li className="ml-4" key={index}>
-                  {err}
-                </li>
-              ))}
-            </ul>
-          ) : result?.data?.failure ? (
-            <p className="bg-destructive/10 text-destructive rounded-lg border p-2 text-[0.8rem] font-medium">
-              {result.data.failure}
-            </p>
-          ) : null}
+          <FormErrorsField result={result} />
           <SubmitButton type="submit" className="w-full">
             Sign up
           </SubmitButton>

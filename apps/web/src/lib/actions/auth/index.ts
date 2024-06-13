@@ -37,7 +37,7 @@ export const signup = action(signupSchema, async ({ username, password }) => {
 
     if (existingUser)
       return {
-        failure: 'Invaild username',
+        error: 'Invalid username',
       }
 
     await db.transaction(async (tx) => {
@@ -55,7 +55,7 @@ export const signup = action(signupSchema, async ({ username, password }) => {
       if (!createdDefaultCategory) {
         tx.rollback()
         return {
-          failure: 'Something went wrong, please try again',
+          error: 'Something went wrong, please try again',
         }
       }
     })
@@ -71,7 +71,7 @@ export const signup = action(signupSchema, async ({ username, password }) => {
   } catch (error) {
     console.error(error)
     return {
-      failure: 'Something went wrong, please try again',
+      error: 'Something went wrong, please try again',
     }
   }
   redirect('/')
@@ -84,7 +84,7 @@ export const login = action(loginSchema, async ({ username, password }) => {
 
   if (!existingUser)
     return {
-      failure: 'Invalid username or password',
+      error: 'Invalid username or password',
     }
 
   const validPassword = await verify(existingUser.hashedPassword, password, {
@@ -96,7 +96,7 @@ export const login = action(loginSchema, async ({ username, password }) => {
 
   if (!validPassword)
     return {
-      failure: 'Invalid username or password',
+      error: 'Invalid username or password',
     }
 
   const session = await lucia.createSession(existingUser.id, {})

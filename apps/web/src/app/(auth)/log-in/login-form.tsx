@@ -1,5 +1,7 @@
 'use client'
 
+import { FormErrorsField } from '@/components/form-errors-field'
+import { PasswordInput } from '@/components/password-input'
 import { SubmitButton } from '@/components/submit-button'
 import { login } from '@/lib/actions/auth'
 
@@ -20,6 +22,13 @@ import Link from 'next/link'
 function LoginForm() {
   const { execute, result } = useAction(login)
 
+  const handleLogin = (formData: FormData) => {
+    const username = formData.get('username') as string
+    const password = formData.get('password') as string
+
+    execute({ username, password })
+  }
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -27,21 +36,13 @@ function LoginForm() {
         <CardDescription>Login to your account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form
-          action={(formData) => {
-            const username = formData.get('username') as string
-            const password = formData.get('password') as string
-
-            execute({ username, password })
-          }}
-          className="grid gap-4"
-        >
+        <form action={handleLogin} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               type="text"
-              placeholder="TheSleepyCat"
+              placeholder="John"
               name="username"
               required
             />
@@ -50,21 +51,14 @@ function LoginForm() {
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
             </div>
-            <Input id="password" type="password" name="password" required />
+            <PasswordInput
+              id="password"
+              name="password"
+              placeholder="Your strong password"
+              required
+            />
           </div>
-          {result?.validationErrors ? (
-            <ul className="bg-destructive/10 text-destructive list-disc space-y-1 rounded-lg border p-2 text-[0.8rem] font-medium">
-              {Object.values(result.validationErrors).map((err, index) => (
-                <li className="ml-4" key={index}>
-                  {err}
-                </li>
-              ))}
-            </ul>
-          ) : result?.data?.failure ? (
-            <p className="bg-destructive/10 text-destructive rounded-lg border p-2 text-[0.8rem] font-medium">
-              {result.data.failure}
-            </p>
-          ) : null}
+          <FormErrorsField result={result} />
           <SubmitButton type="submit" className="w-full">
             Login
           </SubmitButton>
