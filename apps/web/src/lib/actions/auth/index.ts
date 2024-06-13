@@ -2,9 +2,14 @@
 
 import { lucia } from '@/lib/auth'
 import { validateRequest } from '@/lib/auth/validate-request'
-import { db } from '@/lib/database'
-import { action } from '@/lib/safe-action'
-import { loginSchema, signupSchema } from '@/lib/validators/auth'
+import { db, eq } from '@/lib/database'
+import { action, authAction } from '@/lib/safe-action'
+import {
+  UpdatePasswordSchema,
+  UpdateUsernameSchema,
+  loginSchema,
+  signupSchema,
+} from '@/lib/validators/auth'
 import { createDefaultCategory } from '../categories'
 
 import { users } from '@yomu/core/database/schema/web'
@@ -134,3 +139,94 @@ export const getUserOrRedirect = async () => {
 
   return user
 }
+
+export const updateUsername = authAction(
+  UpdateUsernameSchema,
+  async ({ username }, { userId }) => {
+    try {
+      const currentUser = await db.query.users.findFirst({
+        where: (table, { eq }) => eq(table.id, userId),
+      })
+
+      if (!currentUser) {
+        throw new Error('User not found, make sure you are logged in')
+      }
+
+      const existingUser = await db.query.users.findFirst({
+        where: (table, { and, not, eq }) =>
+          and(
+            not(eq(table.id, userId)),
+            eq(table.username, username.toLowerCase()),
+          ),
+      })
+
+      if (existingUser)
+        return {
+          error: 'This username is already taken',
+        }
+
+      await db
+        .update(users)
+        .set({ username: username.toLowerCase() })
+        .where(eq(users.id, userId))
+
+      return {
+        success: 'Username updated successfully',
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        error: 'Something went wrong, please try again',
+      }
+    }
+  },
+)
+
+export const updatePassword = authAction(
+  UpdatePasswordSchema,
+  async ({ currentPassword, newPassword }, { userId }) => {
+    try {
+      const currentUser = await db.query.users.findFirst({
+        where: (table, { eq }) => eq(table.id, userId),
+      })
+
+      if (!currentUser) {
+        throw new Error('User not found, make sure you are logged in')
+      }
+
+      const validPassword = await verify(
+        currentUser.hashedPassword,
+        currentPassword,
+        {
+          memoryCost: 19456,
+          timeCost: 2,
+          outputLen: 32,
+          parallelism: 1,
+        },
+      )
+
+      if (!validPassword)
+        return {
+          error: 'Invalid current password',
+        }
+
+      const hashedPassword = await hash(newPassword, {
+        memoryCost: 19456,
+        timeCost: 2,
+        outputLen: 32,
+        parallelism: 1,
+      })
+
+      await db.update(users).set({ hashedPassword }).where(eq(users.id, userId))
+
+      return {
+        success: 'Password updated successfully',
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        error: 'Something went wrong, please try again',
+      }
+    }
+  },
+)
