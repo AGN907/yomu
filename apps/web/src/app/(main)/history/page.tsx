@@ -1,3 +1,4 @@
+import { PageLayout } from '@/components/page-layout'
 import {
   getHistoryChapters,
   type HistoryItemWithTimestamps,
@@ -22,22 +23,19 @@ async function HistoryPage() {
   )
 
   return (
-    <div className="container">
-      <h1 className="mb-4 text-2xl font-semibold md:text-3xl">History</h1>
-      <div className="grid gap-6">
-        <div className="space-y-6">
-          {groupedByDateArray.length === 0 ? (
-            <p>You don&apos;t have any reading history yet.</p>
-          ) : (
-            <>
-              {groupedByDateArray.map(([date, chapters]) => (
-                <HistoryItemsList key={date} listName={date} items={chapters} />
-              ))}
-            </>
-          )}
-        </div>
+    <PageLayout pageTitle="History">
+      <div className="space-y-6">
+        {groupedByDateArray.length === 0 ? (
+          <p>You don&apos;t have any reading history yet.</p>
+        ) : (
+          <>
+            {groupedByDateArray.map(([date, chapters]) => (
+              <HistoryItemsList key={date} listName={date} items={chapters} />
+            ))}
+          </>
+        )}
       </div>
-    </div>
+    </PageLayout>
   )
 }
 

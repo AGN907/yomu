@@ -37,9 +37,6 @@ async function ChapterContent({ sourceId, chapter }: ChapterContentProps) {
 
   return (
     <div>
-      <h1 className="mb-4 self-start text-2xl font-medium md:text-3xl">
-        {chapter.title}
-      </h1>
       <div className="space-y-4">
         {content.map((paragraph, i) => (
           <p key={i}>{paragraph}</p>

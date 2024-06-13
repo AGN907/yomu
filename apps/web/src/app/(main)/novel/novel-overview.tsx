@@ -1,13 +1,14 @@
 import { GoBack } from '@/components/go-back'
+import { PageLayout } from '@/components/page-layout'
 import { getCategories } from '@/lib/actions/categories'
 import { getNovelInfo } from '@/lib/actions/novels'
 import { sourceManager } from '@/lib/source-manager'
-import { ChaptersList } from './chapters-list'
-import { NovelMetadata } from './novel-metadata'
-import { NovelSummary } from './novel-summary'
-import { ToggleInLibrary } from './toggle-in-library'
-import { UpdateNovelData } from './update-novel-data'
-import { ViewInSource } from './view-in-source'
+import { ChaptersList } from './_components/chapters-list'
+import { NovelMetadata } from './_components/novel-metadata'
+import { NovelSummary } from './_components/novel-summary'
+import { ToggleInLibrary } from './_components/toggle-in-library'
+import { UpdateNovelData } from './_components/update-novel-data'
+import { ViewInSource } from './_components/view-in-source'
 
 import { Badge } from '@yomu/ui/components/badge'
 import { Card, CardContent, CardFooter } from '@yomu/ui/components/card'
@@ -43,8 +44,14 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
   const currentSource = sourceManager.getSource(sourceId)
 
   return (
-    <div className="space-y-4">
-      <GoBack />
+    <PageLayout
+      pageTitle={
+        <div className="flex items-center gap-4">
+          <GoBack />
+          <h1>{title}</h1>
+        </div>
+      }
+    >
       <Card className="w-full rounded-2xl">
         <CardContent className="bg-accent dark:bg-card flex flex-col gap-8 rounded-2xl border p-4 lg:flex-row">
           <div className="flex-shrink-0 self-center lg:self-start">
@@ -104,7 +111,7 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
           </div>
         </CardFooter>
       </Card>
-    </div>
+    </PageLayout>
   )
 }
 

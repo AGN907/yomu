@@ -1,3 +1,4 @@
+import { PageLayout } from '@/components/page-layout'
 import { fetchNovelsByFilter, fetchNovelsByQuery } from '@/lib/actions/novels'
 import { FiltersToggle } from './_components/filters-toggle'
 import { NovelInfiniteList } from './_components/novel-infinite-list'
@@ -38,8 +39,7 @@ async function SourcePage({ params, searchParams }: SourcePageProps) {
     : await fetchNovelsByFilter(sourceId, 1, isLatest)
 
   return (
-    <div className="container space-y-4">
-      <h1 className="text-2xl font-semibold md:text-3xl">{sourceId}</h1>
+    <PageLayout pageTitle={sourceId}>
       <div className="flex justify-between">
         <div className="relative w-full max-w-md">
           <form>
@@ -70,7 +70,7 @@ async function SourcePage({ params, searchParams }: SourcePageProps) {
           query={q}
         />
       </div>
-    </div>
+    </PageLayout>
   )
 }
 

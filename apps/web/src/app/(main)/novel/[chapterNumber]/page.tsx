@@ -1,4 +1,5 @@
 import { GoBack } from '@/components/go-back'
+import { PageLayout } from '@/components/page-layout'
 import Spinner from '@/components/spinner'
 import { getChapterFromDatabase } from '@/lib/actions/chapters'
 import { BottomChapterSection } from './_components/bottom-chapter-section'
@@ -52,11 +53,15 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
   const sourceId = selectedChapter.novel.sourceId
 
   return (
-    <div className="container relative flex h-auto flex-col items-center">
-      <div className="mb-4 self-start">
-        <GoBack href={`/novel?sourceId=${sourceId}&novelUrl=${novelUrl}`} />
-      </div>
-      <div className="h-full max-w-3xl">
+    <PageLayout
+      pageTitle={
+        <div className="flex items-center gap-4">
+          <GoBack href={`/novel?sourceId=${sourceId}&novelUrl=${novelUrl}`} />
+          <h1>{selectedChapter.title}</h1>
+        </div>
+      }
+    >
+      <div className="mx-auto h-full max-w-3xl px-8">
         <Suspense fallback={<Spinner size={48} />}>
           <ChapterContent sourceId={sourceId} chapter={selectedChapter} />
         </Suspense>
@@ -65,7 +70,7 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
         novelId={novelId}
         currentChapterNumber={chapterNumber}
       />
-    </div>
+    </PageLayout>
   )
 }
 

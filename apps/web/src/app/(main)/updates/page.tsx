@@ -1,3 +1,4 @@
+import { PageLayout } from '@/components/page-layout'
 import { getUpdatedChapters } from '@/lib/actions/updates'
 import { UpdatesList } from './_components/update-items-list'
 
@@ -30,8 +31,7 @@ async function UpdatesPage() {
   )
 
   return (
-    <div className="container">
-      <h1 className="mb-4 text-2xl font-semibold md:text-3xl">Updates</h1>
+    <PageLayout pageTitle="Updates">
       <div>
         {groupedByDateArray.length === 0 ? (
           <p>You don&apos;t have any updates yet.</p>
@@ -43,7 +43,7 @@ async function UpdatesPage() {
           </>
         )}
       </div>
-    </div>
+    </PageLayout>
   )
 }
 
