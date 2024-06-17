@@ -1,13 +1,14 @@
 'use server'
 
-import { db } from '@/lib/database'
+import { and, db, eq } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
 import { CreateNewCategoryScehma } from '@/lib/validators/categories'
 import { getUserOrRedirect } from '../auth'
 
-import { categories } from '@yomu/core/database/schema/web'
+import { Category, categories } from '@yomu/core/database/schema/web'
 
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
 
 export const getCategories = async () => {
   const user = await getUserOrRedirect()
@@ -77,3 +78,54 @@ export const createDefaultCategory = async (userId: string) => {
     return false
   }
 }
+
+export const updateCategory = authAction(
+  z.custom<Category>(),
+  async ({ ...category }, { userId }) => {
+    try {
+      await db
+        .update(categories)
+        .set({ ...category })
+        .where(
+          and(eq(categories.userId, userId), eq(categories.id, category.id)),
+        )
+
+      return {
+        success: 'Category updated',
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        error: "Couldn't update category. Please try again",
+      }
+    } finally {
+      revalidatePath('/library')
+      revalidatePath('/settings/categories')
+    }
+  },
+)
+
+export const deleteCategory = authAction(
+  z.object({ categoryId: z.number() }),
+  async ({ categoryId }, { userId }) => {
+    try {
+      await db
+        .delete(categories)
+        .where(
+          and(eq(categories.userId, userId), eq(categories.id, categoryId)),
+        )
+
+      return {
+        success: 'Category deleted',
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        error: "Couldn't delete category. Please try again",
+      }
+    } finally {
+      revalidatePath('/library')
+      revalidatePath('/settings/categories')
+    }
+  },
+)

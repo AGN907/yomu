@@ -19,12 +19,14 @@ import {
   Loader2 as Loader,
   Menu,
   Moon,
+  Pencil,
   Plus,
   RefreshCw,
   Search,
   Settings,
   Sun,
   Tag,
+  Trash,
   User,
 } from 'lucide-react'
 
@@ -49,11 +51,13 @@ export {
   Loader,
   Menu,
   Moon,
+  Pencil,
   Plus,
   RefreshCw,
   Search,
   Settings,
   Sun,
   Tag,
+  Trash,
   User,
 }
