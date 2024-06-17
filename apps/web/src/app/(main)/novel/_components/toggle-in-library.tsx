@@ -1,18 +1,19 @@
 'use client'
 
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/responsive-dialog'
 import { addNovelToLibrary } from '@/lib/actions/novels'
 import { capitalize } from '@/lib/utils'
 
 import { Category } from '@yomu/core/database/schema/web'
 import { Button } from '@yomu/ui/components/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@yomu/ui/components/dialog'
 import { Bookmark } from '@yomu/ui/components/icons'
 import {
   Select,
@@ -25,7 +26,7 @@ import { toast } from '@yomu/ui/components/sonner'
 import { cn } from '@yomu/ui/utils'
 
 import { useAction } from 'next-safe-action/hooks'
-import { useEffect, useOptimistic, useState } from 'react'
+import { useState } from 'react'
 
 type ToggleInLibraryProps = {
   novelId: number
@@ -38,116 +39,96 @@ function ToggleInLibrary({
   inLibrary,
   categories,
 }: ToggleInLibraryProps) {
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [optimisticInLibrary, setOptimisticInLibrary] = useOptimistic(
-    inLibrary,
-    (state) => !state,
-  )
+  const [open, setOpen] = useState(false)
+  const [selectedCategoryId, setSelectedCategoryId] = useState(1)
 
-  const { execute, result } = useAction(addNovelToLibrary)
+  const { execute: toggleNovelInLibrary, status: addStatus } = useAction(
+    addNovelToLibrary,
+    {
+      onSettled(result) {
+        const { data } = result
+        if (data?.success) {
+          toast.success(data.success)
+          setOpen(false)
+        } else if (data?.error) {
+          toast.error(data.error)
+        }
+      },
+      onError(error) {
+        toast.error(error.serverError || error.fetchError)
+      },
+    },
+  )
   const isDefaultCategory = categories.length === 1
 
-  useEffect(() => {
-    if (result && result.data) {
-      if (result.data.error) {
-        toast.error(result.data.error)
-      } else {
-        toast.success(result.data.success)
-        setDialogOpen(false)
-      }
-    }
-  }, [result])
-
-  const handleInLibraryToggle = (inLibrary: boolean, categoryId?: number) => {
-    setOptimisticInLibrary(inLibrary)
-
-    execute({ novelId, inLibrary, categoryId })
-  }
-
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <form
-        action={() => {
+    <ResponsiveDialog open={open} onOpenChange={setOpen}>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => {
           if (inLibrary) {
-            handleInLibraryToggle(false)
+            toggleNovelInLibrary({ novelId, inLibrary: false })
           } else if (!inLibrary && isDefaultCategory) {
-            handleInLibraryToggle(true, 1)
+            toggleNovelInLibrary({ novelId, inLibrary: true, categoryId: 1 })
+          } else {
+            setOpen(true)
           }
         }}
       >
-        <Button
-          variant="outline"
-          size="icon"
-          type={inLibrary || isDefaultCategory ? 'submit' : 'button'}
-          onClick={() =>
-            !inLibrary && !isDefaultCategory && setDialogOpen(true)
-          }
-        >
-          <Bookmark
-            className={cn(
-              'size-6',
-              optimisticInLibrary ? 'fill-yellow-400 stroke-yellow-500' : '',
-            )}
-          />
-          <span className="sr-only">
-            {inLibrary ? 'Remove' : 'Add'} novel from library
-          </span>
-        </Button>
-      </form>
-      <DialogContent>
-        <AddToLibraryForm
-          onAddToLibrary={(formData) => {
-            const categoryId = Number(formData.get('categoryId') as string)
-
-            handleInLibraryToggle(true, categoryId)
-          }}
-          categories={categories}
-          confirm={
-            <DialogFooter>
-              <Button type="submit">Assign</Button>
-            </DialogFooter>
-          }
-        >
-          <DialogHeader>
-            <DialogTitle>Assign novel to category</DialogTitle>
-            <DialogDescription>
-              Add novel to a specific category
-            </DialogDescription>
-          </DialogHeader>
-        </AddToLibraryForm>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-type AddToLibraryFormProps = {
-  children: React.ReactNode
-  onAddToLibrary: (formData: FormData) => void
-  categories: Category[]
-  confirm: React.ReactNode
-}
-function AddToLibraryForm(props: AddToLibraryFormProps) {
-  const { children, onAddToLibrary, categories, confirm } = props
-
-  return (
-    <form action={onAddToLibrary}>
-      {children}
-      <div className="grid gap-4 py-4">
-        <Select name="categoryId" defaultValue="1">
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map((category) => (
-              <SelectItem key={category.id} value={category.id.toString()}>
-                {capitalize(category.name)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      {confirm}
-    </form>
+        <Bookmark
+          className={cn(
+            'size-6',
+            inLibrary ? 'fill-yellow-400 stroke-yellow-500' : '',
+          )}
+        />
+        <span className="sr-only">
+          {inLibrary ? 'Remove' : 'Add'} novel from library
+        </span>
+      </Button>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>
+            Assign novel to category
+          </ResponsiveDialogTitle>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogBody>
+          <div className="grid gap-4">
+            <Select
+              onValueChange={(value) => setSelectedCategoryId(parseInt(value))}
+              defaultValue={`${selectedCategoryId}`}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={`${category.id}`}>
+                    {capitalize(category.name)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              onClick={() =>
+                toggleNovelInLibrary({
+                  novelId,
+                  inLibrary: true,
+                  categoryId: selectedCategoryId,
+                })
+              }
+            >
+              {addStatus === 'executing' ? 'Adding...' : 'Add'}
+            </Button>
+          </div>
+        </ResponsiveDialogBody>
+        <ResponsiveDialogFooter>
+          <ResponsiveDialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </ResponsiveDialogClose>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }
 
