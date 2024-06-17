@@ -10,10 +10,10 @@ type FormErrorsFieldProps = {
 
 function FormErrorsField({ result }: FormErrorsFieldProps) {
   return (
-    <>
+    <div>
       {result?.validationErrors ? (
         <ul className="bg-destructive/10 text-destructive list-disc space-y-1 rounded-lg border p-2 text-[0.8rem] font-medium">
-          {Object.values(result.validationErrors).map((err, index) => (
+          {Object.values(result.validationErrors).flatMap((err, index) => (
             <li className="ml-4" key={index}>
               {err}
             </li>
@@ -24,7 +24,7 @@ function FormErrorsField({ result }: FormErrorsFieldProps) {
           {result.data.error}
         </p>
       ) : null}
-    </>
+    </div>
   )
 }
 
