@@ -14,10 +14,6 @@ const SIDEBARITEMS = [
     name: 'Categories',
     path: '/settings/categories',
   },
-  {
-    name: 'Preferences',
-    path: '/settings/preferences',
-  },
 ]
 
 function SettingsSidebar() {
