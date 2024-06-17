@@ -67,6 +67,12 @@ export const novels = sqliteTable('novels', {
 
 export const chapters = sqliteTable('chapters', {
   id: integer('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
   novelId: integer('novel_id')
     .notNull()
     .references(() => novels.id, {
@@ -82,12 +88,13 @@ export const chapters = sqliteTable('chapters', {
     .notNull()
     .default(false),
   releaseDate: integer('release_date', { mode: 'timestamp' }).notNull(),
+  // TODO: use for tracking chapter progress
   progress: integer('progress').notNull().default(0),
 })
 
 export const history = sqliteTable('history', {
   id: integer('id').primaryKey(),
-  userId: integer('user_id')
+  userId: text('user_id')
     .notNull()
     .references(() => users.id, {
       onDelete: 'cascade',
@@ -116,7 +123,7 @@ export const history = sqliteTable('history', {
 
 export const updatedChapters = sqliteTable('updated_chapters', {
   id: integer('id').primaryKey(),
-  userId: integer('user_id')
+  userId: text('user_id')
     .notNull()
     .references(() => users.id, {
       onDelete: 'cascade',
@@ -144,7 +151,6 @@ export const updatedChapters = sqliteTable('updated_chapters', {
 
 export const userRelations = relations(users, ({ many }) => ({
   novels: many(novels),
-  categories: many(categories),
   history: many(history),
   updatedChapters: many(updatedChapters),
 }))
