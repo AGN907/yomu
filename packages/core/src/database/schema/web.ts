@@ -23,13 +23,15 @@ export const sessions = sqliteTable('sessions', {
 
 export const categories = sqliteTable('categories', {
   id: integer('id').primaryKey(),
-  name: text('name').notNull(),
+  name: text('name').unique().notNull(),
   userId: text('user_id')
     .references(() => users.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     })
     .notNull(),
+  // TODO: use order for drag and drop in categories page and sorting in library
+  order: integer('order').notNull().default(0),
 })
 
 export const novels = sqliteTable('novels', {
@@ -80,10 +82,17 @@ export const chapters = sqliteTable('chapters', {
     .notNull()
     .default(false),
   releaseDate: integer('release_date', { mode: 'timestamp' }).notNull(),
+  progress: integer('progress').notNull().default(0),
 })
 
 export const history = sqliteTable('history', {
   id: integer('id').primaryKey(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
   novelId: integer('novel_id')
     .notNull()
     .unique()
@@ -107,6 +116,12 @@ export const history = sqliteTable('history', {
 
 export const updatedChapters = sqliteTable('updated_chapters', {
   id: integer('id').primaryKey(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
   chapterId: integer('chapter_id')
     .notNull()
     .references(() => chapters.id, {
@@ -129,13 +144,20 @@ export const updatedChapters = sqliteTable('updated_chapters', {
 
 export const userRelations = relations(users, ({ many }) => ({
   novels: many(novels),
+  categories: many(categories),
+  history: many(history),
+  updatedChapters: many(updatedChapters),
 }))
 
 export const novelRelations = relations(novels, ({ many, one }) => ({
-  chapters: many(chapters),
   user: one(users, {
     fields: [novels.userId],
     references: [users.id],
+  }),
+  chapters: many(chapters),
+  latestRead: one(history, {
+    fields: [novels.id],
+    references: [history.novelId],
   }),
 }))
 
@@ -144,9 +166,17 @@ export const chapterRelations = relations(chapters, ({ one }) => ({
     fields: [chapters.novelId],
     references: [novels.id],
   }),
+  history: one(history, {
+    fields: [chapters.id],
+    references: [history.chapterId],
+  }),
 }))
 
 export const historyRelations = relations(history, ({ one }) => ({
+  user: one(users, {
+    fields: [history.userId],
+    references: [users.id],
+  }),
   novel: one(novels, {
     fields: [history.novelId],
     references: [novels.id],
@@ -160,6 +190,10 @@ export const historyRelations = relations(history, ({ one }) => ({
 export const updatedChaptersRelations = relations(
   updatedChapters,
   ({ one }) => ({
+    user: one(users, {
+      fields: [updatedChapters.userId],
+      references: [users.id],
+    }),
     novel: one(novels, {
       fields: [updatedChapters.novelId],
       references: [novels.id],
