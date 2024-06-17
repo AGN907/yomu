@@ -24,18 +24,18 @@ export const getCategories = async () => {
 export const createCategory = authAction(
   CreateNewCategoryScehma,
   async ({ name }, { userId }) => {
-    const categoryExist = await db.query.categories.findFirst({
-      where: (table, { and, eq }) =>
-        and(eq(table.userId, userId), eq(table.name, name)),
-    })
-
-    if (categoryExist) {
-      return {
-        error: 'Category already exists',
-      }
-    }
-
     try {
+      const categoryExist = await db.query.categories.findFirst({
+        where: (table, { and, eq }) =>
+          and(eq(table.userId, userId), eq(table.name, name)),
+      })
+
+      if (categoryExist) {
+        return {
+          error: 'Category already exists',
+        }
+      }
+
       await db.insert(categories).values({
         name: name.trim().toLowerCase(),
         userId,
@@ -47,10 +47,9 @@ export const createCategory = authAction(
         success: 'Category created',
       }
     } catch (error) {
-      if (error instanceof Error) {
-        return {
-          error: "Couldn't create category. Please try again",
-        }
+      console.error(error)
+      return {
+        error: "Couldn't create category. Please try again",
       }
     }
   },

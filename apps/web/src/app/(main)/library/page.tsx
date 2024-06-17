@@ -1,6 +1,5 @@
 import { PageLayout } from '@/components/page-layout'
 import { getCategories } from '@/lib/actions/categories'
-import { CreateNewCategory } from './_components/create-new-category'
 import { LibrarySection } from './_components/library-section'
 
 export const metadata = {
@@ -15,7 +14,6 @@ async function LibraryPage() {
       pageTitle={
         <div className="flex items-center gap-4">
           <h1>Library</h1>
-          <CreateNewCategory />
         </div>
       }
     >
