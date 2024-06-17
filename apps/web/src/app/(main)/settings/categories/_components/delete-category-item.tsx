@@ -25,11 +25,17 @@ function DeleteCategoryItem({ categoryId }: { categoryId: number }) {
   const { execute: deleteCategoryItem, status: deleteStatus } = useAction(
     deleteCategory,
     {
-      onSuccess: (result) => {
+      onSettled(result) {
+        const { data } = result
+        if (data?.error) {
+          toast.error(data.error)
+        }
+      },
+      onSuccess(result) {
         toast.info(result.success)
         setOpen(false)
       },
-      onError: (error) => {
+      onError(error) {
         toast.error(error.serverError || error.fetchError)
       },
     },

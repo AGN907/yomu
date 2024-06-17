@@ -7,7 +7,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export async function RecentChapters() {
-  const recentChapters = await getLatestUpdatedChapters(5)
+  const { data: recentChapters = [] } = await getLatestUpdatedChapters({
+    limit: 5,
+  })
 
   const isRecentChaptersEmpty = recentChapters.length === 0
 

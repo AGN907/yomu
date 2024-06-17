@@ -8,11 +8,11 @@ function useLibraryQuery(initialCategoryId: number) {
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ['library', categoryId],
-    queryFn: () => getNovelsByCategory(categoryId),
+    queryFn: () => getNovelsByCategory({ categoryId }),
   })
 
   return {
-    data,
+    data: data?.data,
     isLoading,
     isFetching,
     categoryId,

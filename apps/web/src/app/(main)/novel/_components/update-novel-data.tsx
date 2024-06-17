@@ -1,33 +1,57 @@
 'use client'
 
-import { SubmitButton } from '@/components/submit-button'
+import Spinner from '@/components/spinner'
 import { updateNovel } from '@/lib/actions/updates'
 
+import { Button } from '@yomu/ui/components/button'
 import { RefreshCw } from '@yomu/ui/components/icons'
 import { toast } from '@yomu/ui/components/sonner'
+
+import { useAction } from 'next-safe-action/hooks'
 
 type UpdateNovelDataProps = {
   novelId: number
 }
 
 function UpdateNovelData({ novelId }: UpdateNovelDataProps) {
-  const handleNovelUpdate = async () => {
-    const actionPromise = updateNovel(novelId)
-
-    toast.promise(actionPromise, {
-      loading: 'Updating novel...',
-      success: (data) => data?.success,
-      error: (err) => err.error,
-    })
-  }
+  const { execute: updateNovelData, status: updateNovelStatus } = useAction(
+    updateNovel,
+    {
+      onExecute: () => {
+        toast('Updating novel...', {
+          id: 'update-novel-data',
+        })
+      },
+      onSettled: (result) => {
+        const { data } = result
+        if (data?.error) {
+          toast.error(data.error)
+        }
+      },
+      onSuccess: (data) => {
+        toast.dismiss('update-novel-data')
+        toast.success(data?.success)
+      },
+      onError: (err) => {
+        toast.dismiss('update-novel-data')
+        toast.error(err.fetchError || err.serverError)
+      },
+    },
+  )
 
   return (
-    <form action={handleNovelUpdate}>
-      <SubmitButton size="icon" variant="outline">
-        <span className="sr-only">Update novel</span>
+    <Button
+      onClick={() => updateNovelData({ novelId })}
+      size="icon"
+      variant="outline"
+    >
+      <span className="sr-only">Update novel</span>
+      {updateNovelStatus === 'executing' ? (
+        <Spinner className="size-6" />
+      ) : (
         <RefreshCw className="size-6" />
-      </SubmitButton>
-    </form>
+      )}
+    </Button>
   )
 }
 

@@ -11,7 +11,10 @@ type ChapterContentProps = {
 
 async function ChapterContent({ sourceId, chapter }: ChapterContentProps) {
   const { id, novelId, url } = chapter
-  const fetchedChapter = await fetchChapterContent(sourceId, url)
+  const { data: fetchedChapter } = await fetchChapterContent({
+    sourceId,
+    chapterUrl: url,
+  })
   if (!fetchedChapter) {
     return (
       <div className="space-y-4">
@@ -33,7 +36,7 @@ async function ChapterContent({ sourceId, chapter }: ChapterContentProps) {
 
   const content = fetchedChapter.content
 
-  await addChapterToHistory(novelId, id)
+  await addChapterToHistory({ novelId, chapterId: id })
 
   return (
     <div>

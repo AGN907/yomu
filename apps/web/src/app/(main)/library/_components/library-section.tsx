@@ -10,15 +10,21 @@ import { Category } from '@yomu/core/database/schema/web'
 import { ScrollArea, ScrollBar } from '@yomu/ui/components/scroll-area'
 
 type LibrarySectionProps = {
-  initialCategoryId: number
   initialCategories: Category[]
 }
 
 function LibrarySection(props: LibrarySectionProps) {
-  const { initialCategoryId, initialCategories } = props
+  const { initialCategories } = props
 
-  const { data, isLoading, isFetching, categoryId, setCategoryId } =
-    useLibraryQuery(initialCategoryId)
+  const defaultCategoryId = 1
+
+  const {
+    data = [],
+    isLoading,
+    isFetching,
+    categoryId,
+    setCategoryId,
+  } = useLibraryQuery(defaultCategoryId)
 
   return (
     <>
@@ -35,10 +41,16 @@ function LibrarySection(props: LibrarySectionProps) {
         </ScrollArea>
       </div>
       {isLoading || isFetching ? <Spinner size={40} /> : null}
-      <div className="grid grid-cols-1 place-items-center gap-8 sm:grid-cols-2 md:place-items-start lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-        {}
-        {data ? <LibraryList novels={data} /> : null}
-      </div>
+      {}
+      {data.length > 0 ? (
+        <div className="grid grid-cols-1 place-items-center gap-8 sm:grid-cols-2 md:place-items-start lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+          <LibraryList novels={data} />
+        </div>
+      ) : (
+        <div className="flex items-center justify-center">
+          <h3 className="text-xl font-medium">Category is empty</h3>
+        </div>
+      )}
     </>
   )
 }

@@ -2,11 +2,11 @@
 
 import { NovelCard } from '@/components/novel-card'
 import { fetchNovelsByFilter, fetchNovelsByQuery } from '@/lib/actions/novels'
+import { LoadMore } from './load-more'
 
 import type { NovelItem } from '@yomu/sources/types'
 
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { LoadMore } from './load-more'
 
 type NovelInfiniteListProps = {
   initialNovels: NovelItem[]
@@ -60,18 +60,30 @@ function useNovelsInfiniteQuery(options: NovelsQueryOptions) {
   const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['novels', sourceId, isLatest, query],
-      queryFn: ({ pageParam }) =>
-        query
-          ? fetchNovelsByQuery(sourceId, pageParam, query)
-          : fetchNovelsByFilter(sourceId, pageParam, isLatest),
+      queryFn: async ({ pageParam }) => {
+        const { data } = query
+          ? await fetchNovelsByQuery({ sourceId, page: pageParam, query })
+          : await fetchNovelsByFilter({
+              sourceId,
+              page: pageParam,
+              latest: isLatest,
+            })
+
+        return {
+          novels: data?.novels || [],
+          hasNextPage: data?.hasNextPage || false,
+        }
+      },
       getNextPageParam: (lastPage, _, currentPage) =>
-        lastPage.hasNextPage ? currentPage + 1 : undefined,
+        lastPage?.hasNextPage ? currentPage + 1 : undefined,
       initialPageParam: 2,
       initialData: {
         pages: [{ novels: initialNovels, hasNextPage: true }],
         pageParams: [1],
       },
       staleTime: 1000 * 60 * 5, // 5 minutes
+      refetchOnWindowFocus: false,
+      retry: 3,
     })
 
   return {

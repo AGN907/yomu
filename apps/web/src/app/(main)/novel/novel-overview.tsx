@@ -21,7 +21,7 @@ type NovelOverviewProps = {
 }
 
 async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
-  const novelInfo = await getNovelInfo(sourceId, novelUrl)
+  const { data: novelInfo } = await getNovelInfo({ sourceId, url: novelUrl })
   const categories = await getCategories()
 
   if (!novelInfo) {

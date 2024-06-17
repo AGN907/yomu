@@ -20,15 +20,15 @@ export async function generateMetadata({
   params,
   searchParams,
 }: ChapterPageProps) {
-  const { chapterNumber } = params
-  const { chapterId } = searchParams
+  const { chapterNumber: chapterNumberString } = params
+  const { chapterId: chapterIdString } = searchParams
 
-  const selectedChapter = await getChapterFromDatabase(
-    parseInt(chapterId),
-    parseInt(chapterNumber),
-  )
+  const chapterNumber = parseInt(chapterNumberString)
+  const chapterId = parseInt(chapterIdString)
 
-  const novelTitle = selectedChapter?.novel?.title || ''
+  const { data } = await getChapterFromDatabase({ chapterId, chapterNumber })
+
+  const novelTitle = data?.novel?.title || ''
 
   return {
     title: `Chapter ${chapterNumber} ${novelTitle ? `- ${novelTitle}` : ''} - Yomu`,
@@ -42,28 +42,28 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
   const chapterNumber = parseInt(chapterNumberString)
   const chapterId = parseInt(chapterIdString)
 
-  const selectedChapter = await getChapterFromDatabase(chapterId, chapterNumber)
+  const { data } = await getChapterFromDatabase({ chapterId, chapterNumber })
 
-  if (!selectedChapter) {
+  if (!data) {
     throw new Error('Chapter not found')
   }
 
-  const novelId = selectedChapter.novel.id
-  const novelUrl = selectedChapter.novel.url
-  const sourceId = selectedChapter.novel.sourceId
+  const novelId = data.novel.id
+  const novelUrl = data.novel.url
+  const sourceId = data.novel.sourceId
 
   return (
     <PageLayout
       pageTitle={
         <div className="flex items-center gap-4">
           <GoBack href={`/novel?sourceId=${sourceId}&novelUrl=${novelUrl}`} />
-          <h1>{selectedChapter.title}</h1>
+          <h1>{data.title}</h1>
         </div>
       }
     >
       <div className="mx-auto h-full max-w-3xl px-8">
         <Suspense fallback={<Spinner size={48} />}>
-          <ChapterContent sourceId={sourceId} chapter={selectedChapter} />
+          <ChapterContent sourceId={sourceId} chapter={data} />
         </Suspense>
       </div>
       <BottomChapterSection

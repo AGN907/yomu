@@ -9,28 +9,28 @@ import { Label } from '@yomu/ui/components/label'
 import { toast } from '@yomu/ui/components/sonner'
 
 import { useAction } from 'next-safe-action/hooks'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 
 function PasswordFormCard() {
   const formRef = useRef<HTMLFormElement>(null)
-  const { execute, result } = useAction(updatePassword)
-
-  const handleSubmit = (formData: FormData) => {
-    const currentPassword = formData.get('current-password') as string
-    const newPassword = formData.get('new-password') as string
-
-    execute({ currentPassword, newPassword })
-    formRef.current?.reset()
-  }
-
-  useEffect(() => {
-    if (result && result.data && result.data.success) {
-      toast.success(result.data.success)
-    }
-  }, [result])
+  const { execute: updatePass, result } = useAction(updatePassword, {
+    onSuccess(result) {
+      toast.error(result.success)
+    },
+  })
 
   return (
-    <form ref={formRef} action={handleSubmit} className="space-y-8">
+    <form
+      ref={formRef}
+      action={(formData) => {
+        const currentPassword = formData.get('current-password') as string
+        const newPassword = formData.get('new-password') as string
+
+        updatePass({ currentPassword, newPassword })
+        formRef.current?.reset()
+      }}
+      className="space-y-8"
+    >
       <CardContainer
         title="Update password"
         description="Change your password"

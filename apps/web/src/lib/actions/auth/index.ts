@@ -144,14 +144,6 @@ export const updateUsername = authAction(
   UpdateUsernameSchema,
   async ({ username }, { userId }) => {
     try {
-      const currentUser = await db.query.users.findFirst({
-        where: (table, { eq }) => eq(table.id, userId),
-      })
-
-      if (!currentUser) {
-        throw new Error('User not found, make sure you are logged in')
-      }
-
       const existingUser = await db.query.users.findFirst({
         where: (table, { and, not, eq }) =>
           and(
@@ -188,10 +180,13 @@ export const updatePassword = authAction(
     try {
       const currentUser = await db.query.users.findFirst({
         where: (table, { eq }) => eq(table.id, userId),
+        columns: {
+          hashedPassword: true,
+        },
       })
 
       if (!currentUser) {
-        throw new Error('User not found, make sure you are logged in')
+        redirect('/login')
       }
 
       const validPassword = await verify(

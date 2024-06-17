@@ -18,7 +18,7 @@ async function LibraryPage() {
       }
     >
       <div className="flex flex-col space-y-8">
-        <LibrarySection initialCategoryId={1} initialCategories={categories} />
+        <LibrarySection initialCategories={categories} />
       </div>
     </PageLayout>
   )

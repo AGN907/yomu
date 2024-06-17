@@ -34,9 +34,10 @@ async function SourcePage({ params, searchParams }: SourcePageProps) {
   const { filter, q } = searchParams
   const isLatest = (filter || 'latest') === 'latest'
 
-  const { novels } = q
-    ? await fetchNovelsByQuery(sourceId, 1, q)
-    : await fetchNovelsByFilter(sourceId, 1, isLatest)
+  const page = 1
+  const { data } = q
+    ? await fetchNovelsByQuery({ sourceId, page, query: q })
+    : await fetchNovelsByFilter({ sourceId, page, latest: isLatest })
 
   return (
     <PageLayout pageTitle={sourceId}>
@@ -64,7 +65,7 @@ async function SourcePage({ params, searchParams }: SourcePageProps) {
       </div>
       <div className="mx-auto w-full max-w-7xl pt-8">
         <NovelInfiniteList
-          initialNovels={novels}
+          initialNovels={data?.novels || []}
           sourceId={sourceId}
           isLatest={isLatest}
           query={q}

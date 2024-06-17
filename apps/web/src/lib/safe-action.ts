@@ -1,4 +1,5 @@
 import { createSafeActionClient } from 'next-safe-action'
+import { redirect } from 'next/navigation'
 import { validateRequest } from './auth/validate-request'
 
 export const action = createSafeActionClient()
@@ -8,7 +9,7 @@ export const authAction = createSafeActionClient({
     const { user } = await validateRequest()
 
     if (!user) {
-      throw new Error('Unauthorized')
+      redirect('/login')
     }
 
     return { userId: user.id }
