@@ -23,7 +23,7 @@ export const sessions = sqliteTable('sessions', {
 
 export const categories = sqliteTable('categories', {
   id: integer('id').primaryKey(),
-  name: text('name').unique().notNull(),
+  name: text('name').notNull(),
   userId: text('user_id')
     .references(() => users.id, {
       onDelete: 'cascade',
