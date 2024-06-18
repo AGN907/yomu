@@ -42,8 +42,7 @@ function SignupForm() {
             <Input
               id="username"
               type="text"
-              placeholder="TheSleepyCat"
-              pattern="^[a-zA-Z0-9_-]{4,31}$"
+              placeholder="John"
               name="username"
               required
             />

@@ -51,12 +51,7 @@ function LoginForm() {
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
             </div>
-            <PasswordInput
-              id="password"
-              name="password"
-              placeholder="Your strong password"
-              required
-            />
+            <PasswordInput id="password" name="password" required />
           </div>
           <FormErrorsField result={result} />
           <SubmitButton type="submit" className="w-full">
