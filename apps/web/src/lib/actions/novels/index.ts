@@ -184,7 +184,11 @@ export const addNovelToLibrary = authAction(
     try {
       const [{ isAdded }] = await db
         .update(novels)
-        .set({ inLibrary, updatedAt: new Date(), categoryId })
+        .set({
+          inLibrary,
+          updatedAt: new Date(),
+          categoryId,
+        })
         .where(and(eq(novels.userId, userId), eq(novels.id, novelId)))
         .returning({ isAdded: novels.inLibrary })
 

@@ -59,7 +59,7 @@ export const createDefaultCategory = async (userId: string) => {
   try {
     const categoryExist = await db.query.categories.findFirst({
       where: (table, { and, eq }) =>
-        and(eq(table.userId, userId), eq(table.name, 'default')),
+        and(eq(table.userId, userId), eq(table.default, true)),
     })
 
     if (categoryExist) {
@@ -69,6 +69,7 @@ export const createDefaultCategory = async (userId: string) => {
     await db.insert(categories).values({
       name: 'default',
       userId,
+      default: true,
     })
 
     return true
@@ -87,7 +88,7 @@ export const updateCategory = authAction(
         .set({ ...category })
         .where(
           and(
-            not(eq(categories.name, 'default')),
+            not(eq(categories.default, true)),
             eq(categories.userId, userId),
             eq(categories.id, category.id),
           ),
@@ -115,7 +116,7 @@ export const deleteCategory = authAction(
       await db.delete(categories).where(
         and(
           // Don't delete default category
-          not(eq(categories.name, 'default')),
+          not(eq(categories.default, true)),
           eq(categories.userId, userId),
           eq(categories.id, categoryId),
         ),

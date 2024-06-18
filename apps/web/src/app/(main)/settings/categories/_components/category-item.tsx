@@ -10,7 +10,7 @@ type CategoryItemProps = {
 }
 
 function CategoryItem({ category }: CategoryItemProps) {
-  const isDefaultCategory = category.name === 'default'
+  const isDefaultCategory = category.default
 
   return (
     <div className="grid rounded border px-4 py-2">

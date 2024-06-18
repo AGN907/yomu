@@ -40,7 +40,13 @@ function ToggleInLibrary({
   categories,
 }: ToggleInLibraryProps) {
   const [open, setOpen] = useState(false)
-  const [selectedCategoryId, setSelectedCategoryId] = useState(1)
+  const defaultCategory = categories.find(
+    (category) => category.default,
+  ) as Category
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    defaultCategory.id,
+  )
 
   const { execute: toggleNovelInLibrary, status: addStatus } = useAction(
     addNovelToLibrary,
@@ -70,7 +76,11 @@ function ToggleInLibrary({
           if (inLibrary) {
             toggleNovelInLibrary({ novelId, inLibrary: false })
           } else if (!inLibrary && isDefaultCategory) {
-            toggleNovelInLibrary({ novelId, inLibrary: true, categoryId: 1 })
+            toggleNovelInLibrary({
+              novelId,
+              inLibrary: true,
+              categoryId: defaultCategory.id,
+            })
           } else {
             setOpen(true)
           }
@@ -95,7 +105,7 @@ function ToggleInLibrary({
         <ResponsiveDialogBody>
           <div className="grid gap-4">
             <Select
-              onValueChange={(value) => setSelectedCategoryId(parseInt(value))}
+              onValueChange={(value) => setSelectedCategoryId(Number(value))}
               defaultValue={`${selectedCategoryId}`}
             >
               <SelectTrigger>
