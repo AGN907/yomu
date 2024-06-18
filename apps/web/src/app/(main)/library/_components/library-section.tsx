@@ -1,15 +1,19 @@
 'use client'
 
 import Spinner from '@/components/spinner'
-import { LibraryCategories } from './library-categories'
+import { getNovelsByCategory } from '@/lib/actions/novels'
+import { capitalize } from '@/lib/utils'
 import { LibraryList } from './library-list'
 import { UpdateCategoryNovels } from './update-category-novels'
-import { useLibraryQuery } from './use-library-query'
 
 import { Category } from '@yomu/core/database/schema/web'
 import { ScrollArea, ScrollBar } from '@yomu/ui/components/scroll-area'
+import { ToggleGroup, ToggleGroupItem } from '@yomu/ui/components/toggle-group'
 
+import { useAction } from 'next-safe-action/hooks'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 
 type LibrarySectionProps = {
   initialCategories: Category[]
@@ -17,6 +21,11 @@ type LibrarySectionProps = {
 
 function LibrarySection(props: LibrarySectionProps) {
   const { initialCategories } = props
+  const {
+    execute: getNovels,
+    status: getNovelsStatus,
+    result: { data = [] },
+  } = useAction(getNovelsByCategory)
 
   const searchParams = useSearchParams()
   const category = searchParams.get('categoryId')
@@ -24,34 +33,49 @@ function LibrarySection(props: LibrarySectionProps) {
   const defaultCategory = initialCategories.find((c) => c.default) as Category
   const defaultCategoryId = Number(category) || defaultCategory.id
 
-  const {
-    data = [],
-    isLoading,
-    isFetching,
-    categoryId,
-    setCategoryId,
-  } = useLibraryQuery(defaultCategoryId)
+  useEffect(() => {
+    getNovels({ categoryId: defaultCategoryId })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const isPending = isLoading || isFetching
+  const isPending =
+    getNovelsStatus === 'executing' || getNovelsStatus === 'idle'
 
   return (
     <>
       <div className="flex flex-row-reverse items-center gap-2 whitespace-nowrap md:flex-row">
-        <UpdateCategoryNovels categoryId={categoryId} />
+        <UpdateCategoryNovels categoryId={defaultCategoryId} />
         <ScrollArea>
           <div className="py-4">
-            <LibraryCategories
-              categories={initialCategories}
-              defaultCategoryId={defaultCategoryId}
-              selectedCategoryId={categoryId}
-              setCategoryId={setCategoryId}
-            />
+            <ToggleGroup
+              variant="outline"
+              size="sm"
+              type="single"
+              defaultValue={`${defaultCategoryId}`}
+              onValueChange={(value) =>
+                value && getNovels({ categoryId: Number(value) })
+              }
+            >
+              {initialCategories.map((category) => (
+                <ToggleGroupItem
+                  key={category.id}
+                  value={`${category.id}`}
+                  aria-checked={defaultCategoryId === category.id}
+                  data-state={defaultCategoryId === category.id ? 'on' : 'off'}
+                  asChild
+                >
+                  <Link href={{ query: { categoryId: category.id } }}>
+                    {capitalize(category.name)}
+                  </Link>
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
           </div>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
       {isPending ? <Spinner size={40} /> : null}
-      {!isPending && data.length === 0 ? (
+      {!isPending && data?.length === 0 ? (
         <div className="flex items-center justify-center">
           <h3 className="text-xl font-medium">Category is empty</h3>
         </div>
