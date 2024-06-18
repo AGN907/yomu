@@ -1,6 +1,6 @@
 'use server'
 
-import { and, db, eq } from '@/lib/database'
+import { and, db, eq, not } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
 import { CreateNewCategoryScehma } from '@/lib/validators/categories'
 import { getUserOrRedirect } from '../auth'
@@ -86,7 +86,11 @@ export const updateCategory = authAction(
         .update(categories)
         .set({ ...category })
         .where(
-          and(eq(categories.userId, userId), eq(categories.id, category.id)),
+          and(
+            not(eq(categories.name, 'default')),
+            eq(categories.userId, userId),
+            eq(categories.id, category.id),
+          ),
         )
 
       return {
@@ -108,11 +112,14 @@ export const deleteCategory = authAction(
   z.object({ categoryId: z.number() }),
   async ({ categoryId }, { userId }) => {
     try {
-      await db
-        .delete(categories)
-        .where(
-          and(eq(categories.userId, userId), eq(categories.id, categoryId)),
-        )
+      await db.delete(categories).where(
+        and(
+          // Don't delete default category
+          not(eq(categories.name, 'default')),
+          eq(categories.userId, userId),
+          eq(categories.id, categoryId),
+        ),
+      )
 
       return {
         success: 'Category deleted',
