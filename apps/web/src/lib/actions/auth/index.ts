@@ -128,7 +128,7 @@ export const logout = async () => {
     sessionCookie.attributes,
   )
 
-  return redirect('/login')
+  return redirect('/log-in')
 }
 
 export const getUserOrRedirect = async () => {

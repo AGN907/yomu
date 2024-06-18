@@ -1,5 +1,6 @@
 'use client'
 
+import { SubmitButton } from '@/components/submit-button'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { logout } from '@/lib/actions/auth'
 
@@ -107,9 +108,9 @@ function NavigationSidebar() {
         </nav>
         <div className="mt-auto flex gap-4">
           <form action={logout} className="flex-grow">
-            <Button className="w-full" type="submit">
+            <SubmitButton className="w-full" type="submit">
               Log out
-            </Button>
+            </SubmitButton>
           </form>
           <ThemeToggle />
         </div>
