@@ -30,6 +30,7 @@ export const categories = sqliteTable('categories', {
       onUpdate: 'cascade',
     })
     .notNull(),
+  default: integer('default', { mode: 'boolean' }).notNull().default(false),
   // TODO: use order for drag and drop in categories page and sorting in library
   order: integer('order').notNull().default(0),
 })
