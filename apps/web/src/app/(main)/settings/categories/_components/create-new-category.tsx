@@ -29,13 +29,12 @@ function CreateNewCategory() {
     {
       onSettled(result) {
         const { data } = result
-        if (data?.error) {
+        if (data?.success) {
+          toast.success(data.success)
+          setOpen(false)
+        } else if (data?.error) {
           toast.error(data.error)
         }
-      },
-      onSuccess(result) {
-        toast.success(result.success)
-        setOpen(false)
       },
       onError(error) {
         toast.error(error.serverError || error.fetchError)

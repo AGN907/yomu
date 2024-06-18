@@ -27,13 +27,12 @@ function DeleteCategoryItem({ categoryId }: { categoryId: number }) {
     {
       onSettled(result) {
         const { data } = result
-        if (data?.error) {
+        if (data?.success) {
+          toast.info(data.success)
+          setOpen(false)
+        } else if (data?.error) {
           toast.error(data.error)
         }
-      },
-      onSuccess(result) {
-        toast.info(result.success)
-        setOpen(false)
       },
       onError(error) {
         toast.error(error.serverError || error.fetchError)
