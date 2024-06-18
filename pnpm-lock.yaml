@@ -145,6 +145,9 @@ importers:
       '@types/better-sqlite3':
         specifier: ^7.6.10
         version: 7.6.10
+      autoprefixer:
+        specifier: ^10.4.19
+        version: 10.4.19(postcss@8.4.38)
       drizzle-kit:
         specifier: ^0.21.2
         version: 0.21.2
