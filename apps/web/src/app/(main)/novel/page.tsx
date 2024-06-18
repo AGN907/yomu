@@ -2,6 +2,8 @@ import { db } from '@/lib/database'
 import { NovelSkeleton } from './_components/novel-skeleton'
 import { NovelOverview } from './novel-overview'
 
+import { GoBack } from '@/components/go-back'
+import { PageLayout } from '@/components/page-layout'
 import { Suspense } from 'react'
 
 type NovelPageProps = {
@@ -28,9 +30,17 @@ async function NovelPage({ searchParams }: NovelPageProps) {
   const { sourceId, novelUrl } = searchParams
 
   return (
-    <Suspense fallback={<NovelSkeleton />}>
-      <NovelOverview sourceId={sourceId} novelUrl={novelUrl} />
-    </Suspense>
+    <PageLayout
+      pageTitle={
+        <div className="flex items-center">
+          <GoBack />
+        </div>
+      }
+    >
+      <Suspense fallback={<NovelSkeleton />}>
+        <NovelOverview sourceId={sourceId} novelUrl={novelUrl} />
+      </Suspense>
+    </PageLayout>
   )
 }
 
