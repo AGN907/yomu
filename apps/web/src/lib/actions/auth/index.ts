@@ -186,7 +186,7 @@ export const updatePassword = authAction(
       })
 
       if (!currentUser) {
-        redirect('/login')
+        redirect('/log-in')
       }
 
       const validPassword = await verify(

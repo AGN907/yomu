@@ -9,7 +9,7 @@ export const authAction = createSafeActionClient({
     const { user } = await validateRequest()
 
     if (!user) {
-      redirect('/login')
+      redirect('/log-in')
     }
 
     return { userId: user.id }
