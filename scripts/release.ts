@@ -16,13 +16,9 @@ import * as yargs from 'yargs'
       default: true,
     })
     .option('verbose', {
+      alias: 'v',
       description:
         'Whether or not to enable verbose logging, defaults to false',
-      type: 'boolean',
-      default: false,
-    })
-    .option('first-release', {
-      description: 'Whether or not this is the first release',
       type: 'boolean',
       default: false,
     })
@@ -31,19 +27,17 @@ import * as yargs from 'yargs'
   const { workspaceVersion, projectsVersionData } = await releaseVersion({
     specifier: options.version,
     dryRun: options.dryRun,
-    verbose: options.verbose,
-    firstRelease: options.firstRelease,
     gitCommit: false,
-    stageChanges: true,
+    verbose: options.verbose,
   })
 
   await releaseChangelog({
     versionData: projectsVersionData,
+    version: workspaceVersion,
     dryRun: options.dryRun,
     verbose: options.verbose,
-    version: workspaceVersion,
-    firstRelease: options.firstRelease,
     gitCommitMessage: 'chore({projectName}): release {version}',
+    interactive: 'all',
     projects: ['web'],
   })
 
