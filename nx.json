@@ -16,11 +16,14 @@
     "version": {
       "conventionalCommits": true
     },
+    "git": {
+      "commitMessage": "chore({projectName}): release {version}"
+    },
     "projectsRelationship": "independent",
     "changelog": {
       "projectChangelogs": {
-        "file": false,
-        "createRelease": "github"
+        "createRelease": "github",
+        "file": false
       }
     }
   },
