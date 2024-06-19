@@ -11,6 +11,19 @@
       "cache": true
     }
   },
+  "release": {
+    "projects": ["apps/*", "packages/*"],
+    "version": {
+      "conventionalCommits": true
+    },
+    "projectsRelationship": "independent",
+    "changelog": {
+      "projectChangelogs": {
+        "file": false,
+        "createRelease": "github"
+      }
+    }
+  },
   "plugins": [
     {
       "plugin": "@nx/eslint/plugin",
