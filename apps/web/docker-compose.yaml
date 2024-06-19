@@ -9,7 +9,7 @@ services:
     environment:
       DATABASE_URL: './database/yomu.db'
     volumes:
-      - yomu-web-sqlite:/app/database
+      - yomu-database:/app/database
 
 volumes:
-  yomu-web-sqlite:
+  yomu-database:

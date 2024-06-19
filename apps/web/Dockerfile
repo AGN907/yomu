@@ -25,11 +25,13 @@ COPY --from=deps /app/packages ./packages
 COPY --from=deps /app/.npmrc ./
 COPY --from=deps /app/tsconfig.base.json ./
 
-# Generate database migrations and migrate database
+# Delete database if it already exists
+RUN rm -f apps/web/database/yomu.db
+# Generate database migrations and create database
 RUN pnpm --filter=web generate && pnpm --filter=web migrate
 
 # Prune web app
-RUN pnpm --filter=web deploy /app/pruned/web
+RUN pnpm --filter=web deploy /app/pruned/web 
 
 WORKDIR /app/pruned/web
 
