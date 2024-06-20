@@ -1,4 +1,6 @@
 FROM node:20-alpine AS base
+ARG DATABASE_PATH
+
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
@@ -27,7 +29,7 @@ COPY --from=deps /app/.npmrc ./
 COPY --from=deps /app/tsconfig.base.json ./
 
 # Delete database if it already exists
-RUN rm -f apps/web/database/yomu.db
+RUN rm -f apps/web/$DATABASE_PATH
 # Generate database migrations and create database
 RUN pnpm --filter=web generate && pnpm --filter=web migrate
 
@@ -47,7 +49,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 ENV PORT 3000
 
 COPY --from=builder /app/apps/web/public ./public
-COPY --from=builder /app/apps/web/database/yomu.db ./database/yomu.db
+COPY --from=builder /app/apps/web/$DATABASE_PATH ./$DATABASE_PATH
 COPY --from=builder /app/pruned/web/.next/standalone ./
 COPY --from=builder /app/pruned/web/.next/static ./.next/static
 

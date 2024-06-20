@@ -3,11 +3,9 @@ import * as schema from '@yomu/core/database/schema/web'
 
 import Database from 'better-sqlite3'
 
-const databasePath =
-  //   process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : './yomu.db'
-  './database/yomu.db'
+const DATABASE_PATH = process.env.DATABASE_PATH
 
-const sql = new Database(databasePath)
+const sql = new Database(DATABASE_PATH)
 
 export const db = betterSqliteDrizzle(sql, { schema })
 
