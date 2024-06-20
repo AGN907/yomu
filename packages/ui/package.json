@@ -1,6 +1,6 @@
 {
   "name": "@yomu/ui",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "scripts": {
     "build": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
