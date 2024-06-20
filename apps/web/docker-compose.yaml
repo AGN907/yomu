@@ -6,8 +6,11 @@ services:
     image: agn907/yomu
     ports:
       - '3000:3000'
-    environment:
-      DATABASE_URL: './database/yomu.db'
+    env_file:
+      - path: .env
+        required: false
+      - path: .env.local
+        required: true
     volumes:
       - yomu-database:/app/database
 
