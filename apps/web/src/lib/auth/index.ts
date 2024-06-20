@@ -7,11 +7,13 @@ import { Lucia } from 'lucia'
 
 const adapter = new DrizzleSQLiteAdapter(db, sessions, users)
 
+const SECURE_COOKIE = process.env.SECURE_COOKIE === 'true'
+
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
     expires: false,
     attributes: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: SECURE_COOKIE,
     },
   },
   getUserAttributes: (attributes) => {
