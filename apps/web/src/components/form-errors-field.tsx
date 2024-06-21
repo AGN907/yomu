@@ -1,6 +1,6 @@
 type FormErrorsFieldProps = {
   result: {
-    validationErrors?: Record<string, string[]>
+    validationErrors?: Partial<Record<string, string[]>>
     data?: {
       error?: string
       success?: string

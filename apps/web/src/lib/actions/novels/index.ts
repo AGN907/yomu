@@ -21,6 +21,7 @@ import {
   history,
   novels,
 } from '@yomu/core/database/schema/web'
+import { ChapterItemWithoutContent } from '@yomu/sources/types'
 
 import { revalidatePath } from 'next/cache'
 
@@ -164,11 +165,13 @@ const saveNovelToDatabase = authAction(
           .returning({ novelId: novels.id })
 
         const novelId = novel.novelId
-        const modifiedNovelChapters = novelChapters.map((chapter) => ({
-          ...chapter,
-          novelId,
-          userId,
-        }))
+        const modifiedNovelChapters = novelChapters.map(
+          (chapter: ChapterItemWithoutContent) => ({
+            ...chapter,
+            novelId,
+            userId,
+          }),
+        )
 
         await tx.insert(chapters).values(modifiedNovelChapters)
       })
