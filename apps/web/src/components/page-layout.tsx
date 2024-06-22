@@ -23,7 +23,7 @@ function PageLayout({
 
       <div
         className={cn(
-          'mx-auto grid w-full max-w-6xl items-start gap-6',
+          'mx-auto grid h-full w-full max-w-6xl items-start gap-6',
           className,
         )}
         {...props}
