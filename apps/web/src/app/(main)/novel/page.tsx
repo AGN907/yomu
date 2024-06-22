@@ -1,9 +1,9 @@
-import { db } from '@/lib/database'
+import { GoBack } from '@/components/go-back'
+import { PageLayout } from '@/components/page-layout'
+import { unSlugify } from '@/lib/utils'
 import { NovelSkeleton } from './_components/novel-skeleton'
 import { NovelOverview } from './novel-overview'
 
-import { GoBack } from '@/components/go-back'
-import { PageLayout } from '@/components/page-layout'
 import { Suspense } from 'react'
 
 type NovelPageProps = {
@@ -14,16 +14,11 @@ type NovelPageProps = {
 }
 
 export async function generateMetadata({ searchParams }: NovelPageProps) {
-  const { sourceId, novelUrl } = searchParams
-  const novelTitle = await db.query.novels.findFirst({
-    where: (table, { and, eq }) =>
-      and(eq(table.sourceId, sourceId), eq(table.url, novelUrl)),
-    columns: {
-      title: true,
-    },
-  })
+  const { novelUrl } = searchParams
 
-  return { title: `${novelTitle?.title || 'Novel'} - Yomu` }
+  const title = unSlugify(novelUrl)
+
+  return { title: `${title} - Yomu` }
 }
 
 async function NovelPage({ searchParams }: NovelPageProps) {
