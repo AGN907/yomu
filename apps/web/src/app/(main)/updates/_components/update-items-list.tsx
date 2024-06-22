@@ -63,7 +63,7 @@ const renderNovelUpdates = ({ title, chapters }: GroupedItem) => {
           </span>
         </div>
       </AccordionTrigger>
-      <AccordionContent>
+      <AccordionContent className="divide-border divide-y">
         {chapters.map((chapter) => (
           <UpdateItemCard key={chapter.id} item={chapter} />
         ))}

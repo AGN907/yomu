@@ -10,7 +10,7 @@ function UpdateItemCard({ item }: ChapterUpdateCardProps) {
   const { chapterId, chapterNumber } = item
 
   return (
-    <div className="border-b p-4">
+    <div className="p-4">
       <div className="text-muted-foreground text-sm">
         <Link
           href={{
