@@ -5,6 +5,10 @@ import {
 } from '@/lib/actions/history'
 import { HistoryItemsList } from './_components/history-items-list'
 
+export const metadata = {
+  title: 'History - Yomu',
+}
+
 async function HistoryPage() {
   const historyChapters = await getHistoryChapters()
 

@@ -4,6 +4,10 @@ import { UpdatesList } from './_components/update-items-list'
 
 import type { UpdateItem } from '@yomu/sources/types'
 
+export const metadata = {
+  title: 'Updates - Yomu',
+}
+
 async function UpdatesPage() {
   const updatesChapters = await getUpdatedChapters()
 
