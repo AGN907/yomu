@@ -43,7 +43,7 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
 
   return (
     <Card className="w-full rounded-2xl">
-      <CardContent className="bg-accent dark:bg-card flex flex-col gap-8 rounded-2xl border p-4 lg:flex-row">
+      <CardContent className="bg-card flex flex-col gap-8 rounded-2xl border p-4 lg:flex-row">
         <div className="flex-shrink-0 self-center lg:self-start">
           <Image
             className="w-[200px] rounded border border-neutral-400 transition-opacity duration-300 hover:opacity-80 dark:border-neutral-800 dark:brightness-90"
