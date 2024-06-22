@@ -31,14 +31,14 @@ This repository contains all the code required to build & use the self-hosted we
 - React Native/Expo: the mobile client is built using React Native and Expo
 - PNPM-workspace/Nx: the monorepo is managed using PNPM workspaces and Nx
 
-| Name            | Path                                   | Description                                |
-| --------------- | -------------------------------------- | ------------------------------------------ |
-| `@yomu/web`     | [apps/web]('apps/web')                 | Next.js web client                         |
-| `@yomu/core`    | [packages/core]('packages/core')       | Shared core library                        |
-| `@yomu/sources` | [packages/sources]('packages/sources') | Implementation of third-party sources      |
-| `@yomu/ui`      | [packages/ui]('packages/ui')           | UI components for web with Shadcn          |
-| `@yomu/mobile`  | `apps/mobile`                          | React Native/Expo mobile client **(soon)** |
+| Name            | Path                                 | Description                                |
+| --------------- | ------------------------------------ | ------------------------------------------ |
+| `@yomu/web`     | [apps/web](apps/web)                 | Next.js web client                         |
+| `@yomu/core`    | [packages/core](packages/core)       | Shared core library                        |
+| `@yomu/sources` | [packages/sources](packages/sources) | Implementation of third-party sources      |
+| `@yomu/ui`      | [packages/ui](packages/ui)           | UI components for web with Shadcn          |
+| `@yomu/mobile`  | `apps/mobile`                        | React Native/Expo mobile client **(soon)** |
 
 ## CONTRIBUTING
 
-I'm not really looking for contributions at the moment, but if you have any suggestions please [open an issue](https://github.com/AGN907/yomu/issues/new)
+I'm not really looking for contributions at the moment, but if you have any suggestions please [submit a pull request](https://github.com/AGN907/yomu/pulls) or [open an issue](https://github.com/AGN907/yomu/issues/new) and I'll try to fix it as soon as possible.
