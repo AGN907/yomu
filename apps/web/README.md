@@ -9,6 +9,9 @@
     <a href="https://hub.docker.com/r/agn907/yomu">
     <img alt="Docker image size" src="https://img.shields.io/docker/image-size/agn907/yomu?style=for-the-badge&logo=docker&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41" />
     </a>
+    <a href="https://github.com/AGN907/yomu/issues?q=is%3Aopen+is%3Aissue+label%3Aweb">
+<img alt="open issues with label web" src="https://img.shields.io/github/issues-search/agn907/yomu?query=is%3Aopen%20is%3Aissue%20label%3Aweb%20&style=for-the-badge&logo=bilibili&logoColor=D9E0EE&label=Issues&labelColor=302D41&color=C9CBFF">
+</a>
     </div>
 
 ---
