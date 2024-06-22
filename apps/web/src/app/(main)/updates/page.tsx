@@ -36,7 +36,7 @@ async function UpdatesPage() {
 
   return (
     <PageLayout pageTitle="Updates">
-      <div>
+      <div className="space-y-6">
         {groupedByDateArray.length === 0 ? (
           <p>You don&apos;t have any updates yet.</p>
         ) : (
