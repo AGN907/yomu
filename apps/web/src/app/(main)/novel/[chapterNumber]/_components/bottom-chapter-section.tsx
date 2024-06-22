@@ -1,7 +1,5 @@
-import { db } from '@/lib/database'
+import { getNextAndPreviousChapters } from '@/lib/actions/chapters'
 import { ChapterNavigationButton } from './chapter-navigation-item'
-
-import { ArrowLeft, ArrowRight } from '@yomu/ui/components/icons'
 
 type BottomChapterBarProps = {
   novelId: number
@@ -11,42 +9,29 @@ type BottomChapterBarProps = {
 async function BottomChapterSection(props: BottomChapterBarProps) {
   const { currentChapterNumber, novelId } = props
 
-  const [previousChapter, nextChapter] = await Promise.all([
-    db.query.chapters.findFirst({
-      where: (table, { and, eq }) =>
-        and(
-          eq(table.novelId, novelId),
-          eq(table.number, currentChapterNumber - 1),
-        ),
-      columns: {
-        id: true,
-        number: true,
-      },
-    }),
-    db.query.chapters.findFirst({
-      where: (table, { and, eq }) =>
-        and(
-          eq(table.novelId, novelId),
-          eq(table.number, currentChapterNumber + 1),
-        ),
-      columns: {
-        id: true,
-        number: true,
-      },
-    }),
-  ])
+  const { data } = await getNextAndPreviousChapters({
+    currentChapterNumber,
+    novelId,
+  })
+
+  if (!data) return
+
+  const { previousChapter, nextChapter } = data
 
   return (
-    <div className="sticky bottom-4 mt-8 flex gap-10 md:mt-0">
-      <div className="mr-auto">
+    <div className="flex justify-center gap-1 md:justify-between">
+      <div className="md:mr-auto">
         {previousChapter ? (
-          <ChapterNavigationButton chapter={previousChapter} Icon={ArrowLeft} />
+          <ChapterNavigationButton chapter={previousChapter}>
+            Previous
+          </ChapterNavigationButton>
         ) : null}
       </div>
-      <div></div>
-      <div className="ml-auto">
+      <div className="md:ml-auto">
         {nextChapter ? (
-          <ChapterNavigationButton chapter={nextChapter} Icon={ArrowRight} />
+          <ChapterNavigationButton chapter={nextChapter}>
+            Next
+          </ChapterNavigationButton>
         ) : null}
       </div>
     </div>

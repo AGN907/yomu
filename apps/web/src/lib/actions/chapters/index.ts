@@ -6,6 +6,7 @@ import { sourceManager } from '@/lib/source-manager'
 import {
   FetchChapterContentSchema,
   GetChapterSchema,
+  GetNextAndPreviousChapters,
   LatestUpdatedChaptersSchema,
   MarkChapterAsReadSchema,
 } from '@/lib/validators/chapters'
@@ -96,6 +97,37 @@ export const markChapterAsRead = authAction(
       revalidatePath('/novel')
     } catch (error) {
       console.error(error)
+    }
+  },
+)
+
+export const getNextAndPreviousChapters = authAction(
+  GetNextAndPreviousChapters,
+  async ({ currentChapterNumber, novelId }, { userId }) => {
+    try {
+      const [previousChapter, nextChapter] = await Promise.all([
+        db.query.chapters.findFirst({
+          where: (table, { and, eq }) =>
+            and(
+              eq(table.userId, userId),
+              eq(table.novelId, novelId),
+              eq(table.number, currentChapterNumber - 1),
+            ),
+        }),
+        db.query.chapters.findFirst({
+          where: (table, { and, eq }) =>
+            and(
+              eq(table.userId, userId),
+              eq(table.novelId, novelId),
+              eq(table.number, currentChapterNumber + 1),
+            ),
+        }),
+      ])
+
+      return { previousChapter, nextChapter }
+    } catch (error) {
+      console.error(error)
+      return { previousChapter: null, nextChapter: null }
     }
   },
 )

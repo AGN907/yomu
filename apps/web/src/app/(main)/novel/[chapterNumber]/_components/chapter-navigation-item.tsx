@@ -3,19 +3,19 @@ import { Button } from '@yomu/ui/components/button'
 import Link from 'next/link'
 
 type ChapterNavigationItemProps = {
+  children: React.ReactNode
   chapter: {
     id: number
     number: number
   }
-  Icon: JSX.ElementType
 }
 
 function ChapterNavigationButton({
+  children,
   chapter,
-  Icon,
 }: ChapterNavigationItemProps) {
   return (
-    <Button className="rounded-full" size="icon" asChild>
+    <Button size="sm" asChild>
       <Link
         href={{
           pathname: `/novel/${chapter.number}`,
@@ -24,7 +24,7 @@ function ChapterNavigationButton({
           },
         }}
       >
-        <Icon size={24} />
+        {children}
       </Link>
     </Button>
   )

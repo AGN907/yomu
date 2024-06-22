@@ -17,10 +17,12 @@ async function ChapterContent({ sourceId, chapter }: ChapterContentProps) {
   })
   if (!fetchedChapter) {
     return (
-      <div className="space-y-4">
+      <div className="flex flex-col items-center justify-center gap-2">
+        <h3 className="text-xl font-medium">
+          No content was extracted from the source
+        </h3>
         <p>
-          No content was extracted from the website. Check if there is any
-          content on the original website, and create an{' '}
+          Check if there is any content on the original source, and create an{' '}
           <a
             className="text-blue-500 hover:underline"
             target="_blank"
@@ -28,7 +30,7 @@ async function ChapterContent({ sourceId, chapter }: ChapterContentProps) {
           >
             issue
           </a>{' '}
-          on the github page.
+          on the github page if there is.
         </p>
       </div>
     )
@@ -41,6 +43,7 @@ async function ChapterContent({ sourceId, chapter }: ChapterContentProps) {
   return (
     <div>
       <div className="space-y-4">
+        <h1 className="text-2xl font-bold md:text-3xl">{chapter.title}</h1>
         {content.map((paragraph, i) => (
           <p key={i}>{paragraph}</p>
         ))}

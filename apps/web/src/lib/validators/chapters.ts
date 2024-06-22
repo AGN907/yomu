@@ -17,3 +17,8 @@ export const FetchChapterContentSchema = z.object({
   sourceId: z.string(),
   chapterUrl: z.string(),
 })
+
+export const GetNextAndPreviousChapters = z.object({
+  currentChapterNumber: z.number(),
+  novelId: z.number(),
+})

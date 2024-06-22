@@ -28,7 +28,7 @@ export async function generateMetadata({
 
   const { data } = await getChapterFromDatabase({ chapterId, chapterNumber })
 
-  const novelTitle = data?.novel?.title || ''
+  const novelTitle = data?.novel?.title || 'Not found'
 
   return {
     title: `Chapter ${chapterNumber} ${novelTitle ? `- ${novelTitle}` : ''} - Yomu`,
@@ -57,19 +57,25 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
       pageTitle={
         <div className="flex items-center gap-4">
           <GoBack href={`/novel?sourceId=${sourceId}&novelUrl=${novelUrl}`} />
-          <h1>{data.title}</h1>
         </div>
       }
     >
-      <div className="mx-auto h-full max-w-3xl px-8">
+      <div className="mx-auto flex h-full w-full max-w-3xl flex-col justify-between gap-2 px-4 md:px-0">
         <Suspense fallback={<Spinner size={48} />}>
+          <div className="self-end pb-4 md:pb-0">
+            <BottomChapterSection
+              novelId={novelId}
+              currentChapterNumber={chapterNumber}
+            />
+          </div>
+
           <ChapterContent sourceId={sourceId} chapter={data} />
+          <BottomChapterSection
+            novelId={novelId}
+            currentChapterNumber={chapterNumber}
+          />
         </Suspense>
       </div>
-      <BottomChapterSection
-        novelId={novelId}
-        currentChapterNumber={chapterNumber}
-      />
     </PageLayout>
   )
 }
