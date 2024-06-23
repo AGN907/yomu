@@ -5,3 +5,4 @@ pnpm-lock.yaml
 pnpm-workspace.yaml
 .husky
 /.nx/cache
+/.nx/workspace-data
