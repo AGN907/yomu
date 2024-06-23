@@ -17,6 +17,7 @@ import { users } from '@yomu/core/database/schema/web'
 import { hash, verify } from '@node-rs/argon2'
 import { generateIdFromEntropySize } from 'lucia'
 
+import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
@@ -146,10 +147,7 @@ export const updateUsername = authAction(
     try {
       const existingUser = await db.query.users.findFirst({
         where: (table, { and, not, eq }) =>
-          and(
-            not(eq(table.id, userId)),
-            eq(table.username, username.toLowerCase()),
-          ),
+          and(not(eq(table.id, userId)), eq(table.username, username)),
       })
 
       if (existingUser)
@@ -159,8 +157,11 @@ export const updateUsername = authAction(
 
       await db
         .update(users)
-        .set({ username: username.toLowerCase() })
+        .set({ username: username })
         .where(eq(users.id, userId))
+
+      revalidatePath('/')
+      revalidatePath('/settings')
 
       return {
         success: 'Username updated successfully',
