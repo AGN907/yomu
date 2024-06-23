@@ -11,6 +11,9 @@
  <a href="https://github.com/AGN907/Yomu/issues">
       <img alt="Issues" src="https://img.shields.io/github/issues/AGN907/Yomu?style=for-the-badge&logo=bilibili&color=F5E0DC&logoColor=D9E0EE&labelColor=302D41" />
     </a>
+    <a href="https://github.com/AGN907/yomu#AGPL-3.0-1-ov-file">
+    <img alt="license" src="https://img.shields.io/github/license/AGN907/yomu?style=for-the-badge&logo=gnu&color=8aadf3&logoColor=D9E0EE&labelColor=302D41">
+    </a>
  <a href="https://twitter.com/intent/follow?screen_name=AGN907">
       <img alt="follow on Twitter" src="https://img.shields.io/twitter/follow/AGN907?style=for-the-badge&logo=twitter&color=8aadf3&logoColor=D9E0EE&labelColor=302D41" />
     </a>
