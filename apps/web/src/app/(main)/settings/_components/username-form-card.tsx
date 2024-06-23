@@ -1,4 +1,5 @@
 'use client'
+
 import { CardContainer } from '@/components/card-container'
 import { FormErrorsField } from '@/components/form-errors-field'
 import { SubmitButton } from '@/components/submit-button'
@@ -17,7 +18,11 @@ type UsernameFormCardProps = {
 function UsernameFormCard({ username }: UsernameFormCardProps) {
   const { execute: updateUser, result } = useAction(updateUsername, {
     onSuccess(result) {
-      toast.success(result.success)
+      if (result.success) {
+        toast.success(result.success, {
+          id: 'update-username',
+        })
+      }
     },
   })
 
@@ -25,7 +30,11 @@ function UsernameFormCard({ username }: UsernameFormCardProps) {
     <form
       action={(formData) => {
         const newUsername = formData.get('username') as string
-        if (newUsername === username) return
+        if (newUsername === username) {
+          toast.error('New username must be different from old one')
+          return
+        }
+
         updateUser({ username: newUsername })
       }}
     >

@@ -1,4 +1,5 @@
 'use client'
+
 import { CardContainer } from '@/components/card-container'
 import { FormErrorsField } from '@/components/form-errors-field'
 import { PasswordInput } from '@/components/password-input'
@@ -15,7 +16,9 @@ function PasswordFormCard() {
   const formRef = useRef<HTMLFormElement>(null)
   const { execute: updatePass, result } = useAction(updatePassword, {
     onSuccess(result) {
-      toast.error(result.success)
+      toast.success(result.success, {
+        id: 'update-password',
+      })
     },
   })
 
