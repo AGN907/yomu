@@ -35,6 +35,7 @@
     "@types/node": "^20",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
+    "next": "14.2.3",
     "typescript": "^5",
     "yargs": "^17.7.2"
   },
