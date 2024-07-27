@@ -1,32 +1,20 @@
 'use client'
-import { Button } from '@yomu/ui/components/button'
-import { Search } from '@yomu/ui/components/icons'
+
+import { useDebounced } from '@/lib/hooks/use-debounced'
 import { Input } from '@yomu/ui/components/input'
-import { useState } from 'react'
 
 export function SearchSourceForm({
   onSearchSubmit,
 }: {
   onSearchSubmit: (query: string) => void
 }) {
-  const [query, setQuery] = useState('')
+  const debouncedOnSearch = useDebounced(onSearchSubmit, 800)
 
   return (
-    <form onSubmit={() => onSearchSubmit(query)}>
-      <Input
-        name="q"
-        className="pr-10"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search novels..."
-      />
-      <Button
-        className="absolute right-2 top-1/2 -translate-y-1/2"
-        size="icon"
-        variant="ghost"
-      >
-        <Search className="size-5" />
-      </Button>
-    </form>
+    <Input
+      className="pr-10"
+      onChange={(e) => debouncedOnSearch(e.target.value)}
+      placeholder="Search novels..."
+    />
   )
 }
