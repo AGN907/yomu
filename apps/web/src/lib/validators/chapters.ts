@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const MarkChapterAsReadSchema = z.object({
-  chapterId: z.number(),
+  chapterIds: z.array(z.number()),
 })
 
 export const GetChapterSchema = z.object({
