@@ -17,7 +17,7 @@ function TrackReadingState({ chapterId }: TrackReadingStateProps) {
 
   useEffect(() => {
     const markAsRead = () => {
-      execute({ chapterId })
+      execute({ chapterIds: [chapterId] })
     }
     if (inView) markAsRead()
   }, [inView, chapterId, execute])
