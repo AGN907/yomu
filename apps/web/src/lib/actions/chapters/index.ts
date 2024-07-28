@@ -1,6 +1,6 @@
 'use server'
 
-import { and, db, desc, eq } from '@/lib/database'
+import { and, db, desc, eq, inArray } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
 import {
@@ -87,12 +87,12 @@ export const fetchChapterContent = authAction(
 
 export const markChapterAsRead = authAction(
   MarkChapterAsReadSchema,
-  async ({ chapterId }) => {
+  async ({ chapterIds }) => {
     try {
       await db
         .update(chapters)
         .set({ read: true })
-        .where(eq(chapters.id, chapterId))
+        .where(inArray(chapters.id, chapterIds))
 
       revalidatePath('/novel')
     } catch (error) {
