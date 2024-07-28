@@ -17,7 +17,7 @@
 ---
 
 <div align="center">
-<img src="../../screenshots/Yomu-Web.gif" width="600"  />
+<img src="../../screenshots/Yomu-Web.gif" alt="Yomu Web" width="600"  />
 </div>
 
 ## Features
@@ -35,6 +35,8 @@ As the web client is self-hosted you will need to make sure you have `Docker/Doc
 
 To install docker and docker desktop follow the instructions [here](https://docs.docker.com/desktop/install/)
 
+You also need [Node.js](https://nodejs.org/en/) and [pnpm](https://pnpm.io/) installed.
+
 After that you can clone the repository and navigate to the root of the folder.
 
 ```shell
@@ -42,7 +44,7 @@ git clone https://github.com/AGN907/yomu.git
 cd yomu
 ```
 
-Next rename the .env.example file to .env.local and use can modify it or use the default.
+Rename the `.env.example` file to `.env.local` and you can modify the values or keep the default.
 
 ```shell
 cd apps/web
@@ -50,20 +52,48 @@ mv .env.example .env.local
 ```
 
 > [!TIP]
-> Don't forget to return to the root of the folder
+> Don't forget to return to the root of the folder using `cd ../..`
 
-```shell
-cd ../..
-```
-
-From here you can simply copy and paste this into your terminal:
+Finally you can run the web client:
 
 ```shell
 // You can add `-d` to run it in the background
-docker compose -f ./apps/web/docker-compose.yaml up
+pnpm nx run web:run-container
 ```
 
-Now visit <http://localhost:3000> in your browser to see the web client.
+Now visit the url shown in your terminal to see the web client.
 
 > [!NOTE]
 > You will need to create an account the first time you run the web client.
+
+## Building
+
+To build the docker image with the latest changes you will need to have these tools installed:
+
+- Node
+- pnpm
+- Docker
+
+Clone the repository and navigate to the root of the folder.
+
+```shell
+git clone https://github.com/AGN907/yomu.git
+cd yomu
+```
+
+Rename the `.env.example` file to `.env.local`.
+
+```shell
+cd apps/web
+mv .env.example .env.local
+```
+
+Build the image with:
+
+```shell
+pnpm nx run web:build-docker
+```
+
+This command will name the image as `agn907/yomu:latest`. If you want a different name you can modify the script on the [package.json](./package.json)
+
+Run `pnpm nx run web:run-container` to start the web client.

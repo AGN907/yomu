@@ -13,7 +13,8 @@
     "push": "drizzle-kit push",
     "drop": "drizzle-kit drop",
     "build-docker": "dotenvx run -f .env.local -- sh -c 'docker build -t agn907/yomu -f Dockerfile --build-arg='DATABASE_PATH=$DATABASE_PATH' ../..'",
-    "push-docker": "docker push agn907/yomu:latest"
+    "push-docker": "docker push agn907/yomu:latest",
+    "run-docker": "docker compose -f ./docker-compose.yaml up"
   },
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.7",
