@@ -102,3 +102,7 @@ pnpm nx run web:build-image
 This command will name the image as `agn907/yomu:latest`. If you want a different name you can modify the script on the [package.json](./package.json)
 
 Run `pnpm nx run web:run-container` to start the web client.
+
+## Contributing
+
+If you want to contribute to the project you can follow the [contributing guide](./CONTRIBUTING.md)
