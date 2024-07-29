@@ -12,7 +12,6 @@ export function SearchSourceForm({
 
   return (
     <Input
-      className="pr-10"
       onChange={(e) => debouncedOnSearch(e.target.value)}
       placeholder="Search novels..."
     />
