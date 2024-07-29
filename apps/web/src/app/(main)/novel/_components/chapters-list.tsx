@@ -1,11 +1,12 @@
 'use client'
 
+import { updateReadState } from '@/lib/actions/chapters'
+import { ChapterItem } from './chapter-item'
+
 import { Chapter } from '@yomu/core/database/schema/web'
 import { Button } from '@yomu/ui/components/button'
 import { Check, CheckCheck } from '@yomu/ui/components/icons'
-
-import { updateReadState } from '@/lib/actions/chapters'
-import { ChapterItem } from './chapter-item'
+import { cn } from '@yomu/ui/utils'
 
 import { useCallback, useMemo, useState } from 'react'
 
@@ -99,13 +100,17 @@ function ChaptersList({ chapters }: ChaptersListProps) {
   }, [selectedIds, chapters, markAsRead, markAsUnread])
 
   return (
-    <div className="space-y-4">
-      {selectedIds.size > 0 ? (
-        <div className="bg-accent flex items-center justify-between rounded border px-2 py-1">
-          <p className="text-sm">{selectedIds.size} chapter selected</p>
-          <div className="flex gap-4">{actions?.map((action) => action)}</div>
-        </div>
-      ) : null}
+    <div className="w-full space-y-2">
+      <h3 className="text-2xl font-medium">Chapters</h3>
+      <div
+        className={cn(
+          'bg-accent flex items-center justify-between px-2 py-1 transition-opacity',
+          selectedIds.size > 0 ? 'opacity-100 delay-200' : 'opacity-0 delay-0',
+        )}
+      >
+        <p className="text-sm">{selectedIds.size} chapter selected</p>
+        <div className="flex gap-4">{actions?.map((action) => action)}</div>
+      </div>
       {chapters.map((chapter) => (
         <ChapterItem
           key={chapter.id}

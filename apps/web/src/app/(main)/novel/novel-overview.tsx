@@ -91,10 +91,7 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
       </CardContent>
 
       <CardFooter className="relative flex flex-col-reverse gap-16 pt-8 xl:flex-row xl:items-start">
-        <div className="space-y-4">
-          <h3 className="text-2xl font-medium">Chapters</h3>
-          <ChaptersList chapters={chapters} />
-        </div>
+        <ChaptersList chapters={chapters} />
         <div className="w-full space-y-4 xl:sticky xl:top-4 xl:max-w-md">
           <h3 className="text-2xl font-medium">Summary</h3>
           <NovelSummary summary={summary} />
