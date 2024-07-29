@@ -8,7 +8,7 @@ import {
   GetChapterSchema,
   GetNextAndPreviousChapters,
   LatestUpdatedChaptersSchema,
-  MarkChapterAsReadSchema,
+  UpdateReadStateSchema,
 } from '@/lib/validators/chapters'
 
 import {
@@ -85,13 +85,13 @@ export const fetchChapterContent = authAction(
   },
 )
 
-export const markChapterAsRead = authAction(
-  MarkChapterAsReadSchema,
-  async ({ chapterIds }) => {
+export const updateReadState = authAction(
+  UpdateReadStateSchema,
+  async ({ chapterIds, read }) => {
     try {
       await db
         .update(chapters)
-        .set({ read: true })
+        .set({ read })
         .where(inArray(chapters.id, chapterIds))
 
       revalidatePath('/novel')
