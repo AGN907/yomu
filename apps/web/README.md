@@ -74,23 +74,27 @@ To build the docker image with the latest changes you will need to have these to
 - pnpm
 - Docker
 
-Clone the repository and navigate to the root of the folder.
+Clone the repository and install the dependencies.
 
 ```shell
 git clone https://github.com/AGN907/yomu.git
 cd yomu
+pnpm install
 ```
 
-Rename the `.env.example` file to `.env.local`.
+It will take a while to install the dependencies.
+
+After the dependencies are installed you must rename the `.env.example` file to `.env.local`.
 
 ```shell
 cd apps/web
 mv .env.example .env.local
 ```
 
-Build the image with:
+Now you can start building the image
 
 ```shell
+cd ../.. # go back to root
 pnpm nx run web:build-image
 ```
 
