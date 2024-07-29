@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
-export const MarkChapterAsReadSchema = z.object({
+export const UpdateReadStateSchema = z.object({
+  read: z.boolean(),
   chapterIds: z.array(z.number()),
 })
 
