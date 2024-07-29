@@ -37,11 +37,12 @@ To install docker and docker desktop follow the instructions [here](https://docs
 
 You also need [Node.js](https://nodejs.org/en/) and [pnpm](https://pnpm.io/) installed.
 
-After that you can clone the repository and navigate to the root of the folder.
+Clone the repository and install the dependencies.
 
 ```shell
 git clone https://github.com/AGN907/yomu.git
 cd yomu
+pnpm install
 ```
 
 Rename the `.env.example` file to `.env.local` and you can modify the values or keep the default.
