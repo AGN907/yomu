@@ -17,7 +17,8 @@ So if you think a method will be reused across packages move it to the core pack
 
 ## Gettings started
 
-We don't have any specific instructions for getting started.
+> [!TIP]
+> We recommend using the [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow) for contributing to this project.
 
 You see a problem? check if there is an [issue](https://github.com/AGN907/yomu/issues/new) or [pull request](https://github.com/AGN907/yomu/pulls) addressed to it, or create one and start working on it on your own fork of the repository.
 
