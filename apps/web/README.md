@@ -33,7 +33,7 @@
 
 As the web client is self-hosted you will need to make sure you have `Docker/Docker Desktop` installed to run it.
 
-To install docker and docker desktop follow the instructions [here](https://docs.docker.com/desktop/install/)
+To install docker or docker desktop follow the instructions [here](https://docs.docker.com/desktop/install/)
 
 You also need [Node.js](https://nodejs.org/en/) and [pnpm](https://pnpm.io/) installed.
 
@@ -45,7 +45,7 @@ cd yomu
 pnpm install
 ```
 
-Rename the `.env.example` file to `.env.local` and you can modify the values or keep the default.
+Rename the `.env.example` file to `.env.local`. You modify the values or leave them as they are.
 
 ```shell
 cd apps/web
@@ -75,15 +75,13 @@ To build the docker image with the latest changes you will need to have these to
 - pnpm
 - Docker
 
-Clone the repository and install the dependencies.
+Clone the repository and install the dependencies. This will take some time.
 
 ```shell
 git clone https://github.com/AGN907/yomu.git
 cd yomu
 pnpm install
 ```
-
-It will take a while to install the dependencies.
 
 After the dependencies are installed you must rename the `.env.example` file to `.env.local`.
 
@@ -92,17 +90,18 @@ cd apps/web
 mv .env.example .env.local
 ```
 
-Now you can start building the image
+Now you're ready to build the image.
 
 ```shell
 cd ../.. # go back to root
 pnpm nx run web:build-image
 ```
 
-This command will name the image as `agn907/yomu:latest`. If you want a different name you can modify the script on the [package.json](./package.json)
+> [!NOTE]
+> This command will name the image as `agn907/yomu:latest`. If you want a different name you can modify the script on the [package.json](./package.json)
 
 Run `pnpm nx run web:run-container` to start the web client.
 
 ## Contributing
 
-If you want to contribute to the project you can follow the [contributing guide](./CONTRIBUTING.md)
+We welcome all contributors! Check out the [contributing guide](./CONTRIBUTING.md) to get started.
