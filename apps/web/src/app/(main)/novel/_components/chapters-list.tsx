@@ -71,10 +71,10 @@ function ChaptersList({ chapters }: ChaptersListProps) {
           className="gap-2"
           onClick={markAsRead}
           variant="outline"
-          size="sm"
+          size="icon"
         >
-          <Check className="size-4" />
-          Mark read
+          <Check className="size-5" />
+          <span className="sr-only">Mark chapter as read</span>
         </Button>,
       )
     }
@@ -89,10 +89,10 @@ function ChaptersList({ chapters }: ChaptersListProps) {
           className="gap-2"
           onClick={markAsUnread}
           variant="outline"
-          size="sm"
+          size="icon"
         >
-          <CheckCheck className="size-4" />
-          Mark unread
+          <CheckCheck className="size-5" />
+          <span className="sr-only">Mark chapter as unread</span>
         </Button>,
       )
     }
