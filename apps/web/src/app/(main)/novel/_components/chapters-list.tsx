@@ -1,12 +1,12 @@
 'use client'
 
 import { updateReadState } from '@/lib/actions/chapters'
+import { ActionsBar } from './actions-bar'
 import { ChapterItem } from './chapter-item'
 
 import { Chapter } from '@yomu/core/database/schema/web'
 import { Button } from '@yomu/ui/components/button'
 import { Check, CheckCheck } from '@yomu/ui/components/icons'
-import { cn } from '@yomu/ui/utils'
 
 import { useCallback, useMemo, useState } from 'react'
 
@@ -102,23 +102,20 @@ function ChaptersList({ chapters }: ChaptersListProps) {
   return (
     <div className="w-full space-y-2">
       <h3 className="text-2xl font-medium">Chapters</h3>
-      <div
-        className={cn(
-          'bg-accent flex items-center justify-between px-2 py-1 transition-opacity',
-          selectedIds.size > 0 ? 'opacity-100 delay-200' : 'opacity-0 delay-0',
-        )}
-      >
-        <p className="text-sm">{selectedIds.size} chapter selected</p>
-        <div className="flex gap-4">{actions?.map((action) => action)}</div>
+      <div className="space-y-2">
+        <ActionsBar actions={actions} numberOfSelected={selectedIds.size} />
+
+        <div className="space-y-1">
+          {chapters.map((chapter) => (
+            <ChapterItem
+              key={chapter.id}
+              chapter={chapter}
+              isSelected={selectedIds.has(chapter.id)}
+              onSelect={handleCheck}
+            />
+          ))}
+        </div>
       </div>
-      {chapters.map((chapter) => (
-        <ChapterItem
-          key={chapter.id}
-          chapter={chapter}
-          isSelected={selectedIds.has(chapter.id)}
-          onSelect={handleCheck}
-        />
-      ))}
     </div>
   )
 }
