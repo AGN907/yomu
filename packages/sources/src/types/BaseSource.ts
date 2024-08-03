@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import ky from 'ky'
-import {
+import type {
   ChapterItemContent,
   ChapterItemWithoutContent,
-  Source,
-  SourceNovelFetchResponse,
+  NovelItemData,
   SourceNovelsFetchResponse,
 } from './'
 
-export abstract class BaseSource implements Source {
+import ky from 'ky'
+
+export abstract class BaseSource {
   id
   name
   baseUrl
@@ -27,57 +26,40 @@ export abstract class BaseSource implements Source {
     })
   }
 
-  fetchedNovelSelector(): string {
-    throw new Error('Method not implemented.')
-  }
-  searchedNovelSelector(): string {
-    throw new Error('Method not implemented.')
-  }
-  chapterSelector(): string {
-    throw new Error('Method not implemented.')
-  }
+  // These methods return the html selectors for different methods
+  abstract fetchedNovelSelector(): string
+  abstract searchedNovelSelector(): string
+  abstract chapterSelector(): string
+  abstract fetchedNovelCountSelector(): string
+  abstract searchedNovelCountSelector(): string
 
-  fetchedNovelCountSelector(): string {
-    throw new Error('Method not implemented.')
-  }
-  searchedNovelCountSelector(): string {
-    throw new Error('Method not implemented.')
-  }
-
-  async fetchNovels(
+  // Support fetching novels with latest or trending param
+  abstract fetchNovels(
     page: number,
-    showLatest = false,
-  ): Promise<SourceNovelsFetchResponse> {
-    throw new Error('Method not implemented.')
-  }
+    showLatest: boolean,
+  ): Promise<SourceNovelsFetchResponse>
 
-  async searchNovels(
+  // Used for searching novels
+  abstract searchNovels(
     page: number,
     query: string,
-  ): Promise<SourceNovelsFetchResponse> {
-    throw new Error('Method not implemented.')
-  }
+  ): Promise<SourceNovelsFetchResponse>
 
-  async fetchNovel(url: string): Promise<SourceNovelFetchResponse> {
-    throw new Error('Method not implemented.')
-  }
+  // Fetch all details of a novel except the chapters
+  abstract fetchNovel(url: string): Promise<NovelItemData | null>
 
-  async fetchNovelChapters(
+  // Fetch all chapters of a novel
+  abstract fetchNovelChapters(
     url: string,
     novelId: string,
-  ): Promise<ChapterItemWithoutContent[]> {
-    throw new Error('Method not implemented.')
-  }
+  ): Promise<ChapterItemWithoutContent[]>
 
-  async fetchChapterContent(url: string): Promise<ChapterItemContent | null> {
-    throw new Error('Method not implemented.')
-  }
+  // Fetch the content of a chapter
+  abstract fetchChapterContent(url: string): Promise<ChapterItemContent | null>
 
-  getOriginalNovelUrl(url: string): string {
-    throw new Error('Method not implemented.')
-  }
+  // Get the original url of the novel in the source website
+  abstract getOriginalNovelUrl(url: string): string
 
-  getOriginalChapterUrl(url: string): string {
-    throw new Error('Method not implemented.')
-  }
+  // Get the original url of the chapter in the source website
+  abstract getOriginalChapterUrl(url: string): string
 }

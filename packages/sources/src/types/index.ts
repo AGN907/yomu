@@ -51,31 +51,10 @@ export interface SourceNovelsFetchResponse {
   hasNextPage: boolean
 }
 
-export interface SourceNovelFetchResponse {
-  novel: NovelItemData | null
-  chapters: ChapterItemWithoutContent[]
-}
-
 export interface SourceInfo {
   id: string
   name: string
   baseUrl: string
   icon: string
   lang: string
-}
-
-export interface Source {
-  fetchNovels: (
-    page: number,
-    showLatest?: boolean,
-  ) => Promise<SourceNovelsFetchResponse>
-  searchNovels: (
-    page: number,
-    query: string,
-  ) => Promise<SourceNovelsFetchResponse>
-  fetchNovel: (url: string) => Promise<SourceNovelFetchResponse>
-
-  fetchChapterContent: (url: string) => Promise<ChapterItemContent | null>
-  getOriginalNovelUrl: (url: string) => string
-  getOriginalChapterUrl: (url: string) => string
 }

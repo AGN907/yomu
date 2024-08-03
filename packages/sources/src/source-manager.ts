@@ -1,10 +1,10 @@
 import * as allSources from './sources'
-import { Source, SourceInfo } from './types'
+import { BaseSource, SourceInfo } from './types'
 
 import sourcesData from './sources/sources.json'
 
 type SourceClass = {
-  new (): Source
+  new (): BaseSource
 }
 
 export class SourceManager {
