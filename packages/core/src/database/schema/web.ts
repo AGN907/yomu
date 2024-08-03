@@ -55,6 +55,7 @@ export const novels = sqliteTable('novels', {
     .$type<string[]>(),
   status: text('status', { length: 255 }).notNull(),
   sourceId: text('source_id').notNull(),
+  sourceNovelId: text('source_novel_id', { length: 16 }).notNull(),
   inLibrary: integer('in_library', { mode: 'boolean' })
     .notNull()
     .default(false),
