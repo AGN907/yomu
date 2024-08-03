@@ -1,7 +1,7 @@
 import type {
   ChapterItemContent,
   ChapterItemWithoutContent,
-  NovelItemData,
+  NovelItemWithInfo,
   SourceNovelsFetchResponse,
 } from './'
 
@@ -46,7 +46,7 @@ export abstract class BaseSource {
   ): Promise<SourceNovelsFetchResponse>
 
   // Fetch all details of a novel except the chapters
-  abstract fetchNovel(url: string): Promise<NovelItemData | null>
+  abstract fetchNovel(url: string): Promise<NovelItemWithInfo | null>
 
   // Fetch all chapters of a novel
   abstract fetchNovelChapters(

@@ -1,4 +1,4 @@
-import { BaseSource, NovelItemData, NovelStatus } from '../../types'
+import { BaseSource, NovelItemWithInfo, NovelStatus } from '../../types'
 
 import { parseReleaseDate } from '@yomu/core/date-helpers'
 
@@ -34,6 +34,10 @@ export class MadaraSource extends BaseSource {
     return 'div.c-blog__heading h1.h4'
   }
 
+  isNovelItem(item: unknown): item is NovelItemWithInfo {
+    return item !== null
+  }
+
   async fetchNovels(page: number, showLatest?: boolean) {
     const sortOrder = showLatest ? '?m_orderby=latest' : '?m_orderby=trending'
     const url = `${this.novelsSubString}/page/${page}${sortOrder}`
@@ -50,7 +54,11 @@ export class MadaraSource extends BaseSource {
           const url = doc(el)
             .find('.post-title > h3 > a')
             .attr('href')
-            ?.split('/')[4] as string
+            ?.split('/')[4]
+
+          if (!url) {
+            return null
+          }
 
           const image = doc(el).find('img')
           const thumbnail = image.attr('data-src') || image.attr('src') || ''
@@ -62,6 +70,7 @@ export class MadaraSource extends BaseSource {
             sourceId: this.id,
           }
         })
+        .filter(this.isNovelItem)
 
       const hasNextPage = !!doc('.nav-previous').html()
 
@@ -87,8 +96,11 @@ export class MadaraSource extends BaseSource {
         .toArray()
         .map((el) => {
           const title = doc(el).find('.post-title').text().trim()
-          const url =
-            this.extractPathname(doc(el).find('a').attr('href'))?.[1] || ''
+          const url = this.extractPathname(doc(el).find('a').attr('href'))?.[1]
+
+          if (!url) {
+            return null
+          }
 
           const image = doc(el).find('.tab-thumb img')
           const thumbnail = image.attr('data-src') || image.attr('src') || ''
@@ -100,6 +112,7 @@ export class MadaraSource extends BaseSource {
             sourceId: this.id,
           }
         })
+        .filter(this.isNovelItem)
 
       const hasNextPage = !!doc('.nav-previous').html()
 
@@ -132,48 +145,53 @@ export class MadaraSource extends BaseSource {
       doc('div.summary__content .code-block,script').remove()
       const summary = doc('div.summary__content').text().trim()
 
-      const novelId =
+      const sourceNovelId =
         doc('rating-post-id').attr('value') ||
         doc('#manga-chapters-holder').attr('data-id')
 
-      if (!novelId) throw new Error('Failed to extract novel id')
+      if (!sourceNovelId) throw new Error('Failed to extract novel id')
 
-      const novel: NovelItemData = {
+      const { author, genres, status } = doc(
+        '.post-content_item, .post-content',
+      )
+        .toArray()
+        .reduce(
+          (acc, el) => {
+            const detailName = doc(el).find('h5').text().trim()
+            const detail = doc(el).find('.summary-content').text().trim()
+
+            switch (detailName) {
+              case 'Genre(s)':
+                acc['genres'] = detail.replace(/[\t\n]/g, ',').split(',')
+                break
+              case 'Author(s)':
+                acc['author'] = detail.split(',')[0] || 'Unknown'
+                break
+              case 'Status':
+                acc['status'] = detail.includes('OnGoing')
+                  ? NovelStatus.ONGOING
+                  : detail.includes('Completed')
+                    ? NovelStatus.COMPLETED
+                    : NovelStatus.UNKNOWN
+                break
+            }
+
+            return acc
+          },
+          {} as { author: string; genres: string[]; status: NovelStatus },
+        )
+
+      return {
         title,
-        author: 'Unknown',
-        thumbnail: this.getHighQualtiyThumbnail(thumbnail),
         url,
+        thumbnail: this.getHighQualtiyThumbnail(thumbnail),
+        author,
         summary,
-        genres: [],
-        status: NovelStatus.UNKNOWN,
+        genres,
+        status,
         sourceId: this.id,
+        sourceNovelId: sourceNovelId,
       }
-
-      doc('.post-content_item, .post-content').each(function () {
-        const detailName = doc(this).find('h5').text().trim()
-        const detail = doc(this).find('.summary-content').text().trim()
-
-        switch (detailName) {
-          case 'Genre(s)':
-          case 'التصنيفات':
-            novel.genres = detail.replace(/[\t\n]/g, ',').split(',')
-            break
-          case 'Author(s)':
-          case 'المؤلف':
-          case 'المؤلف (ين)':
-            novel.author = detail.split(',')[0] || novel.author
-            break
-          case 'Status':
-          case 'الحالة':
-            novel.status =
-              detail.includes('OnGoing') || detail.includes('مستمرة')
-                ? NovelStatus.ONGOING
-                : NovelStatus.COMPLETED
-            break
-        }
-      })
-
-      return novel
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message)
