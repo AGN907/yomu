@@ -1,4 +1,4 @@
-import { ChapterItemWithoutContent, NovelItemData } from '@yomu/sources/types'
+import { NovelItemWithInfo } from '@yomu/sources/types'
 
 import { z } from 'zod'
 
@@ -37,7 +37,6 @@ export const GetNovelSchema = z.object({
   url: z.string(),
 })
 
-export const SaveNovelToLibrarySchema = z.object({
-  novel: z.custom<NovelItemData>(),
-  chapters: z.custom<ChapterItemWithoutContent[]>(),
+export const SaveNovelToDatabaseSchema = z.object({
+  novel: z.custom<NovelItemWithInfo>(),
 })

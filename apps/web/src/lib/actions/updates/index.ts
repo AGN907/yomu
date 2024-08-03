@@ -13,6 +13,7 @@ import {
 } from '@yomu/core/database/schema/web'
 
 import { revalidatePath } from 'next/cache'
+import { getNovelChapters } from '../chapters'
 
 export const updateNovel = authAction(
   UpdateNovelSchema,
@@ -36,14 +37,22 @@ export const updateNovel = authAction(
       }
 
       const { sourceId, url } = selectedNovel
-      const { data } = await fetchNovelInfo({ sourceId, url })
-      if (!data) {
+      const [{ data: novel }, { data: novelChapters }] = await Promise.all([
+        fetchNovelInfo({ sourceId, url }),
+        getNovelChapters({ novelId }),
+      ])
+      if (!novel) {
         return {
           error: 'Failed to fetch latest novel data, update aborted',
         }
       }
 
-      const { novel, chapters: novelChapters } = data
+      if (!novelChapters) {
+        return {
+          error: 'Failed to fetch novel chapters, update aborted',
+        }
+      }
+
       const [{ inLibrary }] = await db
         .update(novels)
         .set({
@@ -80,7 +89,6 @@ export const updateNovel = authAction(
           success: `Novel was updated, ${totalNewChapters} new chapters were added`,
         }
       }
-
       return {
         success: 'Novel was updated, no new chapters were added',
       }

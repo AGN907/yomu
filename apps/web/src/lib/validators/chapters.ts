@@ -23,3 +23,8 @@ export const GetNextAndPreviousChapters = z.object({
   currentChapterNumber: z.number(),
   novelId: z.number(),
 })
+
+export const GetNovelChaptersSchema = z.object({
+  novelId: z.number(),
+  sort: z.string().optional(),
+})

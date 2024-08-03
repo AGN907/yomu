@@ -1,4 +1,5 @@
 'use server'
+
 import { and, db, desc, eq } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
@@ -8,7 +9,7 @@ import {
   FetchNovelsByQuerySchema,
   GetNovelSchema,
   GetNovelsByCategorySchema,
-  SaveNovelToLibrarySchema,
+  SaveNovelToDatabaseSchema,
   UpdateNovelsByCategorySchema,
 } from '@/lib/validators/novels'
 import { getUserOrRedirect } from '../auth'
@@ -21,7 +22,6 @@ import {
   history,
   novels,
 } from '@yomu/core/database/schema/web'
-import { ChapterItemWithoutContent } from '@yomu/sources/types'
 
 import { revalidatePath } from 'next/cache'
 
@@ -100,13 +100,12 @@ export const getNovelInfo = authAction(
         return novelExist
       }
 
-      const { data: fetchedData } = await fetchNovelInfo({ sourceId, url })
-      if (!fetchedData || !fetchedData.novel) {
-        throw new Error('Novel not found')
+      const { data: fetchedNovel } = await fetchNovelInfo({ sourceId, url })
+      if (!fetchedNovel) {
+        throw new Error('Failed to fetch novel from source')
       }
 
-      const { novel, chapters } = fetchedData
-      await saveNovelToDatabase({ novel, chapters })
+      await saveNovelToDatabase({ novel: fetchedNovel })
 
       const { data } = await getNovelFromDatabase({ sourceId, url })
       return data
@@ -140,9 +139,6 @@ export const getNovelFromDatabase = authAction(
             eq(table.sourceId, sourceId),
             eq(table.url, url),
           ),
-        with: {
-          chapters: true,
-        },
       })
     } catch (error) {
       console.error(error)
@@ -151,30 +147,19 @@ export const getNovelFromDatabase = authAction(
 )
 
 const saveNovelToDatabase = authAction(
-  SaveNovelToLibrarySchema,
-  async ({ novel, chapters: novelChapters }, { userId }) => {
+  SaveNovelToDatabaseSchema,
+  async ({ novel }, { userId }) => {
     const novelWithUserId: NewNovel = {
       ...novel,
       userId,
     }
     try {
-      await db.transaction(async (tx) => {
-        const [novel] = await tx
-          .insert(novels)
-          .values(novelWithUserId)
-          .returning({ novelId: novels.id })
+      const [novel] = await db
+        .insert(novels)
+        .values(novelWithUserId)
+        .returning({ novelId: novels.id })
 
-        const novelId = novel.novelId
-        const modifiedNovelChapters = novelChapters.map(
-          (chapter: ChapterItemWithoutContent) => ({
-            ...chapter,
-            novelId,
-            userId,
-          }),
-        )
-
-        await tx.insert(chapters).values(modifiedNovelChapters)
-      })
+      return novel
     } catch (error) {
       console.error(error)
     }

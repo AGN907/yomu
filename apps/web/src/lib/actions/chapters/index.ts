@@ -7,11 +7,13 @@ import {
   FetchChapterContentSchema,
   GetChapterSchema,
   GetNextAndPreviousChapters,
+  GetNovelChaptersSchema,
   LatestUpdatedChaptersSchema,
   UpdateReadStateSchema,
 } from '@/lib/validators/chapters'
 
 import {
+  NewChapter,
   chapters,
   novels,
   updatedChapters,
@@ -131,3 +133,83 @@ export const getNextAndPreviousChapters = authAction(
     }
   },
 )
+
+export const getNovelChapters = authAction(
+  GetNovelChaptersSchema,
+  async ({ novelId }, { userId }) => {
+    try {
+      const novelExist = await db.query.novels.findFirst({
+        where: (table, { and, eq }) =>
+          and(eq(table.userId, userId), eq(table.id, novelId)),
+        columns: {
+          url: true,
+          sourceId: true,
+          sourceNovelId: true,
+        },
+      })
+
+      if (!novelExist)
+        throw new Error(
+          "Failed to fetch novel chapters, novel don't exist in database",
+        )
+
+      const savedChapters = await getChaptersFromDatabase(novelId)
+
+      if (savedChapters && savedChapters.length > 0) return savedChapters
+
+      const { sourceId, url, sourceNovelId } = novelExist
+      const chapters = await fetchNovelChapters(sourceId, {
+        url,
+        sourceNovelId,
+      })
+
+      if (!chapters)
+        throw new Error(
+          "Failed to fetch novel chapters, chapters don't exist in source",
+        )
+
+      const chaptersWithIds = chapters.map((chapter) => ({
+        ...chapter,
+        novelId,
+        userId,
+      }))
+
+      return await saveChaptersToDatabase(chaptersWithIds)
+    } catch (error) {
+      console.error(error)
+    }
+  },
+)
+
+const fetchNovelChapters = (
+  sourceId: string,
+  { url, sourceNovelId }: { url: string; sourceNovelId: string },
+) => {
+  try {
+    const source = sourceManager.getSource(sourceId)
+
+    return source.fetchNovelChapters(url, sourceNovelId)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getChaptersFromDatabase = (novelId: number, sort?: string) => {
+  try {
+    return db.query.chapters.findMany({
+      where: (table, { and, eq }) => and(eq(table.novelId, novelId)),
+      orderBy: (table, { asc, desc }) =>
+        sort === 'desc' ? desc(table.number) : asc(table.number),
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const saveChaptersToDatabase = async (novelChapters: NewChapter[]) => {
+  try {
+    return await db.insert(chapters).values(novelChapters).returning()
+  } catch (error) {
+    console.error(error)
+  }
+}
