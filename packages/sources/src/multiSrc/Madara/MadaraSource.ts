@@ -1,13 +1,8 @@
+import { BaseSource, NovelItemData, NovelStatus } from '../../types'
+
 import { parseReleaseDate } from '@yomu/core/date-helpers'
 
 import * as cheerio from 'cheerio'
-import {
-  BaseSource,
-  ChapterItemWithoutContent,
-  NovelItem,
-  NovelItemData,
-  NovelStatus,
-} from '../../types'
 
 export class MadaraSource extends BaseSource {
   constructor(id: string, name: string, baseUrl: string, lang: string) {
@@ -20,26 +15,26 @@ export class MadaraSource extends BaseSource {
   protected novelSubString = 'novel'
   protected chapterSubString = 'novel'
 
-  override fetchedNovelSelector() {
+  fetchedNovelSelector() {
     return '.page-item-detail'
   }
 
-  override searchedNovelSelector() {
+  searchedNovelSelector() {
     return '.c-tabs-item__content'
   }
 
-  override chapterSelector() {
+  chapterSelector() {
     return '.wp-manga-chapter'
   }
 
-  override fetchedNovelCountSelector() {
+  fetchedNovelCountSelector() {
     return 'div.c-page__content .h4'
   }
-  override searchedNovelCountSelector() {
+  searchedNovelCountSelector() {
     return 'div.c-blog__heading h1.h4'
   }
 
-  override async fetchNovels(page: number, showLatest?: boolean) {
+  async fetchNovels(page: number, showLatest?: boolean) {
     const sortOrder = showLatest ? '?m_orderby=latest' : '?m_orderby=trending'
     const url = `${this.novelsSubString}/page/${page}${sortOrder}`
 
@@ -47,31 +42,26 @@ export class MadaraSource extends BaseSource {
       const body = await this.httpClient.get(url).text()
 
       const doc = cheerio.load(body)
-      const novels: NovelItem[] = []
 
-      doc(this.fetchedNovelSelector()).each((_, el) => {
-        const title: string = doc(el).find('.post-title > h3 > a').text().trim()
+      const novels = doc(this.fetchedNovelSelector())
+        .toArray()
+        .map((el) => {
+          const title = doc(el).find('.post-title > h3 > a').text().trim()
+          const url = doc(el)
+            .find('.post-title > h3 > a')
+            .attr('href')
+            ?.split('/')[4] as string
 
-        const image = doc(el).find('img')
-        const thumbnail = image.attr('data-src') || image.attr('src') || ''
+          const image = doc(el).find('img')
+          const thumbnail = image.attr('data-src') || image.attr('src') || ''
 
-        const url = doc(el)
-          ?.find('.post-title')
-          ?.find('a')
-          ?.attr('href')
-          ?.split('/')[4]
-
-        if (!title || !url) {
-          return
-        }
-
-        novels.push({
-          title,
-          thumbnail: this.getHighQualtiyThumbnail(thumbnail),
-          url: url,
-          sourceId: this.id,
+          return {
+            title,
+            thumbnail: this.getHighQualtiyThumbnail(thumbnail),
+            url,
+            sourceId: this.id,
+          }
         })
-      })
 
       const hasNextPage = !!doc('.nav-previous').html()
 
@@ -85,7 +75,7 @@ export class MadaraSource extends BaseSource {
     }
   }
 
-  override async searchNovels(page: number, query: string) {
+  async searchNovels(page: number, query: string) {
     const url = `${this.novelsSubString}/page/${page}/?s=${query}&post_type=wp-manga`
 
     try {
@@ -93,25 +83,23 @@ export class MadaraSource extends BaseSource {
 
       const doc = cheerio.load(body)
 
-      const novels: NovelItem[] = []
+      const novels = doc(this.searchedNovelSelector())
+        .toArray()
+        .map((el) => {
+          const title = doc(el).find('.post-title').text().trim()
+          const url =
+            this.extractPathname(doc(el).find('a').attr('href'))?.[1] || ''
 
-      doc(this.searchedNovelSelector()).each((index, el) => {
-        const url =
-          this.extractPathname(doc(el).find('a').attr('href'))?.[1] || ''
+          const image = doc(el).find('.tab-thumb img')
+          const thumbnail = image.attr('data-src') || image.attr('src') || ''
 
-        const title = doc(el).find('.post-title').text().trim()
-        const thumbnail =
-          doc(el).find('.tab-thumb img').attr('data-src') ||
-          doc(el).find('.tab-thumb img').attr('src') ||
-          ''
-
-        novels.push({
-          title,
-          thumbnail,
-          url,
-          sourceId: this.id,
+          return {
+            title,
+            thumbnail,
+            url,
+            sourceId: this.id,
+          }
         })
-      })
 
       const hasNextPage = !!doc('.nav-previous').html()
 
@@ -125,7 +113,7 @@ export class MadaraSource extends BaseSource {
     }
   }
 
-  override async fetchNovel(url: string) {
+  async fetchNovel(url: string) {
     try {
       const body = await this.httpClient
         .get(`${this.novelSubString}/${url}`)
@@ -185,18 +173,16 @@ export class MadaraSource extends BaseSource {
         }
       })
 
-      const chapters = await this.fetchNovelChapters(url, novelId)
-
-      return { novel, chapters }
+      return novel
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message)
       }
-      return { novel: null, chapters: [] }
+      return null
     }
   }
 
-  override async fetchNovelChapters(url: string, novelId: string) {
+  async fetchNovelChapters(url: string, novelId: string) {
     try {
       const body = this.useNewEndpoint
         ? await this.httpClient
@@ -213,31 +199,28 @@ export class MadaraSource extends BaseSource {
 
       const doc = cheerio.load(body)
 
-      const chapters: ChapterItemWithoutContent[] = []
-
-      doc(this.chapterSelector())
+      const chapters = doc(this.chapterSelector())
         .toArray()
         .reverse()
-        .forEach((chapter, index) => {
-          const url = this.extractPathname(doc(chapter).find('a').attr('href'))
+        .map((el, index) => {
+          const title = doc(el).find('a').text().trim()
+          const url = this.extractPathname(doc(el).find('a').attr('href'))
             .slice(1, 3)
             .join('/')
 
-          const title = doc(chapter).find('a').text().trim()
-
-          const releaseDate = doc(chapter)
+          const releaseDate = doc(el)
             .find('.chapter-release-date')
             .text()
             .trim()
 
           const date = parseReleaseDate(releaseDate)
 
-          chapters.push({
+          return {
             title,
             url,
             releaseDate: date || new Date(),
             number: index + 1,
-          })
+          }
         })
 
       return chapters
@@ -249,7 +232,7 @@ export class MadaraSource extends BaseSource {
     }
   }
 
-  override async fetchChapterContent(url: string) {
+  async fetchChapterContent(url: string) {
     const chapterUrl = `${this.chapterSubString}/${url}`
 
     try {
