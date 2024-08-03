@@ -7,7 +7,8 @@ export interface NovelItem {
   sourceId: string
 }
 
-export interface NovelItemData extends NovelItem {
+export interface NovelItemWithInfo extends NovelItem {
+  sourceNovelId: string
   genres: string[]
   status: NovelStatus
   summary: string
