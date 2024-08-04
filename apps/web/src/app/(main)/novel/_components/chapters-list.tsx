@@ -1,20 +1,25 @@
 'use client'
 
-import { updateReadState } from '@/lib/actions/chapters'
+import { getNovelChapters } from '@/lib/actions/chapters'
 import { ActionsBar } from './actions-bar'
 import { ChapterItem } from './chapter-item'
 
-import { Chapter } from '@yomu/core/database/schema/web'
-import { Button } from '@yomu/ui/components/button'
-import { Check, CheckCheck } from '@yomu/ui/components/icons'
+import Spinner from '@/components/spinner'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 
 type ChaptersListProps = {
-  chapters: Chapter[]
+  novelId: number
 }
 
-function ChaptersList({ chapters }: ChaptersListProps) {
+function ChaptersList({ novelId }: ChaptersListProps) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['chapters', novelId],
+    queryFn: () => getNovelChapters({ novelId }),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  })
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
 
   const handleCheck = (id: number) => {
@@ -28,93 +33,35 @@ function ChaptersList({ chapters }: ChaptersListProps) {
     setSelectedIds(newCheckedIds)
   }
 
-  const markAsRead = useCallback(async () => {
-    if (selectedIds.size === 0) return
-
-    const unreadSelectedChapters = Array.from(selectedIds).filter(
-      (id) => !chapters.find((chapter) => chapter.id === id)?.read,
-    )
-
-    await updateReadState({
-      chapterIds: unreadSelectedChapters,
-      read: true,
-    })
-
-    setSelectedIds(new Set())
-  }, [selectedIds, chapters])
-
-  const markAsUnread = useCallback(() => {
-    if (selectedIds.size === 0) return
-
-    const readSelectedChapters = Array.from(selectedIds).filter(
-      (id) => chapters.find((chapter) => chapter.id === id)?.read,
-    )
-
-    updateReadState({
-      chapterIds: readSelectedChapters,
-      read: false,
-    })
-
-    setSelectedIds(new Set())
-  }, [chapters, selectedIds])
-
-  const actions = useMemo(() => {
-    const actionsList = []
-
-    if (
-      chapters
-        .filter((chapter) => selectedIds.has(chapter.id))
-        .some((chapter) => !chapter.read)
-    ) {
-      actionsList.push(
-        <Button
-          className="gap-2"
-          onClick={markAsRead}
-          variant="outline"
-          size="icon"
-        >
-          <Check className="size-5" />
-          <span className="sr-only">Mark chapter as read</span>
-        </Button>,
-      )
-    }
-
-    if (
-      chapters
-        .filter((chapter) => selectedIds.has(chapter.id))
-        .some((chapter) => chapter.read)
-    ) {
-      actionsList.push(
-        <Button
-          className="gap-2"
-          onClick={markAsUnread}
-          variant="outline"
-          size="icon"
-        >
-          <CheckCheck className="size-5" />
-          <span className="sr-only">Mark chapter as unread</span>
-        </Button>,
-      )
-    }
-    return actionsList
-  }, [selectedIds, chapters, markAsRead, markAsUnread])
+  const chapters = data?.data ?? []
+  const numberOfChapters = chapters.length
 
   return (
     <div className="w-full space-y-2">
-      <h3 className="text-2xl font-medium">Chapters</h3>
+      <h3 className="text-2xl font-medium">
+        {numberOfChapters} {numberOfChapters === 1 ? 'chapter' : 'chapters'}
+      </h3>
       <div className="space-y-2">
-        <ActionsBar actions={actions} numberOfSelected={selectedIds.size} />
+        <ActionsBar
+          chapters={chapters}
+          selectedIds={selectedIds}
+          onSelectedChange={(newSet) => setSelectedIds(newSet)}
+        />
 
-        <div className="space-y-1">
-          {chapters.map((chapter) => (
-            <ChapterItem
-              key={chapter.id}
-              chapter={chapter}
-              isSelected={selectedIds.has(chapter.id)}
-              onSelect={handleCheck}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <Spinner size={48} />
+        ) : (
+          <div className="space-y-1">
+            {chapters.map((chapter) => (
+              <ChapterItem
+                key={chapter.id}
+                chapter={chapter}
+                isSelected={selectedIds.has(chapter.id)}
+                onSelect={handleCheck}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
