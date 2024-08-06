@@ -4,7 +4,7 @@ import { db, desc, eq } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
 import { UpdateNovelSchema } from '@/lib/validators/novels'
 import { getUserOrRedirect } from '../auth'
-import { fetchNovelInfo } from '../novels'
+import { fetchNovel } from '../novels'
 
 import {
   chapters,
@@ -13,7 +13,7 @@ import {
 } from '@yomu/core/database/schema/web'
 
 import { revalidatePath } from 'next/cache'
-import { getNovelChapters } from '../chapters'
+import { fetchNovelChapters } from '../chapters'
 
 export const updateNovel = authAction(
   UpdateNovelSchema,
@@ -36,20 +36,15 @@ export const updateNovel = authAction(
         }
       }
 
-      const { sourceId, url } = selectedNovel
+      const { sourceId, url, sourceNovelId } = selectedNovel
       const [{ data: novel }, { data: novelChapters }] = await Promise.all([
-        fetchNovelInfo({ sourceId, url }),
-        getNovelChapters({ novelId }),
+        fetchNovel({ sourceId, url }),
+        fetchNovelChapters({ sourceId, url, sourceNovelId }),
       ])
-      if (!novel) {
+
+      if (!novel || !novelChapters) {
         return {
           error: 'Failed to fetch latest novel data, update aborted',
-        }
-      }
-
-      if (!novelChapters) {
-        return {
-          error: 'Failed to fetch novel chapters, update aborted',
         }
       }
 
@@ -67,9 +62,13 @@ export const updateNovel = authAction(
       const newChapters = novelChapters
         .filter((c) => c.number > lastSavedChapterNum)
         .map((c) => ({ ...c, novelId }))
-      const totalNewChapters = newChapters.length
 
-      const isNewChapters = totalNewChapters > 0
+      const isNewChapters = newChapters.length > 0
+      console.log(
+        newChapters.length,
+        novelChapters.length,
+        savedChapters.length,
+      )
       if (isNewChapters) {
         const newInsertedChapters = await db
           .insert(chapters)
@@ -86,7 +85,7 @@ export const updateNovel = authAction(
         }
 
         return {
-          success: `Novel was updated, ${totalNewChapters} new chapters were added`,
+          success: `Novel was updated, ${newChapters.length} new chapters were added`,
         }
       }
       return {

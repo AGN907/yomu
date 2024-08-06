@@ -28,3 +28,9 @@ export const GetNovelChaptersSchema = z.object({
   novelId: z.number(),
   sort: z.string().optional(),
 })
+
+export const FetchNovelChaptersSchema = z.object({
+  sourceId: z.string(),
+  url: z.string(),
+  sourceNovelId: z.string(),
+})

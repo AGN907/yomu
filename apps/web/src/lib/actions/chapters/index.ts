@@ -5,6 +5,7 @@ import { authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
 import {
   FetchChapterContentSchema,
+  FetchNovelChaptersSchema,
   GetChapterSchema,
   GetNextAndPreviousChapters,
   GetNovelChaptersSchema,
@@ -158,7 +159,8 @@ export const getNovelChapters = authAction(
       if (savedChapters && savedChapters.length > 0) return savedChapters
 
       const { sourceId, url, sourceNovelId } = novelExist
-      const chapters = await fetchNovelChapters(sourceId, {
+      const { data: chapters } = await fetchNovelChapters({
+        sourceId,
         url,
         sourceNovelId,
       })
@@ -181,18 +183,18 @@ export const getNovelChapters = authAction(
   },
 )
 
-const fetchNovelChapters = (
-  sourceId: string,
-  { url, sourceNovelId }: { url: string; sourceNovelId: string },
-) => {
-  try {
-    const source = sourceManager.getSource(sourceId)
+export const fetchNovelChapters = authAction(
+  FetchNovelChaptersSchema,
+  async ({ sourceId, url, sourceNovelId }) => {
+    try {
+      const source = sourceManager.getSource(sourceId)
 
-    return source.fetchNovelChapters(url, sourceNovelId)
-  } catch (error) {
-    console.error(error)
-  }
-}
+      return source.fetchNovelChapters(url, sourceNovelId)
+    } catch (error) {
+      console.error(error)
+    }
+  },
+)
 
 const getChaptersFromDatabase = (novelId: number, sort?: string) => {
   try {
