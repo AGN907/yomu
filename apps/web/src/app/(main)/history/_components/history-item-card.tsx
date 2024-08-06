@@ -1,4 +1,4 @@
-import type { HistoryItemWithTimestamps } from '@/lib/actions/history'
+import type { HistoryItemWithTimestamps } from '@/actions/history'
 
 import { dayjs } from '@yomu/core/utils/dates'
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { deleteCategory } from '@/lib/actions/categories'
+import { deleteCategory } from '@/actions/categories'
 
 import {
   AlertDialog,

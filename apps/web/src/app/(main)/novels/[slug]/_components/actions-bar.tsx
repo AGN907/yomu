@@ -1,4 +1,4 @@
-import { updateReadState } from '@/lib/actions/chapters'
+import { updateReadState } from '@/actions/chapters'
 import { getQueryClient } from '@/providers'
 
 import { Chapter } from '@yomu/core/database/schema/web'

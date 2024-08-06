@@ -1,5 +1,6 @@
 'use client'
 
+import { addNovelToLibrary } from '@/actions/novels'
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -9,7 +10,6 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/responsive-dialog'
-import { addNovelToLibrary } from '@/lib/actions/novels'
 
 import { Category } from '@yomu/core/database/schema/web'
 import { capitalize } from '@yomu/core/utils/string'

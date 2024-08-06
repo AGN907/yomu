@@ -1,5 +1,5 @@
-import { fetchChapterContent } from '@/lib/actions/chapters'
-import { addChapterToHistory } from '@/lib/actions/history'
+import { fetchChapterContent } from '@/actions/chapters'
+import { addChapterToHistory } from '@/actions/history'
 import { TrackReadingState } from './track-reading-state'
 
 import type { Chapter } from '@yomu/core/database/schema/web'

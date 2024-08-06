@@ -1,4 +1,4 @@
-import { getUserStats } from '@/lib/actions/stats'
+import { getUserStats } from '@/actions/stats'
 import { StatCard } from './stat-card'
 
 import {

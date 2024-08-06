@@ -1,4 +1,4 @@
-import { type HistoryItemWithTimestamps } from '@/lib/actions/history'
+import { type HistoryItemWithTimestamps } from '@/actions/history'
 import { HistoryItemCard } from './history-item-card'
 
 import { toCalendar } from '@yomu/core/utils/dates'

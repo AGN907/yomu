@@ -1,8 +1,8 @@
 'use client'
 
+import { logout } from '@/actions/auth'
 import { SubmitButton } from '@/components/submit-button'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { logout } from '@/lib/actions/auth'
 
 import { Button } from '@yomu/ui/components/button'
 import {

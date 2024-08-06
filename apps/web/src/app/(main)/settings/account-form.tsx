@@ -1,4 +1,4 @@
-import { getUserOrRedirect } from '@/lib/actions/auth'
+import { getUserOrRedirect } from '@/actions/auth'
 import { PasswordFormCard } from './_components/password-form-card'
 import { UsernameFormCard } from './_components/username-form-card'
 

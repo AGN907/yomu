@@ -1,5 +1,5 @@
+import { getUpdatedChapters } from '@/actions/updates'
 import { PageLayout } from '@/components/page-layout'
-import { getUpdatedChapters } from '@/lib/actions/updates'
 import { UpdatesList } from './_components/update-items-list'
 
 import type { UpdateItem } from '@yomu/sources/types'

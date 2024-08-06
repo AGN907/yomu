@@ -1,4 +1,4 @@
-import { getNextAndPreviousChapters } from '@/lib/actions/chapters'
+import { getNextAndPreviousChapters } from '@/actions/chapters'
 import { ChapterNavigationButton } from './chapter-navigation-item'
 
 type BottomChapterBarProps = {

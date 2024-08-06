@@ -1,7 +1,7 @@
 'use client'
 
+import { updateNovel } from '@/actions/updates'
 import Spinner from '@/components/spinner'
-import { updateNovel } from '@/lib/actions/updates'
 
 import { Button } from '@yomu/ui/components/button'
 import { RefreshCw } from '@yomu/ui/components/icons'

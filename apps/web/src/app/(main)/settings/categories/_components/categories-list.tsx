@@ -1,4 +1,4 @@
-import { getCategories } from '@/lib/actions/categories'
+import { getCategories } from '@/actions/categories'
 import { CategoryItem } from './category-item'
 
 async function CategoriesList() {

@@ -1,7 +1,7 @@
 'use client'
 
+import { getNovelsByCategory } from '@/actions/novels'
 import Spinner from '@/components/spinner'
-import { getNovelsByCategory } from '@/lib/actions/novels'
 import { LibraryList } from './library-list'
 import { UpdateCategoryNovels } from './update-category-novels'
 

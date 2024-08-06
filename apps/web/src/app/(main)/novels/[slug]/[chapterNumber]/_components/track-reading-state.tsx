@@ -1,6 +1,6 @@
 'use client'
 
-import { updateReadState } from '@/lib/actions/chapters'
+import { updateReadState } from '@/actions/chapters'
 
 import { useAction } from 'next-safe-action/hooks'
 import { useEffect } from 'react'

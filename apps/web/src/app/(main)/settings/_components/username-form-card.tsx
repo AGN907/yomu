@@ -1,9 +1,9 @@
 'use client'
 
+import { updateUsername } from '@/actions/auth'
 import { CardContainer } from '@/components/card-container'
 import { FormErrorsField } from '@/components/form-errors-field'
 import { SubmitButton } from '@/components/submit-button'
-import { updateUsername } from '@/lib/actions/auth'
 
 import { Input } from '@yomu/ui/components/input'
 import { Label } from '@yomu/ui/components/label'

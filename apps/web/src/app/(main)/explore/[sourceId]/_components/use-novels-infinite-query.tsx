@@ -1,6 +1,6 @@
 'use client'
 
-import { fetchNovelsByFilter, fetchNovelsByQuery } from '@/lib/actions/novels'
+import { fetchNovelsByFilter, fetchNovelsByQuery } from '@/actions/novels'
 
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react'

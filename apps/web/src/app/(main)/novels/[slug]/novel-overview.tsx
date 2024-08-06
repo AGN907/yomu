@@ -1,5 +1,5 @@
-import { getCategories } from '@/lib/actions/categories'
-import { getNovelInfo } from '@/lib/actions/novels'
+import { getCategories } from '@/actions/categories'
+import { getNovel } from '@/li@/actions/novels'
 import { sourceManager } from '@/lib/source-manager'
 import { ChaptersList } from './_components/chapters-list'
 import { NovelMetadata } from './_components/novel-metadata'
@@ -20,7 +20,7 @@ type NovelOverviewProps = {
 
 async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
   const [{ data: novel }, categories] = await Promise.all([
-    getNovelInfo({ sourceId, url: novelUrl }),
+    getNovel({ sourceId, url: novelUrl }),
     getCategories(),
   ])
 

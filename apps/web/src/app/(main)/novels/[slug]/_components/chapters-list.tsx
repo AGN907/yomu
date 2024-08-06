@@ -1,6 +1,6 @@
 'use client'
 
-import { getNovelChapters } from '@/lib/actions/chapters'
+import { getNovelChapters } from '@/actions/chapters'
 import { ActionsBar } from './actions-bar'
 import { ChapterItem } from './chapter-item'
 

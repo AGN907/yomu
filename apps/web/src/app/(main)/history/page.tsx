@@ -1,8 +1,8 @@
-import { PageLayout } from '@/components/page-layout'
 import {
   getHistoryChapters,
   type HistoryItemWithTimestamps,
-} from '@/lib/actions/history'
+} from '@/actions/history'
+import { PageLayout } from '@/components/page-layout'
 import { HistoryItemsList } from './_components/history-items-list'
 
 export const metadata = {

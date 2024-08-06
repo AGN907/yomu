@@ -1,5 +1,5 @@
+import { getCategories } from '@/actions/categories'
 import { PageLayout } from '@/components/page-layout'
-import { getCategories } from '@/lib/actions/categories'
 import { LibrarySection } from './_components/library-section'
 
 export const metadata = {

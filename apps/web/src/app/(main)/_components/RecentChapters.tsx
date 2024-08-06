@@ -1,5 +1,5 @@
+import { getLatestUpdatedChapters } from '@/actions/updates'
 import { CardContainer } from '@/components/card-container'
-import { getLatestUpdatedChapters } from '@/lib/actions/updates'
 
 import { formatReleaseDate } from '@yomu/core/utils/dates'
 

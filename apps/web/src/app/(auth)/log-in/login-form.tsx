@@ -1,9 +1,9 @@
 'use client'
 
+import { login } from '@/actions/auth'
 import { FormErrorsField } from '@/components/form-errors-field'
 import { PasswordInput } from '@/components/password-input'
 import { SubmitButton } from '@/components/submit-button'
-import { login } from '@/lib/actions/auth'
 
 import {
   Card,

@@ -1,5 +1,6 @@
 'use client'
 
+import { createCategory } from '@/actions/categories'
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -10,7 +11,6 @@ import {
   ResponsiveDialogTitle,
   ResponsiveDialogTrigger,
 } from '@/components/responsive-dialog'
-import { createCategory } from '@/lib/actions/categories'
 
 import { Button } from '@yomu/ui/components/button'
 import { Input } from '@yomu/ui/components/input'

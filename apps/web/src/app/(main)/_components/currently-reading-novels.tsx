@@ -1,6 +1,6 @@
+import { getLatestReadNovels } from '@/actions/novels'
 import { CardContainer } from '@/components/card-container'
 import { NovelCard } from '@/components/novel-card'
-import { getLatestReadNovels } from '@/lib/actions/novels'
 
 import { Progress } from '@yomu/ui/components/progress'
 

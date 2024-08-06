@@ -1,7 +1,7 @@
+import { getChapterById } from '@/actions/chapters'
 import { GoBack } from '@/components/go-back'
 import { PageLayout } from '@/components/page-layout'
 import Spinner from '@/components/spinner'
-import { getChapterById } from '@/lib/actions/chapters'
 import { BottomChapterSection } from './_components/bottom-chapter-section'
 import { ChapterContent } from './_components/chapter-content'
 

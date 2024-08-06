@@ -1,10 +1,10 @@
 'use client'
 
+import { updatePassword } from '@/actions/auth'
 import { CardContainer } from '@/components/card-container'
 import { FormErrorsField } from '@/components/form-errors-field'
 import { PasswordInput } from '@/components/password-input'
 import { SubmitButton } from '@/components/submit-button'
-import { updatePassword } from '@/lib/actions/auth'
 
 import { Label } from '@yomu/ui/components/label'
 import { toast } from '@yomu/ui/components/sonner'
