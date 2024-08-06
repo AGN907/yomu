@@ -9,11 +9,10 @@ import {
   FetchNovelsByQuerySchema,
   GetNovelSchema,
   GetNovelsByCategorySchema,
-  SaveNovelToDatabaseSchema,
   UpdateNovelsByCategorySchema,
 } from '@/lib/validators/novels'
-import { getUserOrRedirect } from '../auth'
-import { updateNovel } from '../updates'
+import { getUserOrRedirect } from './auth'
+import { updateNovel } from './updates'
 
 import {
   NewNovel,
@@ -22,6 +21,7 @@ import {
   history,
   novels,
 } from '@yomu/core/database/schema/web'
+import { NovelItemWithInfo } from '@yomu/sources/types'
 
 import { revalidatePath } from 'next/cache'
 
@@ -91,21 +91,21 @@ export const fetchNovelsByQuery = authAction(
   },
 )
 
-export const getNovelInfo = authAction(
+export const getNovel = authAction(
   GetNovelSchema,
-  async ({ sourceId, url }) => {
+  async ({ sourceId, url }, { userId }) => {
     try {
       const { data: novelExist } = await getNovelFromDatabase({ sourceId, url })
       if (novelExist) {
         return novelExist
       }
 
-      const { data: fetchedNovel } = await fetchNovelInfo({ sourceId, url })
+      const { data: fetchedNovel } = await fetchNovel({ sourceId, url })
       if (!fetchedNovel) {
         throw new Error('Failed to fetch novel from source')
       }
 
-      await saveNovelToDatabase({ novel: fetchedNovel })
+      await saveNovelToDatabase(fetchedNovel, userId)
 
       const { data } = await getNovelFromDatabase({ sourceId, url })
       return data
@@ -115,7 +115,7 @@ export const getNovelInfo = authAction(
   },
 )
 
-export const fetchNovelInfo = authAction(
+export const fetchNovel = authAction(
   GetNovelSchema,
   async ({ sourceId, url }) => {
     try {
@@ -146,25 +146,25 @@ export const getNovelFromDatabase = authAction(
   },
 )
 
-const saveNovelToDatabase = authAction(
-  SaveNovelToDatabaseSchema,
-  async ({ novel }, { userId }) => {
-    const novelWithUserId: NewNovel = {
-      ...novel,
-      userId,
-    }
-    try {
-      const [novel] = await db
-        .insert(novels)
-        .values(novelWithUserId)
-        .returning({ novelId: novels.id })
+const saveNovelToDatabase = async (
+  novel: NovelItemWithInfo,
+  userId: string,
+) => {
+  const novelWithUserId: NewNovel = {
+    ...novel,
+    userId,
+  }
+  try {
+    const [novel] = await db
+      .insert(novels)
+      .values(novelWithUserId)
+      .returning({ novelId: novels.id })
 
-      return novel
-    } catch (error) {
-      console.error(error)
-    }
-  },
-)
+    return novel
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 export const addNovelToLibrary = authAction(
   AddToLibrarySchema,

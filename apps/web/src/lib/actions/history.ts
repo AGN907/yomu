@@ -3,10 +3,11 @@
 import { and, db, desc, eq } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
 import { AddChapterToHistorySchema } from '@/lib/validators/history'
-import { getUserOrRedirect } from '../auth'
+import { getUserOrRedirect } from './auth'
 
 import { chapters, history, novels } from '@yomu/core/database/schema/web'
 import type { HistoryItem } from '@yomu/sources/types'
+
 import { revalidatePath } from 'next/cache'
 
 export const addChapterToHistory = authAction(

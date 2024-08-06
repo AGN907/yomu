@@ -3,7 +3,7 @@
 import { and, db, eq, not } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
 import { CreateNewCategoryScehma } from '@/lib/validators/categories'
-import { getUserOrRedirect } from '../auth'
+import { getUserOrRedirect } from './auth'
 
 import { Category, categories } from '@yomu/core/database/schema/web'
 

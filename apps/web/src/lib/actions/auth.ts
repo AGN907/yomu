@@ -10,7 +10,7 @@ import {
   loginSchema,
   signupSchema,
 } from '@/lib/validators/auth'
-import { createDefaultCategory } from '../categories'
+import { createDefaultCategory } from './categories'
 
 import { users } from '@yomu/core/database/schema/web'
 

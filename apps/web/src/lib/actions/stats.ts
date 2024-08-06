@@ -1,8 +1,8 @@
 'use server'
 
 import { and, count, db, eq } from '@/lib/database'
-import { getUserOrRedirect } from '../auth'
-import { getCategories } from '../categories'
+import { getUserOrRedirect } from './auth'
+import { getCategories } from './categories'
 
 import { chapters, novels } from '@yomu/core/database/schema/web'
 
