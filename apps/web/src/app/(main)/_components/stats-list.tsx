@@ -9,29 +9,33 @@ import {
 } from '@yomu/ui/components/icons'
 
 async function StatsList() {
-  const [savedNovels, completedChapters, unreadChapters, totalCategories] =
-    await getUserStats()
+  const {
+    numberOfLibraryNovels,
+    numberOfCompletedChapters,
+    numberOfUnreadChapters,
+    numberOfCategories,
+  } = await getUserStats()
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
       <StatCard
         label="Novels"
-        value={savedNovels}
+        value={numberOfLibraryNovels}
         icon={<BookText className="text-muted-foreground size-5" />}
       />
       <StatCard
         label="Completed Chapters"
-        value={completedChapters}
+        value={numberOfCompletedChapters}
         icon={<BookOpenCheck className="text-muted-foreground size-5" />}
       />
       <StatCard
         label="Unread Chapters"
-        value={unreadChapters}
+        value={numberOfUnreadChapters}
         icon={<BookOpen className="text-muted-foreground size-5" />}
       />
       <StatCard
         label="Categories"
-        value={totalCategories}
+        value={numberOfCategories}
         icon={<Tag className="text-muted-foreground size-5" />}
       />
     </div>

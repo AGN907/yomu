@@ -10,34 +10,42 @@ export const getUserStats = async () => {
   const user = await getUserOrRedirect()
   const userId = user.id
 
-  const novelCountQuery = await getTotalLibraryNovels(userId)
-  const completedChapterCountQuery = await getCompletedChapters(userId)
-  const unreadChapterCountQuery = await getUnreadChapters(userId)
+  const [
+    numberOfLibraryNovels,
+    numberOfCompletedChapters,
+    numberOfUnreadChapters,
+  ] = await Promise.all([
+    getNumberOfLibraryNovels(userId),
+    getNumberOfCompletedChapters(userId),
+    getNumberOfUnreadChapters(userId),
+  ])
 
   const allCategories = await getCategories()
-  const totalCategoryCount = allCategories.length
+  const numberOfCategories = allCategories.length
 
-  return [
-    novelCountQuery[0].value || 0,
-    completedChapterCountQuery[0].value || 0,
-    unreadChapterCountQuery[0].value || 0,
-    totalCategoryCount,
-  ]
+  return {
+    numberOfLibraryNovels,
+    numberOfCompletedChapters,
+    numberOfUnreadChapters,
+    numberOfCategories,
+  }
 }
 
-export const getTotalLibraryNovels = async (userId: string) => {
-  return await db
+export const getNumberOfLibraryNovels = async (userId: string) => {
+  const [{ numberOfLibraryNovels }] = await db
     .select({
-      value: count(novels.id),
+      numberOfLibraryNovels: count(novels.id),
     })
     .from(novels)
     .where(and(eq(novels.userId, userId), eq(novels.inLibrary, true)))
+
+  return numberOfLibraryNovels
 }
 
-export const getCompletedChapters = async (userId: string) => {
-  return await db
+export const getNumberOfCompletedChapters = async (userId: string) => {
+  const [{ numberOfCompletedChapters }] = await db
     .select({
-      value: count(chapters.id),
+      numberOfCompletedChapters: count(chapters.id),
     })
     .from(chapters)
     .innerJoin(novels, eq(chapters.novelId, novels.id))
@@ -48,12 +56,14 @@ export const getCompletedChapters = async (userId: string) => {
         eq(chapters.read, true),
       ),
     )
+
+  return numberOfCompletedChapters
 }
 
-export const getUnreadChapters = async (userId: string) => {
-  return await db
+export const getNumberOfUnreadChapters = async (userId: string) => {
+  const [{ numberOfUnreadChapters }] = await db
     .select({
-      value: count(chapters.id),
+      numberOfUnreadChapters: count(chapters.id),
     })
     .from(chapters)
     .innerJoin(novels, eq(chapters.novelId, novels.id))
@@ -64,6 +74,8 @@ export const getUnreadChapters = async (userId: string) => {
         eq(chapters.read, false),
       ),
     )
+
+  return numberOfUnreadChapters
 }
 
 export const getGenresStats = async () => {
