@@ -65,11 +65,7 @@ export const updateNovel = authAction(
         .map((c) => ({ ...c, novelId }))
 
       const isNewChapters = newChapters.length > 0
-      console.log(
-        newChapters.length,
-        novelChapters.length,
-        savedChapters.length,
-      )
+
       if (isNewChapters) {
         const newInsertedChapters = await db
           .insert(chapters)
@@ -129,7 +125,6 @@ export const getUpdatedChapters = async () => {
       .orderBy(desc(updatedChapters.updatedAt), desc(chapters.number))
   } catch (error) {
     console.error(error)
-    return []
   }
 }
 

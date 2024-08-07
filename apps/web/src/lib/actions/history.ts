@@ -41,9 +41,7 @@ export type HistoryItemWithTimestamps = HistoryItem & {
   updatedAt: Date
 }
 
-export const getHistoryChapters = async (): Promise<
-  HistoryItemWithTimestamps[]
-> => {
+export const getHistoryChapters = async () => {
   const user = await getUserOrRedirect()
   const userId = user.id
 
@@ -72,6 +70,5 @@ export const getHistoryChapters = async (): Promise<
       .orderBy(desc(history.updatedAt))
   } catch (error) {
     console.error(error)
-    return []
   }
 }

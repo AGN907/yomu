@@ -9,29 +9,28 @@ export const metadata = {
 }
 
 async function UpdatesPage() {
-  const updatesChapters = await getUpdatedChapters()
+  const updatesChapters = (await getUpdatedChapters()) || []
 
   const groupedByDateArray = Object.entries(
-    updatesChapters.reduce(
-      (acc, chapter) => {
-        const date = chapter.updatedAt.toLocaleDateString()
+    updatesChapters.reduce<
+      Record<string, { title: string; chapters: UpdateItem[] }[]>
+    >((acc, chapter) => {
+      const date = chapter.updatedAt.toLocaleDateString()
 
-        if (!acc[date]) {
-          acc[date] = []
-        }
-        if (!acc?.[date]?.find((item) => item.title === chapter.novelTitle)) {
-          acc?.[date]?.push({ title: chapter.novelTitle, chapters: [] })
-        }
+      if (!acc[date]) {
+        acc[date] = []
+      }
+      if (!acc?.[date]?.find((item) => item.title === chapter.novelTitle)) {
+        acc?.[date]?.push({ title: chapter.novelTitle, chapters: [] })
+      }
 
-        const index = acc?.[date]?.findIndex(
-          (item) => item.title === chapter.novelTitle,
-        )
-        acc?.[date]?.[index as number]?.chapters?.push(chapter)
+      const index = acc?.[date]?.findIndex(
+        (item) => item.title === chapter.novelTitle,
+      )
+      acc?.[date]?.[index as number]?.chapters?.push(chapter)
 
-        return acc
-      },
-      {} as Record<string, { title: string; chapters: UpdateItem[] }[]>,
-    ),
+      return acc
+    }, {}),
   )
 
   return (

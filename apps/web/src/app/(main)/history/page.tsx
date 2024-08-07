@@ -10,10 +10,10 @@ export const metadata = {
 }
 
 async function HistoryPage() {
-  const historyChapters = await getHistoryChapters()
+  const historyChapters = (await getHistoryChapters()) || []
 
   const groupedByDateArray = Object.entries(
-    historyChapters.reduce(
+    historyChapters.reduce<Record<string, HistoryItemWithTimestamps[]>>(
       (acc, chapter) => {
         const date = chapter.updatedAt.toLocaleDateString()
         if (!acc[date]) {
@@ -22,7 +22,7 @@ async function HistoryPage() {
         acc?.[date]?.push(chapter)
         return acc
       },
-      {} as Record<string, HistoryItemWithTimestamps[]>,
+      {},
     ),
   )
 
