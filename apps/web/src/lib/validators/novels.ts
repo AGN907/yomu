@@ -1,4 +1,4 @@
-import { NovelItemWithInfo } from '@yomu/sources/types'
+import type { NovelItemWithInfo } from '@yomu/sources/types'
 
 import { z } from 'zod'
 

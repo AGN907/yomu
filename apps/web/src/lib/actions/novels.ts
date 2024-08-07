@@ -1,7 +1,7 @@
 'use server'
 
 import { and, db, desc, eq } from '@/lib/database'
-import { authAction } from '@/lib/safe-action'
+import { MyError, authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
 import {
   AddToLibrarySchema,
@@ -15,13 +15,13 @@ import { getUserOrRedirect } from './auth'
 import { updateNovel } from './updates'
 
 import {
-  NewNovel,
-  Novel,
   chapters,
   history,
   novels,
+  type NewNovel,
+  type Novel,
 } from '@yomu/core/database/schema/web'
-import { NovelItemWithInfo } from '@yomu/sources/types'
+import type { NovelItemWithInfo } from '@yomu/sources/types'
 
 import { revalidatePath } from 'next/cache'
 
@@ -102,7 +102,7 @@ export const getNovel = authAction(
 
       const { data: fetchedNovel } = await fetchNovel({ sourceId, url })
       if (!fetchedNovel) {
-        throw new Error('Failed to fetch novel from source')
+        throw new MyError('Failed to fetch novel from source')
       }
 
       await saveNovelToDatabase(fetchedNovel, userId)

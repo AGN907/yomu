@@ -1,15 +1,24 @@
 import { createSafeActionClient } from 'next-safe-action'
-import { redirect } from 'next/navigation'
 import { validateRequest } from './auth/validate-request'
 
-export const action = createSafeActionClient()
+export class MyError extends Error {}
+
+export const action = createSafeActionClient({
+  handleReturnedServerError(error) {
+    if (error instanceof MyError) {
+      return error.message
+    }
+
+    return 'Something went wrong. Please try again later.'
+  },
+})
 
 export const authAction = createSafeActionClient({
-  async middleware() {
+  middleware: async () => {
     const { user } = await validateRequest()
 
     if (!user) {
-      redirect('/log-in')
+      throw new MyError('Session not found')
     }
 
     return { userId: user.id }

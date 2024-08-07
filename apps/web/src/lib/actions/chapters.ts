@@ -1,7 +1,7 @@
 'use server'
 
 import { db, inArray } from '@/lib/database'
-import { authAction } from '@/lib/safe-action'
+import { MyError, authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
 import {
   FetchChapterContentSchema,
@@ -12,7 +12,7 @@ import {
   UpdateReadStateSchema,
 } from '@/lib/validators/chapters'
 
-import { NewChapter, chapters } from '@yomu/core/database/schema/web'
+import { chapters, type NewChapter } from '@yomu/core/database/schema/web'
 import { revalidatePath } from 'next/cache'
 
 export const fetchChapterContent = authAction(
@@ -90,7 +90,7 @@ export const getNovelChapters = authAction(
       })
 
       if (!novelExist)
-        throw new Error(
+        throw new MyError(
           "Failed to fetch novel chapters, novel don't exist in database",
         )
 
@@ -106,7 +106,7 @@ export const getNovelChapters = authAction(
       })
 
       if (!chapters)
-        throw new Error(
+        throw new MyError(
           "Failed to fetch novel chapters, chapters don't exist in source",
         )
 
