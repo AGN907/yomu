@@ -2,13 +2,16 @@
 
 import { and, db, eq, not } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
-import { CreateNewCategoryScehma } from '@/lib/validators/categories'
+import {
+  CreateNewCategoryScehma,
+  DeleteCategorySchema,
+  UpdateCategorySchema,
+} from '@/lib/validators/categories'
 import { getUserOrRedirect } from './auth'
 
-import { Category, categories } from '@yomu/core/database/schema/web'
+import { categories } from '@yomu/core/database/schema/web'
 
 import { revalidatePath } from 'next/cache'
-import { z } from 'zod'
 
 export const getCategories = async () => {
   const user = await getUserOrRedirect()
@@ -80,7 +83,7 @@ export const createDefaultCategory = async (userId: string) => {
 }
 
 export const updateCategory = authAction(
-  z.custom<Category>(),
+  UpdateCategorySchema,
   async ({ ...category }, { userId }) => {
     try {
       await db
@@ -110,7 +113,7 @@ export const updateCategory = authAction(
 )
 
 export const deleteCategory = authAction(
-  z.object({ categoryId: z.number() }),
+  DeleteCategorySchema,
   async ({ categoryId }, { userId }) => {
     try {
       await db.delete(categories).where(
