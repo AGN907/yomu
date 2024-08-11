@@ -3,10 +3,12 @@
 import { and, db, desc, eq } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
+import { slugify } from '@/lib/utils'
 import {
   AddToLibrarySchema,
   FetchNovelByFilterSchema,
   FetchNovelsByQuerySchema,
+  GetNovelByIdSchema,
   GetNovelSchema,
   GetNovelsByCategorySchema,
   SaveNovelToDatabaseSchema,
@@ -24,6 +26,7 @@ import {
 } from '@yomu/core/database/schema/web'
 
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 export const getLatestReadNovels = async () => {
   const user = await getUserOrRedirect()
@@ -94,24 +97,29 @@ export const fetchNovelsByQuery = authAction(
 export const getNovelInfo = authAction(
   GetNovelSchema,
   async ({ sourceId, url }) => {
-    try {
-      const { data: novelExist } = await getNovelFromDatabase({ sourceId, url })
-      if (novelExist) {
-        return novelExist
-      }
-
-      const { data: fetchedNovel } = await fetchNovelInfo({ sourceId, url })
-      if (!fetchedNovel) {
-        throw new Error('Failed to fetch novel from source')
-      }
-
-      await saveNovelToDatabase({ novel: fetchedNovel })
-
-      const { data } = await getNovelFromDatabase({ sourceId, url })
-      return data
-    } catch (error) {
-      console.error(error)
+    const { data: novelExist } = await getNovelFromDatabase({ sourceId, url })
+    if (novelExist) {
+      redirect(`/novels/${novelExist.id}/${slugify(novelExist.title)}`)
     }
+
+    const { data: fetchedNovel } = await fetchNovelInfo({ sourceId, url })
+    if (!fetchedNovel) {
+      throw new Error('Failed to fetch novel from source')
+    }
+
+    await saveNovelToDatabase({ novel: fetchedNovel })
+
+    const { data } = await getNovelFromDatabase({ sourceId, url })
+
+    if (!data) {
+      throw new Error('Failed to fetch novel from database')
+    }
+
+    const { id, title } = data
+    const slug = slugify(title)
+
+    console.log('/novles/' + id + '/' + slug)
+    redirect(`/novels/${id}/${slug}`)
   },
 )
 
@@ -190,7 +198,7 @@ export const addNovelToLibrary = authAction(
           : "Couldn't add novel to library. Please try again",
       }
     } finally {
-      revalidatePath('/novel')
+      revalidatePath('/novels')
     }
   },
 )
@@ -235,5 +243,24 @@ export const updateNovelsByCategory = authAction(
         error: 'Something went wrong. Please try again',
       }
     }
+  },
+)
+
+export const getNovelById = authAction(
+  GetNovelByIdSchema,
+  async ({ novelId }, { userId }) => {
+    const novel = await db.query.novels.findFirst({
+      where: eq(novels.id, novelId),
+    })
+
+    if (!novel) {
+      throw new Error('Novel not found')
+    }
+
+    if (novel.userId !== userId) {
+      throw new Error('Unauthorized')
+    }
+
+    return novel
   },
 )

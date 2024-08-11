@@ -7,22 +7,22 @@ import { NovelOverview } from './novel-overview'
 import { Suspense } from 'react'
 
 type NovelPageProps = {
-  searchParams: {
-    sourceId: string
-    novelUrl: string
+  params: {
+    id: string
+    slug: string
   }
 }
 
-export async function generateMetadata({ searchParams }: NovelPageProps) {
-  const { novelUrl } = searchParams
+export async function generateMetadata({ params }: NovelPageProps) {
+  const { slug } = params
 
-  const title = unSlugify(novelUrl)
+  const title = unSlugify(slug)
 
   return { title: `${title} - Yomu` }
 }
 
-async function NovelPage({ searchParams }: NovelPageProps) {
-  const { sourceId, novelUrl } = searchParams
+async function NovelPage({ params }: NovelPageProps) {
+  const { id } = params
 
   return (
     <PageLayout
@@ -33,7 +33,7 @@ async function NovelPage({ searchParams }: NovelPageProps) {
       }
     >
       <Suspense fallback={<NovelSkeleton />}>
-        <NovelOverview sourceId={sourceId} novelUrl={novelUrl} />
+        <NovelOverview novelId={Number(id)} />
       </Suspense>
     </PageLayout>
   )

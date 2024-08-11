@@ -40,3 +40,7 @@ export const GetNovelSchema = z.object({
 export const SaveNovelToDatabaseSchema = z.object({
   novel: z.custom<NovelItemWithInfo>(),
 })
+
+export const GetNovelByIdSchema = z.object({
+  novelId: z.number(),
+})
