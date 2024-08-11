@@ -1,8 +1,11 @@
 import { CardContainer } from '@/components/card-container'
 import { NovelCard } from '@/components/novel-card'
 import { getLatestReadNovels } from '@/lib/actions/novels'
+import { slugify } from '@/lib/utils'
 
 import { Progress } from '@yomu/ui/components/progress'
+
+import Link from 'next/link'
 
 async function CurrentlyReadingNovels() {
   const latestReadNovels = await getLatestReadNovels()
@@ -16,15 +19,11 @@ async function CurrentlyReadingNovels() {
     const totalChapters = chapters.length
     const readChapters = chapters.filter((chapter) => chapter.read).length
 
-    const query = { novelUrl: novel.url, sourceId: novel.sourceId }
-
     return (
       <div key={novel.id} className="space-y-2">
-        <NovelCard
-          title={novel.title}
-          thumbnail={novel.thumbnail}
-          query={query}
-        />
+        <Link href={`/novels/${novel.id}/${slugify(novel.title)}`}>
+          <NovelCard title={novel.title} thumbnail={novel.thumbnail} />
+        </Link>
         <div className="space-y-1 px-2">
           <div className="flex justify-end">
             <span className="text-muted-foreground text-xs">

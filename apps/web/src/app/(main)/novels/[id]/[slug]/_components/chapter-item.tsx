@@ -5,6 +5,7 @@ import { Label } from '@yomu/ui/components/label'
 import { cn } from '@yomu/ui/utils'
 
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 type ChapterItemProps = {
   chapter: Chapter
@@ -13,7 +14,8 @@ type ChapterItemProps = {
 }
 
 function ChapterItem({ chapter, isSelected, onSelect }: ChapterItemProps) {
-  const { id, title, number, read, releaseDate } = chapter
+  const { id, novelId, title, number, read, releaseDate } = chapter
+  const { slug } = useParams()
 
   return (
     <Label className="bg-card group grid grid-cols-[2rem_1fr_auto] items-center gap-4 rounded border px-2 py-4">
@@ -29,10 +31,7 @@ function ChapterItem({ chapter, isSelected, onSelect }: ChapterItemProps) {
       <Link
         key={id}
         href={{
-          pathname: `/novel/${number}`,
-          query: {
-            chapterId: id,
-          },
+          pathname: `/novels/${novelId}/${slug}/chapter-${number}`,
         }}
         title={title}
         className={cn(

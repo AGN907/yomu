@@ -1,15 +1,18 @@
 import { GoBack } from '@/components/go-back'
 import { PageLayout } from '@/components/page-layout'
 import Spinner from '@/components/spinner'
-import { getChapterFromDatabase } from '@/lib/actions/chapters'
+import { getChapterByNovelId } from '@/lib/actions/chapters'
 import { BottomChapterSection } from './_components/bottom-chapter-section'
 import { ChapterContent } from './_components/chapter-content'
 
+import { slugify, unSlugify } from '@/lib/utils'
 import { Suspense } from 'react'
 
 type ChapterPageProps = {
   params: {
     chapterNumber: string
+    id: string
+    slug: string
   }
   searchParams: {
     chapterId: string
@@ -20,43 +23,38 @@ export async function generateMetadata({
   params,
   searchParams,
 }: ChapterPageProps) {
-  const { chapterNumber: chapterNumberString } = params
-  const { chapterId: chapterIdString } = searchParams
+  const { chapterNumber: chapterNumberString, slug: novelSlug } = params
 
-  const chapterNumber = parseInt(chapterNumberString)
-  const chapterId = parseInt(chapterIdString)
-
-  const { data } = await getChapterFromDatabase({ chapterId, chapterNumber })
-
-  const novelTitle = data?.novel?.title || 'Not found'
+  const novelTitle = unSlugify(novelSlug)
+  const chapterNumber = parseInt(chapterNumberString.match(/\d+/)?.[0] ?? '-1')
 
   return {
-    title: `Chapter ${chapterNumber} ${novelTitle ? `- ${novelTitle}` : ''} - Yomu`,
+    title: `Chapter ${chapterNumber} ${novelTitle} - Yomu`,
   }
 }
 
-async function ChapterPage({ params, searchParams }: ChapterPageProps) {
-  const { chapterNumber: chapterNumberString } = params
-  const { chapterId: chapterIdString } = searchParams
+async function ChapterPage({ params }: ChapterPageProps) {
+  const { id: novelIdString, chapterNumber: chapterNumberString } = params
 
-  const chapterNumber = parseInt(chapterNumberString)
-  const chapterId = parseInt(chapterIdString)
+  const novelId = parseInt(novelIdString)
+  const chapterNumber = parseInt(chapterNumberString.match(/\d+/)?.[0] ?? '-1')
 
-  const { data } = await getChapterFromDatabase({ chapterId, chapterNumber })
+  const chapterWithSourceId = await getChapterByNovelId(novelId, chapterNumber)
 
-  if (!data) {
+  if (!chapterWithSourceId) {
     throw new Error('Chapter not found')
   }
 
-  const novelId = data.novel.id
-  const novelUrl = data.novel.url
-  const sourceId = data.novel.sourceId
+  const {
+    novel: { title, sourceId },
+    ...chapter
+  } = chapterWithSourceId
 
   return (
     <PageLayout
       pageTitle={
         <div className="flex items-center gap-4">
-          <GoBack href={`/novel?sourceId=${sourceId}&novelUrl=${novelUrl}`} />
+          <GoBack href={`/novels/${novelId}/${slugify(title)}`} />
         </div>
       }
     >
@@ -69,7 +67,7 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
             />
           </div>
 
-          <ChapterContent sourceId={sourceId} chapter={data} />
+          <ChapterContent sourceId={sourceId} chapter={chapter} />
           <BottomChapterSection
             novelId={novelId}
             currentChapterNumber={chapterNumber}

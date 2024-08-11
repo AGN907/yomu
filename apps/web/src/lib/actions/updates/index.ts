@@ -97,7 +97,7 @@ export const updateNovel = authAction(
         error: "Something went wrong, couldn't update novel",
       }
     } finally {
-      revalidatePath('/novel')
+      revalidatePath('/novels')
     }
   },
 )
