@@ -1,5 +1,5 @@
 import { getCategories } from '@/lib/actions/categories'
-import { getNovel } from '@/lib/actions/novels'
+import { getNovelById } from '@/lib/actions/novels'
 import { sourceManager } from '@/lib/source-manager'
 import { ChaptersList } from './_components/chapters-list'
 import { NovelMetadata } from './_components/novel-metadata'
@@ -14,13 +14,12 @@ import { Card, CardContent, CardFooter } from '@yomu/ui/components/card'
 import Image from 'next/image'
 
 type NovelOverviewProps = {
-  sourceId: string
-  novelUrl: string
+  novelId: number
 }
 
-async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
+async function NovelOverview({ novelId }: NovelOverviewProps) {
   const [{ data: novel }, categories] = await Promise.all([
-    getNovel({ sourceId, url: novelUrl }),
+    getNovelById({ novelId }),
     getCategories(),
   ])
 
@@ -38,7 +37,9 @@ async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
     author,
     status,
     inLibrary,
+    sourceId,
   } = novel
+
   const currentSource = sourceManager.getSource(sourceId)
 
   return (

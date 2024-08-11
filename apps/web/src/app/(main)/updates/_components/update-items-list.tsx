@@ -1,5 +1,6 @@
 'use client'
 
+import { slugify } from '@/lib/utils'
 import { UpdateItemCard } from './update-item-card'
 
 import { toCalendar } from '@yomu/core/date-helpers'
@@ -37,9 +38,8 @@ function UpdatesList({ items, listName }: UpdatesListProps) {
 }
 
 const renderNovelUpdates = ({ title, chapters }: GroupedItem) => {
-  const sourceId = chapters[0].sourceId
+  const novelSlug = slugify(chapters[0].novelTitle)
   const novelId = chapters[0].novelId
-  const novelUrl = chapters[0].novelUrl
   const thumbnail = chapters[0].novelThumbnail
 
   const totalChapters = chapters.length
@@ -47,7 +47,7 @@ const renderNovelUpdates = ({ title, chapters }: GroupedItem) => {
   return (
     <AccordionItem key={novelId} value={title}>
       <AccordionTrigger className="grid grid-cols-[50px_1fr_40px] gap-4">
-        <Link href={{ pathname: '/novel', query: { novelUrl, sourceId } }}>
+        <Link href={`/novels/${novelId}/${novelSlug}`}>
           <Image
             className="rounded"
             src={thumbnail}

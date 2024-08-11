@@ -1,6 +1,9 @@
+'use client'
+
 import { Button } from '@yomu/ui/components/button'
 
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 type ChapterNavigationItemProps = {
   children: React.ReactNode
@@ -14,16 +17,11 @@ function ChapterNavigationButton({
   children,
   chapter,
 }: ChapterNavigationItemProps) {
+  const { id: novelId, slug: novelSlug } = useParams()
+
   return (
     <Button size="sm" asChild>
-      <Link
-        href={{
-          pathname: `/novel/${chapter.number}`,
-          query: {
-            chapterId: chapter.id,
-          },
-        }}
-      >
+      <Link href={`/novels/${novelId}/${novelSlug}/${chapter.number}`}>
         {children}
       </Link>
     </Button>

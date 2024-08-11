@@ -37,7 +37,7 @@ export const updateReadState = authAction(
         .set({ read })
         .where(inArray(chapters.id, chapterIds))
 
-      revalidatePath('/novel')
+      revalidatePath('/novels')
     } catch (error) {
       console.error(error)
     }
@@ -175,4 +175,17 @@ const saveChaptersToDatabase = async (novelChapters: NewChapter[]) => {
   } catch (error) {
     console.error(error)
   }
+}
+
+export const getChapterByNovelId = async (
+  novelId: number,
+  chapterNumber: number,
+) => {
+  return await db.query.chapters.findFirst({
+    where: (table, { and, eq }) =>
+      and(eq(table.novelId, novelId), eq(table.number, chapterNumber)),
+    with: {
+      novel: true,
+    },
+  })
 }

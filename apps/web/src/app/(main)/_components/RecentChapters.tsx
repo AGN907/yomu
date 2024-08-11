@@ -1,5 +1,6 @@
 import { CardContainer } from '@/components/card-container'
 import { getLatestUpdatedChapters } from '@/lib/actions/updates'
+import { slugify } from '@/lib/utils'
 
 import { formatReleaseDate } from '@yomu/core/date-helpers'
 
@@ -32,13 +33,7 @@ export async function RecentChapters() {
               >
                 <Link
                   className="block hover:underline"
-                  href={{
-                    pathname: '/novel',
-                    query: {
-                      novelUrl: chapter.novelUrl,
-                      sourceId: chapter.sourceId,
-                    },
-                  }}
+                  href={`/novels/${chapter.novelId}/${slugify(chapter.novelTitle)}`}
                 >
                   <Image
                     className="rounded"
@@ -51,23 +46,18 @@ export async function RecentChapters() {
                 <div className="flex w-full min-w-0 flex-col">
                   <Link
                     className="truncate font-medium hover:underline"
-                    href={{
-                      pathname: '/novel',
-                      query: {
-                        novelUrl: chapter.novelUrl,
-                        sourceId: chapter.sourceId,
-                      },
-                    }}
+                    href={`/novels/${chapter.novelId}/${slugify(
+                      chapter.novelTitle,
+                    )}`}
                   >
                     {chapter.novelTitle}
                   </Link>
 
                   <Link
                     className="truncate text-sm hover:underline"
-                    href={{
-                      pathname: `/novel/${chapter.chapterNumber}`,
-                      query: { chapterId: chapter.chapterId },
-                    }}
+                    href={`/novels/${chapter.novelId}/${slugify(
+                      chapter.novelTitle,
+                    )}/${chapter.chapterNumber}`}
                   >
                     {chapter.chapterTitle}
                   </Link>
