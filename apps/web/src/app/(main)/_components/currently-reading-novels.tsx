@@ -2,7 +2,6 @@ import { CardContainer } from '@/components/card-container'
 import { NovelCard } from '@/components/novel-card'
 import { getLatestReadNovels } from '@/lib/actions/novels'
 
-import { slugify } from '@yomu/core/utils/string'
 import { Progress } from '@yomu/ui/components/progress'
 
 import Link from 'next/link'
@@ -21,7 +20,7 @@ async function CurrentlyReadingNovels() {
 
     return (
       <div key={novel.id} className="space-y-2">
-        <Link href={`/novels/${novel.id}/${slugify(novel.title)}`}>
+        <Link href={`/novels/${novel.id}/${novel.slug}`}>
           <NovelCard title={novel.title} thumbnail={novel.thumbnail} />
         </Link>
         <div className="space-y-1 px-2">

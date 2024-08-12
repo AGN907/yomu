@@ -1,6 +1,6 @@
 'use server'
 
-import { db, inArray } from '@/lib/database'
+import { and, db, desc, eq, inArray } from '@/lib/database'
 import { MyError, authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
 import {
@@ -9,11 +9,51 @@ import {
   GetChapterSchema,
   GetNextAndPreviousChapters,
   GetNovelChaptersSchema,
+  LatestUpdatedChaptersSchema,
   UpdateReadStateSchema,
 } from '@/lib/validators/chapters'
 
-import { chapters, type NewChapter } from '@yomu/core/database/schema/web'
+import {
+  chapters,
+  novels,
+  updatedChapters,
+  type NewChapter,
+} from '@yomu/core/database/schema/web'
+
 import { revalidatePath } from 'next/cache'
+
+export const getLatestUpdatedChapters = authAction(
+  LatestUpdatedChaptersSchema,
+  async ({ limit }, { userId }) => {
+    const result = db
+      .select({
+        novelId: novels.id,
+        novelTitle: novels.title,
+        novelUrl: novels.url,
+        novelThumbnail: novels.thumbnail,
+        sourceId: novels.sourceId,
+        chapterId: chapters.id,
+        chapterTitle: chapters.title,
+        chapterNumber: chapters.number,
+        updatedAt: updatedChapters.updatedAt,
+      })
+      .from(novels)
+      .innerJoin(updatedChapters, eq(novels.id, updatedChapters.novelId))
+      .innerJoin(chapters, eq(updatedChapters.chapterId, chapters.id))
+      .orderBy(desc(updatedChapters.updatedAt), desc(chapters.number))
+      .where(and(eq(novels.userId, userId), eq(novels.inLibrary, true)))
+
+    try {
+      if (limit) {
+        return await result.limit(limit)
+      }
+
+      return await result
+    } catch (error) {
+      console.error(error)
+    }
+  },
+)
 
 export const fetchChapterContent = authAction(
   FetchChapterContentSchema,

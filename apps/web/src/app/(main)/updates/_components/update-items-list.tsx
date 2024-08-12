@@ -3,7 +3,6 @@
 import { UpdateItemCard } from './update-item-card'
 
 import { toCalendar } from '@yomu/core/utils/dates'
-import { slugify } from '@yomu/core/utils/string'
 import type { UpdateItem } from '@yomu/sources/types'
 import {
   Accordion,
@@ -38,7 +37,7 @@ function UpdatesList({ items, listName }: UpdatesListProps) {
 }
 
 const renderNovelUpdates = ({ title, chapters }: GroupedItem) => {
-  const novelSlug = slugify(chapters[0].novelTitle)
+  const novelSlug = chapters[0].novelSlug
   const novelId = chapters[0].novelId
   const thumbnail = chapters[0].novelThumbnail
 

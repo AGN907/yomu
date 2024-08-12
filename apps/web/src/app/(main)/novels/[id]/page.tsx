@@ -1,7 +1,5 @@
 import { getNovelById } from '@/lib/actions/novels'
 
-import { slugify } from '@yomu/core/utils/string'
-
 import { redirect } from 'next/navigation'
 
 type PageParams = {
@@ -11,11 +9,11 @@ type PageParams = {
 }
 
 async function NovelIDPage({ params: { id } }: PageParams) {
-  const { data } = await getNovelById({ novelId: Number(id) })
+  const { data: novel } = await getNovelById({ novelId: Number(id) })
 
-  if (!data) return
+  if (!novel) return
 
-  const slug = slugify(data.title)
+  const { slug } = novel
   redirect(`/novels/${id}/${slug}`)
 
   return <div></div>

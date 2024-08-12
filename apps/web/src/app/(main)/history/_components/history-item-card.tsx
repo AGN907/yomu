@@ -1,7 +1,6 @@
 import type { HistoryItemWithTimestamps } from '@/lib/actions/history'
 
 import { dayjs } from '@yomu/core/utils/dates'
-import { slugify } from '@yomu/core/utils/string'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -11,9 +10,14 @@ export type HistoryItemCardProps = {
 }
 
 function HistoryItemCard({ item }: HistoryItemCardProps) {
-  const { novelId, novelTitle, novelThumbnail, chapterNumber, updatedAt } = item
-
-  const novelSlug = slugify(novelTitle)
+  const {
+    novelId,
+    novelTitle,
+    novelSlug,
+    novelThumbnail,
+    chapterNumber,
+    updatedAt,
+  } = item
 
   return (
     <div className="rounded-lg border p-4">

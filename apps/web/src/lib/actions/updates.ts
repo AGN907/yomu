@@ -107,6 +107,7 @@ export const getUpdatedChapters = async () => {
       .select({
         novelId: novels.id,
         novelTitle: novels.title,
+        novelSlug: novels.slug,
         novelUrl: novels.url,
         novelThumbnail: novels.thumbnail,
         sourceId: novels.sourceId,
