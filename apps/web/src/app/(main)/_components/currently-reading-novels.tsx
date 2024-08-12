@@ -4,8 +4,6 @@ import { getLatestReadNovels } from '@/lib/actions/novels'
 
 import { Progress } from '@yomu/ui/components/progress'
 
-import Link from 'next/link'
-
 async function CurrentlyReadingNovels() {
   const latestReadNovels = await getLatestReadNovels()
 
@@ -20,9 +18,7 @@ async function CurrentlyReadingNovels() {
 
     return (
       <div key={novel.id} className="space-y-2">
-        <Link href={`/novels/${novel.id}/${novel.slug}`}>
-          <NovelCard title={novel.title} thumbnail={novel.thumbnail} />
-        </Link>
+        <NovelCard novel={novel} />
         <div className="space-y-1 px-2">
           <div className="flex justify-end">
             <span className="text-muted-foreground text-xs">

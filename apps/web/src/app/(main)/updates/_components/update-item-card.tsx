@@ -7,13 +7,21 @@ type ChapterUpdateCardProps = {
 }
 
 function UpdateItemCard({ item }: ChapterUpdateCardProps) {
-  const { novelId, novelSlug, chapterNumber } = item
+  const { novelSlug, chapterNumber } = item
+
+  const chapterPath = `/novels/${novelSlug}/${chapterNumber}`
+  const chapterQuery = {
+    chapterId: item.chapterId,
+  }
 
   return (
     <div className="p-4">
       <div className="text-muted-foreground text-sm">
         <Link
-          href={`/novels/${novelId}/${novelSlug}/chapter-${chapterNumber}`}
+          href={{
+            pathname: chapterPath,
+            query: chapterQuery,
+          }}
           className="hover:underline"
         >
           Chapter {chapterNumber}

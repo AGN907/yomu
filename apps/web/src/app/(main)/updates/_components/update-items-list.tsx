@@ -37,16 +37,29 @@ function UpdatesList({ items, listName }: UpdatesListProps) {
 }
 
 const renderNovelUpdates = ({ title, chapters }: GroupedItem) => {
+  const sourceId = chapters[0].sourceId
   const novelSlug = chapters[0].novelSlug
+  const novelUrl = chapters[0].novelUrl
   const novelId = chapters[0].novelId
   const thumbnail = chapters[0].novelThumbnail
 
   const totalChapters = chapters.length
 
+  const novelPath = `/novels/${novelSlug}`
+  const novelQuery = {
+    sourceId,
+    novelUrl,
+  }
+
   return (
     <AccordionItem key={novelId} value={title}>
       <AccordionTrigger className="grid grid-cols-[50px_1fr_40px] gap-4">
-        <Link href={`/novels/${novelId}/${novelSlug}`}>
+        <Link
+          href={{
+            pathname: novelPath,
+            query: novelQuery,
+          }}
+        >
           <Image
             className="rounded"
             src={thumbnail}
