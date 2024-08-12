@@ -14,8 +14,13 @@ type ChapterItemProps = {
 }
 
 function ChapterItem({ chapter, isSelected, onSelect }: ChapterItemProps) {
-  const { id, novelId, title, number, read, releaseDate } = chapter
+  const { id, title, number, read, releaseDate } = chapter
   const { slug } = useParams()
+
+  const chapterPath = `/novels/${slug}/${number}`
+  const chapterQuery = {
+    chapterId: id,
+  }
 
   return (
     <Label className="bg-card group grid grid-cols-[2rem_1fr_auto] items-center gap-4 rounded border px-2 py-4">
@@ -31,7 +36,8 @@ function ChapterItem({ chapter, isSelected, onSelect }: ChapterItemProps) {
       <Link
         key={id}
         href={{
-          pathname: `/novels/${novelId}/${slug}/chapter-${number}`,
+          pathname: chapterPath,
+          query: chapterQuery,
         }}
         title={title}
         className={cn(

@@ -11,18 +11,36 @@ export type HistoryItemCardProps = {
 
 function HistoryItemCard({ item }: HistoryItemCardProps) {
   const {
-    novelId,
+    sourceId,
     novelTitle,
     novelSlug,
+    novelUrl,
     novelThumbnail,
+    chapterId,
     chapterNumber,
     updatedAt,
   } = item
 
+  const novelPath = `/novels/${novelSlug}`
+  const chapterPath = novelPath + `/${chapterNumber}`
+
+  const novelQuery = {
+    sourceId,
+    novelUrl,
+  }
+  const chapterQuery = {
+    chapterId: chapterId,
+  }
+
   return (
     <div className="rounded-lg border p-4">
       <div className="grid grid-cols-[50px_1fr] gap-4">
-        <Link href={`/novels/${novelId}/${novelSlug}`}>
+        <Link
+          href={{
+            pathname: novelPath,
+            query: novelQuery,
+          }}
+        >
           <Image
             className="rounded object-cover"
             src={novelThumbnail}
@@ -35,7 +53,10 @@ function HistoryItemCard({ item }: HistoryItemCardProps) {
           <p className="truncate font-medium">{novelTitle}</p>
           <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <Link
-              href={`/novels/${novelId}/${novelSlug}/chapter-${chapterNumber}`}
+              href={{
+                pathname: chapterPath,
+                query: chapterQuery,
+              }}
               className="hover:underline"
             >
               Chapter {chapterNumber}

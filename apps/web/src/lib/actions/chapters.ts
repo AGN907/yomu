@@ -20,8 +20,6 @@ import {
   type NewChapter,
 } from '@yomu/core/database/schema/web'
 
-import { revalidatePath } from 'next/cache'
-
 export const getLatestUpdatedChapters = authAction(
   LatestUpdatedChaptersSchema,
   async ({ limit }, { userId }) => {
@@ -76,8 +74,6 @@ export const updateReadState = authAction(
         .update(chapters)
         .set({ read })
         .where(inArray(chapters.id, chapterIds))
-
-      revalidatePath('/novels')
     } catch (error) {
       console.error(error)
     }
@@ -217,13 +213,9 @@ const saveChaptersToDatabase = async (novelChapters: NewChapter[]) => {
   }
 }
 
-export const getChapterByNovelId = async (
-  novelId: number,
-  chapterNumber: number,
-) => {
+export const getChapterById = async (chapterId: number) => {
   return await db.query.chapters.findFirst({
-    where: (table, { and, eq }) =>
-      and(eq(table.novelId, novelId), eq(table.number, chapterNumber)),
+    where: (table, { eq }) => eq(table.id, chapterId),
     with: {
       novel: true,
     },

@@ -26,7 +26,6 @@ import {
 import { slugify } from '@yomu/core/utils/string'
 
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 
 export const getLatestReadNovels = async () => {
   const user = await getUserOrRedirect()
@@ -98,10 +97,7 @@ export const getNovel = authAction(
   GetNovelSchema,
   async ({ sourceId, url }) => {
     const { data: novelExist } = await getNovelFromDatabase({ sourceId, url })
-    if (novelExist) {
-      const { id, slug } = novelExist
-      redirect(`/novels/${id}/${slug}`)
-    }
+    if (novelExist) return novelExist
 
     const { data: fetchedNovel } = await fetchNovel({ sourceId, url })
     if (!fetchedNovel) {
@@ -116,9 +112,7 @@ export const getNovel = authAction(
       throw new Error('Failed to fetch novel from database')
     }
 
-    const { id, slug } = novel
-
-    redirect(`/novels/${id}/${slug}`)
+    return novel
   },
 )
 
@@ -198,7 +192,7 @@ export const addNovelToLibrary = authAction(
           : "Couldn't add novel to library. Please try again",
       }
     } finally {
-      revalidatePath('/novels')
+      revalidatePath('/novels/[slug]', 'page')
     }
   },
 )

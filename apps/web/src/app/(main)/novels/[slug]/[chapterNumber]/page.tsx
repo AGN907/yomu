@@ -1,7 +1,7 @@
 import { GoBack } from '@/components/go-back'
 import { PageLayout } from '@/components/page-layout'
 import Spinner from '@/components/spinner'
-import { getChapterByNovelId } from '@/lib/actions/chapters'
+import { getChapterById } from '@/lib/actions/chapters'
 import { BottomChapterSection } from './_components/bottom-chapter-section'
 import { ChapterContent } from './_components/chapter-content'
 
@@ -11,9 +11,8 @@ import { Suspense } from 'react'
 
 type ChapterPageProps = {
   params: {
-    chapterNumber: string
-    id: string
     slug: string
+    chapterNumber: string
   }
   searchParams: {
     chapterId: string
@@ -24,30 +23,29 @@ export async function generateMetadata({
   params,
   searchParams,
 }: ChapterPageProps) {
-  const { chapterNumber: chapterNumberString, slug: novelSlug } = params
+  const { chapterNumber, slug: novelSlug } = params
 
   const novelTitle = unSlugify(novelSlug)
-  const chapterNumber = parseInt(chapterNumberString.match(/\d+/)?.[0] ?? '-1')
 
   return {
     title: `Chapter ${chapterNumber} ${novelTitle} - Yomu`,
   }
 }
 
-async function ChapterPage({ params }: ChapterPageProps) {
-  const { id: novelIdString, chapterNumber: chapterNumberString } = params
+async function ChapterPage({ params, searchParams }: ChapterPageProps) {
+  const { slug: novelSlug, chapterNumber: chapterNumberString } = params
+  const { chapterId } = searchParams
 
-  const novelId = parseInt(novelIdString)
-  const chapterNumber = parseInt(chapterNumberString.match(/\d+/)?.[0] ?? '-1')
+  const chapterNumber = parseInt(chapterNumberString)
 
-  const chapterWithSourceId = await getChapterByNovelId(novelId, chapterNumber)
+  const chapterWithSourceId = await getChapterById(Number(chapterId))
 
   if (!chapterWithSourceId) {
     throw new Error('Chapter not found')
   }
 
   const {
-    novel: { slug, sourceId },
+    novel: { sourceId, id: novelId, url: novelUrl },
     ...chapter
   } = chapterWithSourceId
 
@@ -55,7 +53,9 @@ async function ChapterPage({ params }: ChapterPageProps) {
     <PageLayout
       pageTitle={
         <div className="flex items-center gap-4">
-          <GoBack href={`/novels/${novelId}/${slug}`} />
+          <GoBack
+            href={`/novels/${novelSlug}?sourceId=${sourceId}&novelUrl=${novelUrl}`}
+          />
         </div>
       }
     >
