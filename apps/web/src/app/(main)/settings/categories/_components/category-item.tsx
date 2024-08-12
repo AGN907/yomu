@@ -1,8 +1,8 @@
-import { capitalize } from '@/lib/utils'
 import { DeleteCategoryItem } from './delete-category-item'
 import { EditCategoryItem } from './edit-category-item'
 
 import { Category } from '@yomu/core/database/schema/web'
+import { capitalize } from '@yomu/core/utils/string'
 import { cn } from '@yomu/ui/utils'
 
 type CategoryItemProps = {

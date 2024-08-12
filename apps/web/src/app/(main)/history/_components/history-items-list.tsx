@@ -1,7 +1,7 @@
 import { type HistoryItemWithTimestamps } from '@/lib/actions/history'
 import { HistoryItemCard } from './history-item-card'
 
-import { toCalendar } from '@yomu/core/date-helpers'
+import { toCalendar } from '@yomu/core/utils/dates'
 
 function HistoryItemsList({
   items,

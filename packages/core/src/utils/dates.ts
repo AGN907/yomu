@@ -1,3 +1,4 @@
+import * as chrono from 'chrono-node'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
@@ -24,6 +25,23 @@ dayjs.updateLocale('en', {
   },
 })
 
-export { dayjs }
+export const parseReleaseDate = (time: string) => {
+  return chrono.parseDate(time)
+}
 
-export * from './utils'
+export const formatReleaseDate = (date: Date) => {
+  return dayjs(date).calendar(null, {
+    sameDay: '[Today]',
+    lastDay: '[Yesterday]',
+    lastWeek: function (now: dayjs.Dayjs) {
+      return `${now.diff(this as dayjs.Dayjs, 'day')} days ago`
+    },
+    sameElse: 'MMM D, YYYY',
+  })
+}
+
+export const toCalendar = (date: string) => {
+  return dayjs(date).calendar()
+}
+
+export { dayjs }

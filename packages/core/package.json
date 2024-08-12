@@ -15,6 +15,6 @@
     "./database": "./src/database/index.ts",
     "./database/helpers": "./src/database/helpers.ts",
     "./database/schema/*": "./src/database/schema/*.ts",
-    "./date-helpers": "./src/date-helpers/index.ts"
+    "./utils/*": "./src/utils/*.ts"
   }
 }

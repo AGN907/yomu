@@ -5,7 +5,8 @@ import { getChapterByNovelId } from '@/lib/actions/chapters'
 import { BottomChapterSection } from './_components/bottom-chapter-section'
 import { ChapterContent } from './_components/chapter-content'
 
-import { slugify, unSlugify } from '@/lib/utils'
+import { slugify, unSlugify } from '@yomu/core/utils/string'
+
 import { Suspense } from 'react'
 
 type ChapterPageProps = {

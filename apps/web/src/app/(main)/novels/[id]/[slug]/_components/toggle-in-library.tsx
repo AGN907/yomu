@@ -10,9 +10,9 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/responsive-dialog'
 import { addNovelToLibrary } from '@/lib/actions/novels'
-import { capitalize } from '@/lib/utils'
 
 import { Category } from '@yomu/core/database/schema/web'
+import { capitalize } from '@yomu/core/utils/string'
 import { Button } from '@yomu/ui/components/button'
 import { Bookmark } from '@yomu/ui/components/icons'
 import {

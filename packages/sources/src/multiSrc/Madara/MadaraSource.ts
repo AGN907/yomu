@@ -1,6 +1,6 @@
 import { BaseSource, NovelItemWithInfo, NovelStatus } from '../../types'
 
-import { parseReleaseDate } from '@yomu/core/date-helpers'
+import { parseReleaseDate } from '@yomu/core/utils/dates'
 
 import * as cheerio from 'cheerio'
 

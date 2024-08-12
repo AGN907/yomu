@@ -1,5 +1,4 @@
-import { slugify } from '@/lib/utils'
-
+import { slugify } from '@yomu/core/utils/string'
 import type { UpdateItem } from '@yomu/sources/types'
 
 import Link from 'next/link'

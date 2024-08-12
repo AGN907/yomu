@@ -1,5 +1,7 @@
 import { getNovelById } from '@/lib/actions/novels'
-import { slugify } from '@/lib/utils'
+
+import { slugify } from '@yomu/core/utils/string'
+
 import { redirect } from 'next/navigation'
 
 type PageParams = {
