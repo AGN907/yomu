@@ -2,11 +2,11 @@
 
 import Spinner from '@/components/spinner'
 import { getNovelsByCategory } from '@/lib/actions/novels'
-import { capitalize } from '@/lib/utils'
 import { LibraryList } from './library-list'
 import { UpdateCategoryNovels } from './update-category-novels'
 
 import { Category } from '@yomu/core/database/schema/web'
+import { capitalize } from '@yomu/core/utils/string'
 import { ScrollArea, ScrollBar } from '@yomu/ui/components/scroll-area'
 import { ToggleGroup, ToggleGroupItem } from '@yomu/ui/components/toggle-group'
 

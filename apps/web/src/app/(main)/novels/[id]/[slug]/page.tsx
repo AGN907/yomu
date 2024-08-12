@@ -1,8 +1,9 @@
 import { GoBack } from '@/components/go-back'
 import { PageLayout } from '@/components/page-layout'
-import { unSlugify } from '@/lib/utils'
 import { NovelSkeleton } from './_components/novel-skeleton'
 import { NovelOverview } from './novel-overview'
+
+import { unSlugify } from '@yomu/core/utils/string'
 
 import { Suspense } from 'react'
 

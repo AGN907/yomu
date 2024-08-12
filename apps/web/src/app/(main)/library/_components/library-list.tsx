@@ -1,7 +1,7 @@
 import { NovelCard } from '@/components/novel-card'
-import { slugify } from '@/lib/utils'
 
 import { Novel } from '@yomu/core/database/schema/web'
+import { slugify } from '@yomu/core/utils/string'
 
 import Link from 'next/link'
 

@@ -1,6 +1,5 @@
-import { capitalize } from '@/lib/utils'
-
 import { Category } from '@yomu/core/database/schema/web'
+import { capitalize } from '@yomu/core/utils/string'
 import { ToggleGroup, ToggleGroupItem } from '@yomu/ui/components/toggle-group'
 
 import Link from 'next/link'

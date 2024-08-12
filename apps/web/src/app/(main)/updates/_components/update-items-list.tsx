@@ -1,9 +1,9 @@
 'use client'
 
-import { slugify } from '@/lib/utils'
 import { UpdateItemCard } from './update-item-card'
 
-import { toCalendar } from '@yomu/core/date-helpers'
+import { toCalendar } from '@yomu/core/utils/dates'
+import { slugify } from '@yomu/core/utils/string'
 import type { UpdateItem } from '@yomu/sources/types'
 import {
   Accordion,

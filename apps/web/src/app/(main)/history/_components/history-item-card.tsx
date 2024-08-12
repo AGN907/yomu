@@ -1,7 +1,7 @@
 import type { HistoryItemWithTimestamps } from '@/lib/actions/history'
-import { slugify } from '@/lib/utils'
 
-import { dayjs } from '@yomu/core/date-helpers'
+import { dayjs } from '@yomu/core/utils/dates'
+import { slugify } from '@yomu/core/utils/string'
 
 import Image from 'next/image'
 import Link from 'next/link'
