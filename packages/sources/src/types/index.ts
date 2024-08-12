@@ -37,6 +37,7 @@ export interface HistoryItem {
   novelId: number
   chapterId: number
   novelTitle: string
+  novelSlug: string
   chapterTitle: string
   novelUrl: string
   chapterUrl: string
