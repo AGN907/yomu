@@ -45,6 +45,7 @@ export const novels = sqliteTable('novels', {
     onUpdate: 'cascade',
   }),
   title: text('title').notNull(),
+  slug: text('slug').notNull(),
   url: text('url', { length: 255 }).notNull(),
   author: text('author').notNull(),
   thumbnail: text('thumbnail').notNull(),
