@@ -2,13 +2,10 @@
 
 import { NovelCard } from '@/components/novel-card'
 import Spinner from '@/components/spinner'
-import { getNovelInfo } from '@/lib/actions/novels'
 import { FiltersToggle } from './_components/filters-toggle'
 import { LoadMore } from './_components/load-more'
 import { SearchSourceForm } from './_components/search-source-form'
 import { useNovelsInfiniteQuery } from './_components/use-novels-infinite-query'
-
-import { useAction } from 'next-safe-action/hooks'
 
 type BrowseSourceProps = {
   query: string
@@ -33,8 +30,6 @@ function BrowseSource({ query, isLatest, sourceId }: BrowseSourceProps) {
 
   const flattenedNovels = data?.pages.flatMap((page) => page.novels) || []
 
-  const { execute } = useAction(getNovelInfo)
-
   return (
     <div>
       <div className="flex justify-between">
@@ -54,12 +49,7 @@ function BrowseSource({ query, isLatest, sourceId }: BrowseSourceProps) {
           ) : (
             <div className="grid grid-cols-1 gap-y-8 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {flattenedNovels.map((novel) => (
-                <NovelCard
-                  key={novel.title}
-                  title={novel.title}
-                  thumbnail={novel.thumbnail}
-                  onNovelClick={() => execute({ sourceId, url: novel.url })}
-                />
+                <NovelCard key={novel.title} novel={novel} />
               ))}
             </div>
           )}

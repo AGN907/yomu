@@ -17,11 +17,22 @@ function ChapterNavigationButton({
   children,
   chapter,
 }: ChapterNavigationItemProps) {
-  const { id: novelId, slug: novelSlug } = useParams()
+  const { id, number } = chapter
+  const { slug: novelSlug } = useParams()
+
+  const chapterPath = `/novels/${novelSlug}/${number}`
+  const chapterQuery = {
+    chapterId: id,
+  }
 
   return (
     <Button size="sm" asChild>
-      <Link href={`/novels/${novelId}/${novelSlug}/${chapter.number}`}>
+      <Link
+        href={{
+          pathname: chapterPath,
+          query: chapterQuery,
+        }}
+      >
         {children}
       </Link>
     </Button>
