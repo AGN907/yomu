@@ -5,7 +5,7 @@ import { getChapterByNovelId } from '@/lib/actions/chapters'
 import { BottomChapterSection } from './_components/bottom-chapter-section'
 import { ChapterContent } from './_components/chapter-content'
 
-import { slugify, unSlugify } from '@yomu/core/utils/string'
+import { unSlugify } from '@yomu/core/utils/string'
 
 import { Suspense } from 'react'
 
@@ -47,7 +47,7 @@ async function ChapterPage({ params }: ChapterPageProps) {
   }
 
   const {
-    novel: { title, sourceId },
+    novel: { slug, sourceId },
     ...chapter
   } = chapterWithSourceId
 
@@ -55,7 +55,7 @@ async function ChapterPage({ params }: ChapterPageProps) {
     <PageLayout
       pageTitle={
         <div className="flex items-center gap-4">
-          <GoBack href={`/novels/${novelId}/${slugify(title)}`} />
+          <GoBack href={`/novels/${novelId}/${slug}`} />
         </div>
       }
     >
