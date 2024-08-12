@@ -99,7 +99,8 @@ export const getNovelInfo = authAction(
   async ({ sourceId, url }) => {
     const { data: novelExist } = await getNovelFromDatabase({ sourceId, url })
     if (novelExist) {
-      redirect(`/novels/${novelExist.id}/${slugify(novelExist.title)}`)
+      const { id, slug } = novelExist
+      redirect(`/novels/${id}/${slug}`)
     }
 
     const { data: fetchedNovel } = await fetchNovelInfo({ sourceId, url })
@@ -109,16 +110,14 @@ export const getNovelInfo = authAction(
 
     await saveNovelToDatabase({ novel: fetchedNovel })
 
-    const { data } = await getNovelFromDatabase({ sourceId, url })
+    const { data: novel } = await getNovelFromDatabase({ sourceId, url })
 
-    if (!data) {
+    if (!novel) {
       throw new Error('Failed to fetch novel from database')
     }
 
-    const { id, title } = data
-    const slug = slugify(title)
+    const { id, slug } = novel
 
-    console.log('/novles/' + id + '/' + slug)
     redirect(`/novels/${id}/${slug}`)
   },
 )
@@ -160,6 +159,7 @@ const saveNovelToDatabase = authAction(
     const novelWithUserId: NewNovel = {
       ...novel,
       userId,
+      slug: slugify(novel.title),
     }
     try {
       const [novel] = await db

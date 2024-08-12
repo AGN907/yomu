@@ -52,6 +52,7 @@ export const getHistoryChapters = async (): Promise<
         id: history.id,
         novelId: novels.id,
         novelTitle: novels.title,
+        novelSlug: novels.slug,
         novelUrl: novels.url,
         novelThumbnail: novels.thumbnail,
         chapterId: chapters.id,

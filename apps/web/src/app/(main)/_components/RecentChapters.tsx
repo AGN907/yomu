@@ -2,7 +2,6 @@ import { CardContainer } from '@/components/card-container'
 import { getLatestUpdatedChapters } from '@/lib/actions/chapters'
 
 import { formatReleaseDate } from '@yomu/core/utils/dates'
-import { slugify } from '@yomu/core/utils/string'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -26,47 +25,54 @@ export async function RecentChapters() {
               </p>
             </div>
           ) : (
-            recentChapters.map((chapter) => (
-              <div
-                className="grid grid-cols-[40px_1fr] items-center gap-2 py-1"
-                key={chapter.chapterId}
-              >
-                <Link
-                  className="block hover:underline"
-                  href={`/novels/${chapter.novelId}/${slugify(chapter.novelTitle)}`}
+            recentChapters.map(
+              ({
+                novelId,
+                novelTitle,
+                novelSlug,
+                novelThumbnail,
+                chapterId,
+                chapterTitle,
+                chapterNumber,
+                updatedAt,
+              }) => (
+                <div
+                  className="grid grid-cols-[40px_1fr] items-center gap-2 py-1"
+                  key={chapterId}
                 >
-                  <Image
-                    className="rounded"
-                    src={chapter.novelThumbnail}
-                    alt={chapter.novelTitle}
-                    width={50}
-                    height={80}
-                  />
-                </Link>
-                <div className="flex w-full min-w-0 flex-col">
                   <Link
-                    className="truncate font-medium hover:underline"
-                    href={`/novels/${chapter.novelId}/${slugify(
-                      chapter.novelTitle,
-                    )}`}
+                    className="block hover:underline"
+                    href={`/novels/${novelId}/${novelSlug}`}
                   >
-                    {chapter.novelTitle}
+                    <Image
+                      className="rounded"
+                      src={novelThumbnail}
+                      alt={novelTitle}
+                      width={50}
+                      height={80}
+                    />
                   </Link>
+                  <div className="flex w-full min-w-0 flex-col">
+                    <Link
+                      className="truncate font-medium hover:underline"
+                      href={`/novels/${novelId}/${novelSlug}`}
+                    >
+                      {novelTitle}
+                    </Link>
 
-                  <Link
-                    className="truncate text-sm hover:underline"
-                    href={`/novels/${chapter.novelId}/${slugify(
-                      chapter.novelTitle,
-                    )}/${chapter.chapterNumber}`}
-                  >
-                    {chapter.chapterTitle}
-                  </Link>
-                  <span className="text-muted-foreground ml-auto flex-shrink-0 text-xs">
-                    {formatReleaseDate(chapter.updatedAt)}
-                  </span>
+                    <Link
+                      className="truncate text-sm hover:underline"
+                      href={`/novels/${novelId}/${novelSlug}/${chapterNumber}`}
+                    >
+                      {chapterTitle}
+                    </Link>
+                    <span className="text-muted-foreground ml-auto flex-shrink-0 text-xs">
+                      {formatReleaseDate(updatedAt)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))
+              ),
+            )
           )}
         </div>
       </CardContainer>
