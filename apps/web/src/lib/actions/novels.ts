@@ -3,7 +3,6 @@
 import { and, db, desc, eq } from '@/lib/database'
 import { authAction } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
-import { slugify } from '@/lib/utils'
 import {
   AddToLibrarySchema,
   FetchNovelByFilterSchema,
@@ -23,6 +22,7 @@ import {
   type NewNovel,
   type Novel,
 } from '@yomu/core/database/schema/web'
+import { slugify } from '@yomu/core/utils/string'
 import type { NovelItemWithInfo } from '@yomu/sources/types'
 
 import { revalidatePath } from 'next/cache'

@@ -1,6 +1,6 @@
 'use client'
 
-import { capitalize } from '@/lib/utils'
+import { capitalize } from '@yomu/core/utils/string'
 
 import { useTheme } from 'next-themes'
 import { useMemo } from 'react'

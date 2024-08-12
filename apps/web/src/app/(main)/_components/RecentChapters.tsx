@@ -1,8 +1,8 @@
 import { CardContainer } from '@/components/card-container'
 import { getLatestUpdatedChapters } from '@/lib/actions/updates'
-import { slugify } from '@/lib/utils'
 
-import { formatReleaseDate } from '@yomu/core/date-helpers'
+import { formatReleaseDate } from '@yomu/core/utils/dates'
+import { slugify } from '@yomu/core/utils/string'
 
 import Image from 'next/image'
 import Link from 'next/link'
