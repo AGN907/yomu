@@ -3,10 +3,11 @@
 import { Button } from '@yomu/ui/components/button'
 import { ArrowLeft } from '@yomu/ui/components/icons'
 
+import type { Route } from 'next'
 import { useRouter } from 'next/navigation'
 
 type GoBackProps = {
-  href?: string
+  href?: Route
 }
 
 function GoBack({ href }: GoBackProps) {

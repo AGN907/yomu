@@ -12,6 +12,7 @@ function UpdateItemCard({ item }: ChapterUpdateCardProps) {
   const chapterPath = `/novels/${novelSlug}/${chapterNumber}`
   const chapterQuery = {
     chapterId: item.chapterId,
+    returnTo: '/updates',
   }
 
   return (
