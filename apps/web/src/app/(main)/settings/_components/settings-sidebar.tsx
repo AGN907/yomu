@@ -2,6 +2,7 @@
 
 import { cn } from '@yomu/ui/utils'
 
+import type { Route } from 'next'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -24,7 +25,7 @@ function SettingsSidebar() {
       {SIDEBARITEMS.map(({ name, path }) => (
         <Link
           key={name}
-          href={path}
+          href={path as Route}
           className={cn(pathname === path ? 'text-primary font-semibold' : '')}
         >
           {name}
