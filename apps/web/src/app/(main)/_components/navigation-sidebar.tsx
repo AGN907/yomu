@@ -17,8 +17,9 @@ import {
 import { Separator } from '@yomu/ui/components/separator'
 import { cn } from '@yomu/ui/utils'
 
+import type { Route } from 'next'
 import Image from 'next/image'
-import Link, { LinkProps } from 'next/link'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
@@ -94,9 +95,9 @@ function NavigationSidebar() {
 
               {section.children.map(({ name, href, Icon }) => (
                 <NavigationSidebarItem
-                  onClick={() => setIsSidebarOpen(false)}
+                  onNavigate={() => setIsSidebarOpen(false)}
                   key={name}
-                  href={href}
+                  href={href as Route}
                   isActive={pathname === href}
                 >
                   <Icon size={22} />
@@ -132,22 +133,24 @@ function NavigationSidebar() {
 type NavigationSidebarItemProps = {
   children: React.ReactNode
   isActive: boolean
-} & LinkProps
+  onNavigate: () => void
+  href: Route
+}
 
 function NavigationSidebarItem({
   children,
   href,
   isActive,
-  ...props
+  onNavigate,
 }: NavigationSidebarItemProps) {
   return (
     <Link
+      onClick={onNavigate}
       href={href}
       className={cn(
         'hover:bg-accent/70 flex items-center gap-4 rounded-md px-4 py-2 text-lg md:text-base',
         isActive && 'bg-accent font-medium',
       )}
-      {...props}
     >
       {children}
     </Link>
