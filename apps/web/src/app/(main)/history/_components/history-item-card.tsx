@@ -30,6 +30,7 @@ function HistoryItemCard({ item }: HistoryItemCardProps) {
   }
   const chapterQuery = {
     chapterId: chapterId,
+    returnTo: '/history',
   }
 
   return (

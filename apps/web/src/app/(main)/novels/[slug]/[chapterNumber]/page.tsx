@@ -7,6 +7,7 @@ import { ChapterContent } from './_components/chapter-content'
 
 import { unSlugify } from '@yomu/core/utils/string'
 
+import type { Route } from 'next'
 import { Suspense } from 'react'
 
 type ChapterPageProps = {
@@ -16,6 +17,7 @@ type ChapterPageProps = {
   }
   searchParams: {
     chapterId: string
+    returnTo?: string
   }
 }
 
@@ -33,8 +35,8 @@ export async function generateMetadata({
 }
 
 async function ChapterPage({ params, searchParams }: ChapterPageProps) {
-  const { slug: novelSlug, chapterNumber: chapterNumberString } = params
-  const { chapterId } = searchParams
+  const { chapterNumber: chapterNumberString } = params
+  const { chapterId, returnTo } = searchParams
 
   const chapterNumber = parseInt(chapterNumberString)
 
@@ -45,7 +47,7 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
   }
 
   const {
-    novel: { sourceId, id: novelId, url: novelUrl },
+    novel: { sourceId, id: novelId },
     ...chapter
   } = chapterWithSourceId
 
@@ -53,9 +55,8 @@ async function ChapterPage({ params, searchParams }: ChapterPageProps) {
     <PageLayout
       pageTitle={
         <div className="flex items-center gap-4">
-          <GoBack
-            href={`/novels/${novelSlug}?sourceId=${sourceId}&novelUrl=${novelUrl}`}
-          />
+          {/* FIXME: When navigating back, returns to previous chapter */}
+          <GoBack href={returnTo ? (returnTo as Route) : undefined} />
         </div>
       }
     >
