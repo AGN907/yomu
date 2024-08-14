@@ -9,7 +9,7 @@
   "dependencies": {
     "chrono-node": "^2.7.5",
     "dayjs": "^1.11.11",
-    "drizzle-orm": "^0.30.10"
+    "drizzle-orm": "^0.33.0"
   },
   "exports": {
     "./database": "./src/database/index.ts",
