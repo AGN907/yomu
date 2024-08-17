@@ -1,9 +1,9 @@
-import { getUserOrRedirect } from '@/lib/actions/auth'
+import { assertAuthenticated } from '@/lib/session'
 import { PasswordFormCard } from './_components/password-form-card'
 import { UsernameFormCard } from './_components/username-form-card'
 
 async function AccountForm() {
-  const user = await getUserOrRedirect()
+  const user = await assertAuthenticated()
   const username = user.username
 
   return (

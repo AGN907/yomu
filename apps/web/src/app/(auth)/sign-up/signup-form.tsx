@@ -1,9 +1,8 @@
 'use client'
 
-import { FormErrorsField } from '@/components/form-errors-field'
+import { registerUserAction } from '@/actions/users'
 import { PasswordInput } from '@/components/password-input'
 import { SubmitButton } from '@/components/submit-button'
-import { signup } from '@/lib/actions/auth'
 
 import {
   Card,
@@ -16,11 +15,11 @@ import {
 import { Input } from '@yomu/ui/components/input'
 import { Label } from '@yomu/ui/components/label'
 
-import { useAction } from 'next-safe-action/hooks'
 import Link from 'next/link'
+import { useServerAction } from 'zsa-react'
 
 function SignupForm() {
-  const { execute, result } = useAction(signup)
+  const { execute } = useServerAction(registerUserAction)
 
   const handleSignup = (formData: FormData) => {
     const username = formData.get('username') as string
@@ -53,7 +52,6 @@ function SignupForm() {
             </div>
             <PasswordInput id="password" name="password" required />
           </div>
-          <FormErrorsField result={result} />
           <SubmitButton type="submit" className="w-full">
             Sign up
           </SubmitButton>

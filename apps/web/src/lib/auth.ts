@@ -3,7 +3,13 @@ import { db } from '@/lib/database'
 import { sessions, users } from '@yomu/core/database/schema/web'
 
 import { DrizzleSQLiteAdapter } from '@lucia-auth/adapter-drizzle'
-import { Lucia, type Session, type User } from 'lucia'
+import { hash } from '@node-rs/argon2'
+import {
+  Lucia,
+  generateIdFromEntropySize,
+  type Session,
+  type User,
+} from 'lucia'
 import { cookies } from 'next/headers'
 
 const adapter = new DrizzleSQLiteAdapter(db, sessions, users)
@@ -20,7 +26,6 @@ export const lucia = new Lucia(adapter, {
   getUserAttributes: (attributes) => {
     return {
       username: attributes.username,
-      fullName: attributes.fullName,
     }
   },
 })
@@ -61,9 +66,21 @@ export const validateRequest = async (): Promise<
   return result
 }
 
+export async function hashPassword(password: string) {
+  return await hash(password, {
+    memoryCost: 19456,
+    timeCost: 2,
+    outputLen: 32,
+    parallelism: 1,
+  })
+}
+
+export function generateId() {
+  return generateIdFromEntropySize(10)
+}
+
 interface DatabaseUserAttributes {
   username: string
-  fullName: string
 }
 
 declare module 'lucia' {

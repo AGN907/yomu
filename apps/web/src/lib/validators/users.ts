@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
-export const signupSchema = z.object({
+export const RegisterUserSchema = z.object({
   username: z
     .string()
-    .min(4, 'Please provide your username')
+    .min(4, 'Username is too short. Minimum length is 4 characters')
     .max(31, 'Username is too long. Maximum length is 31 characters')
     .regex(
       /^[a-zA-Z0-9_-]+$/,
@@ -15,9 +15,9 @@ export const signupSchema = z.object({
     .max(255),
 })
 
-export type SignupInput = z.infer<typeof signupSchema>
+export type RegisterUserInput = z.infer<typeof RegisterUserSchema>
 
-export const loginSchema = z.object({
+export const LoginSchema = z.object({
   username: z
     .string()
     .min(4, 'Username is too short. Minimum length is 4 characters')
@@ -28,7 +28,7 @@ export const loginSchema = z.object({
     .max(255),
 })
 
-export type LoginInput = z.infer<typeof loginSchema>
+export type LoginInput = z.infer<typeof LoginSchema>
 
 export const UpdateUsernameSchema = z.object({
   username: z

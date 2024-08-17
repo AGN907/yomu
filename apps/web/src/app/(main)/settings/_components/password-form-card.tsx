@@ -1,24 +1,26 @@
 'use client'
 
+import { updatePasswordAction } from '@/actions/users'
 import { CardContainer } from '@/components/card-container'
-import { FormErrorsField } from '@/components/form-errors-field'
 import { PasswordInput } from '@/components/password-input'
 import { SubmitButton } from '@/components/submit-button'
-import { updatePassword } from '@/lib/actions/auth'
 
 import { Label } from '@yomu/ui/components/label'
 import { toast } from '@yomu/ui/components/sonner'
 
-import { useAction } from 'next-safe-action/hooks'
 import { useRef } from 'react'
+import { useServerAction } from 'zsa-react'
 
 function PasswordFormCard() {
   const formRef = useRef<HTMLFormElement>(null)
-  const { execute: updatePass, result } = useAction(updatePassword, {
-    onSuccess(result) {
-      toast.success(result.success, {
-        id: 'update-password',
+  const { execute, error } = useServerAction(updatePasswordAction, {
+    onSuccess() {
+      toast.success('Password Updated', {
+        description: 'Your password was updated successfully',
       })
+    },
+    onError({ err }) {
+      toast.error(err.message)
     },
   })
 
@@ -29,7 +31,7 @@ function PasswordFormCard() {
         const currentPassword = formData.get('current-password') as string
         const newPassword = formData.get('new-password') as string
 
-        updatePass({ currentPassword, newPassword })
+        execute({ currentPassword, newPassword })
         formRef.current?.reset()
       }}
       className="space-y-8"
@@ -58,7 +60,7 @@ function PasswordFormCard() {
               required
             />
           </div>
-          <FormErrorsField result={result} />
+          {error ? <span>{error.message}</span> : null}
         </div>
       </CardContainer>
     </form>

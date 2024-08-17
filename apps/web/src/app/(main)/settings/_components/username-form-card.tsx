@@ -1,28 +1,28 @@
 'use client'
 
+import { updateUsernameAction } from '@/actions/users'
 import { CardContainer } from '@/components/card-container'
-import { FormErrorsField } from '@/components/form-errors-field'
 import { SubmitButton } from '@/components/submit-button'
-import { updateUsername } from '@/lib/actions/auth'
 
 import { Input } from '@yomu/ui/components/input'
 import { Label } from '@yomu/ui/components/label'
 import { toast } from '@yomu/ui/components/sonner'
 
-import { useAction } from 'next-safe-action/hooks'
+import { useServerAction } from 'zsa-react'
 
 type UsernameFormCardProps = {
   username: string
 }
 
 function UsernameFormCard({ username }: UsernameFormCardProps) {
-  const { execute: updateUser, result } = useAction(updateUsername, {
-    onSuccess(result) {
-      if (result.success) {
-        toast.success(result.success, {
-          id: 'update-username',
-        })
-      }
+  const { execute: updateUser } = useServerAction(updateUsernameAction, {
+    onSuccess() {
+      toast.success('Username Update', {
+        description: 'Your username was updated successfully',
+      })
+    },
+    onError({ err }) {
+      toast.error(err.message)
     },
   })
 
@@ -55,7 +55,6 @@ function UsernameFormCard({ username }: UsernameFormCardProps) {
               required
             />
           </div>
-          <FormErrorsField result={result} />
         </div>
       </CardContainer>
     </form>
