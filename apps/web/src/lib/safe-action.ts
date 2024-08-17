@@ -1,29 +1,21 @@
-import { validateRequest } from './auth/validate-request'
-import { AuthenticationError, PublicError } from './errors'
+import { assertAuthenticated } from './session'
 
-import { createSafeActionClient, DEFAULT_SERVER_ERROR } from 'next-safe-action'
+import { createServerActionProcedure } from 'zsa'
 
 export type UserSession = {
-  userId: string
+  id: string
+  username: string
+  fullName: string
 }
 
-export const action = createSafeActionClient({
-  handleReturnedServerError(error) {
-    if (error instanceof PublicError) {
-      return error.message
-    }
-    return DEFAULT_SERVER_ERROR
-  },
-})
+export const publicAction = createServerActionProcedure()
+  .handler(async () => {})
+  .createServerAction()
 
-export const authAction = createSafeActionClient({
-  async middleware() {
-    const { user } = await validateRequest()
+export const authenticatedAction = createServerActionProcedure()
+  .handler(async () => {
+    const user = await assertAuthenticated()
 
-    if (!user) {
-      throw new AuthenticationError()
-    }
-
-    return { userId: user.id }
-  },
-})
+    return { user }
+  })
+  .createServerAction()
