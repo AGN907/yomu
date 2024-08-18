@@ -1,5 +1,5 @@
 import { assertAuthenticated } from '@/lib/session'
-import { PasswordFormCard } from './_components/password-form-card'
+import { PasswordFormCard } from './_components/password-form'
 import { UsernameFormCard } from './_components/username-form'
 
 async function AccountForm() {

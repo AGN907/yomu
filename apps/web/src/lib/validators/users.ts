@@ -43,13 +43,23 @@ export const UpdateUsernameSchema = z.object({
 
 export type UpdateUsernameInput = z.infer<typeof UpdateUsernameSchema>
 
-export const UpdatePasswordSchema = z.object({
-  currentPassword: z
-    .string()
-    .min(6, 'Password is too short. Minimum length is 6 characters')
-    .max(255),
-  newPassword: z
-    .string()
-    .min(6, 'Password is too short. Minimum length is 6 characters')
-    .max(255),
-})
+export const UpdatePasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(6, 'Password is too short. Minimum length is 6 characters')
+      .max(255),
+    newPassword: z
+      .string()
+      .min(6, 'Password is too short. Minimum length is 6 characters')
+      .max(255),
+  })
+  .refine(
+    ({ currentPassword, newPassword }) => currentPassword !== newPassword,
+    {
+      message: 'New password cannot be the same as the current password',
+      path: ['newPassword'],
+    },
+  )
+
+export type UpdatePasswordInput = z.infer<typeof UpdatePasswordSchema>
