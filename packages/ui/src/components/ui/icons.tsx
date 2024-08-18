@@ -28,6 +28,7 @@ import {
   Settings,
   Sun,
   Tag,
+  Terminal,
   Trash,
   User,
 } from 'lucide-react'
@@ -62,6 +63,7 @@ export {
   Settings,
   Sun,
   Tag,
+  Terminal,
   Trash,
   User,
 }

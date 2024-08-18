@@ -2,7 +2,11 @@
 
 import { registerUserAction } from '@/actions/users'
 import { PasswordInput } from '@/components/password-input'
-import { SubmitButton } from '@/components/submit-button'
+import {
+  RegisterUserSchema,
+  type RegisterUserInput,
+} from '@/lib/validators/users'
+import { LoadingButton } from '@/components/loading-button'
 
 import {
   Card,
@@ -13,18 +17,43 @@ import {
   CardTitle,
 } from '@yomu/ui/components/card'
 import { Input } from '@yomu/ui/components/input'
-import { Label } from '@yomu/ui/components/label'
+import { Alert, AlertDescription, AlertTitle } from '@yomu/ui/components/alert'
+import { toast } from '@yomu/ui/components/sonner'
+import {
+  Form,
+  FormItem,
+  FormControl,
+  FormField,
+  FormMessage,
+  FormLabel,
+} from '@yomu/ui/components/form'
+import { Terminal } from '@yomu/ui/components/icons'
 
 import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import { useServerAction } from 'zsa-react'
 
 function SignupForm() {
-  const { execute } = useServerAction(registerUserAction)
+  const form = useForm<RegisterUserInput>({
+    resolver: zodResolver(RegisterUserSchema),
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+  })
 
-  const handleSignup = (formData: FormData) => {
-    const username = formData.get('username') as string
-    const password = formData.get('password') as string
+  const { execute, isPending, error } = useServerAction(registerUserAction, {
+    onError({ err }) {
+      toast.error('Registration failed', {
+        description: err.message,
+      })
+    },
+  })
 
+  const onSubmit = (data: RegisterUserInput) => {
+    const { username, password } = data
     execute({ username, password })
   }
 
@@ -35,27 +64,46 @@ function SignupForm() {
         <CardDescription>Create an account to get started</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={handleSignup} className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="username">Username</Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder="John"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+            <FormField
               name="username"
-              required
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="John" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-            </div>
-            <PasswordInput id="password" name="password" required />
-          </div>
-          <SubmitButton type="submit" className="w-full">
-            Sign up
-          </SubmitButton>
-        </form>
+            <FormField
+              name="password"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <PasswordInput {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {error ? (
+              <Alert variant="destructive">
+                <Terminal className="size-4" />
+                <AlertTitle>Registration failed</AlertTitle>
+                <AlertDescription>{error.message}</AlertDescription>
+              </Alert>
+            ) : null}
+            <LoadingButton loading={isPending} type="submit" className="w-full">
+              Sign up
+            </LoadingButton>
+          </form>
+        </Form>
       </CardContent>
       <CardFooter className="justify-center">
         <Link className="text-sm hover:underline" href="/log-in">

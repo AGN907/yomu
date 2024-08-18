@@ -2,7 +2,8 @@
 
 import { loginAction } from '@/actions/users'
 import { PasswordInput } from '@/components/password-input'
-import { SubmitButton } from '@/components/submit-button'
+import { LoadingButton } from '@/components/loading-button'
+import { type LoginInput, LoginSchema } from '@/lib/validators/users'
 
 import {
   Card,
@@ -13,17 +14,41 @@ import {
   CardTitle,
 } from '@yomu/ui/components/card'
 import { Input } from '@yomu/ui/components/input'
-import { Label } from '@yomu/ui/components/label'
+import { Alert, AlertDescription, AlertTitle } from '@yomu/ui/components/alert'
+import { toast } from '@yomu/ui/components/sonner'
+import {
+  Form,
+  FormItem,
+  FormControl,
+  FormField,
+  FormMessage,
+  FormLabel,
+} from '@yomu/ui/components/form'
+import { Terminal } from '@yomu/ui/components/icons'
 
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useServerAction } from 'zsa-react'
 
 function LoginForm() {
-  const { execute } = useServerAction(loginAction)
+  const form = useForm<LoginInput>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+  })
+  const { execute, isPending, error } = useServerAction(loginAction, {
+    onError({ err }) {
+      toast.error('Login failed', {
+        description: err.message,
+      })
+    },
+  })
 
-  const handleLogin = (formData: FormData) => {
-    const username = formData.get('username') as string
-    const password = formData.get('password') as string
+  const onSubmit = (data: LoginInput) => {
+    const { username, password } = data
 
     execute({ username, password })
   }
@@ -35,27 +60,46 @@ function LoginForm() {
         <CardDescription>Login to your account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={handleLogin} className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="username">Username</Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder="John"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+            <FormField
               name="username"
-              required
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="John" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-            </div>
-            <PasswordInput id="password" name="password" required />
-          </div>
-          <SubmitButton type="submit" className="w-full">
-            Login
-          </SubmitButton>
-        </form>
+            <FormField
+              name="password"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <PasswordInput {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {error ? (
+              <Alert variant="destructive">
+                <Terminal className="size-4" />
+                <AlertTitle>Login failed</AlertTitle>
+                <AlertDescription>{error.message}</AlertDescription>
+              </Alert>
+            ) : null}
+            <LoadingButton loading={isPending} type="submit" className="w-full">
+              Login
+            </LoadingButton>
+          </form>{' '}
+        </Form>
       </CardContent>
       <CardFooter className="justify-center">
         <Link className="text-sm hover:underline" href="/sign-up">
