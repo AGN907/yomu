@@ -24,7 +24,11 @@ export const registerUserAction = publicAction
   .handler(async ({ input }) => {
     const { username, password } = input
 
-    await registerUserUseCase(username, password)
+    const user = await registerUserUseCase(username, password)
+
+    if (user) {
+      redirect('/')
+    }
   })
 
 export const loginAction = publicAction
