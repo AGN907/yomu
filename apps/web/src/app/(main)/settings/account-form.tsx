@@ -1,6 +1,6 @@
 import { assertAuthenticated } from '@/lib/session'
 import { PasswordFormCard } from './_components/password-form-card'
-import { UsernameFormCard } from './_components/username-form-card'
+import { UsernameFormCard } from './_components/username-form'
 
 async function AccountForm() {
   const user = await assertAuthenticated()
@@ -8,7 +8,7 @@ async function AccountForm() {
 
   return (
     <div className="space-y-8">
-      <UsernameFormCard username={username} />
+      <UsernameFormCard defaultUsername={username} />
       <PasswordFormCard />
     </div>
   )

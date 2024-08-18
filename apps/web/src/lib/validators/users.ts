@@ -33,13 +33,15 @@ export type LoginInput = z.infer<typeof LoginSchema>
 export const UpdateUsernameSchema = z.object({
   username: z
     .string()
-    .min(4, 'Please provide your username')
+    .min(4, 'Username is too short. Minimum length is 4 characters')
     .max(31, 'Username is too long. Maximum length is 31 characters')
     .regex(
       /^[a-zA-Z0-9_-]+$/,
       'Username must use alphanumeric characters with dash and underscore only',
     ),
 })
+
+export type UpdateUsernameInput = z.infer<typeof UpdateUsernameSchema>
 
 export const UpdatePasswordSchema = z.object({
   currentPassword: z
