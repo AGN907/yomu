@@ -1,5 +1,6 @@
 import { PageLayout } from '@/components/page-layout'
-import { getCategories } from '@/lib/actions/categories'
+import { assertAuthenticated } from '@/lib/session'
+import { getCategoriesUseCase } from '@/use-cases/categories'
 import { LibrarySection } from './_components/library-section'
 
 export const metadata = {
@@ -7,7 +8,8 @@ export const metadata = {
 }
 
 async function LibraryPage() {
-  const categories = await getCategories()
+  const user = await assertAuthenticated()
+  const categories = await getCategoriesUseCase(user)
 
   return (
     <PageLayout

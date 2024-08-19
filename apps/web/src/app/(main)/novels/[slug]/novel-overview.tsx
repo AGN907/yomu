@@ -1,6 +1,7 @@
-import { getCategories } from '@/lib/actions/categories'
 import { getNovelInfo } from '@/lib/actions/novels'
+import { assertAuthenticated } from '@/lib/session'
 import { sourceManager } from '@/lib/source-manager'
+import { getCategoriesUseCase } from '@/use-cases/categories'
 import { ChaptersList } from './_components/chapters-list'
 import { NovelMetadata } from './_components/novel-metadata'
 import { NovelSummary } from './_components/novel-summary'
@@ -19,9 +20,10 @@ type NovelOverviewProps = {
 }
 
 async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
+  const user = await assertAuthenticated()
   const [{ data: novel }, categories] = await Promise.all([
     getNovelInfo({ sourceId, url: novelUrl }),
-    getCategories(),
+    getCategoriesUseCase(user),
   ])
 
   if (!novel) {
