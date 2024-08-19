@@ -1,5 +1,6 @@
 'use client'
 
+import { createCategoryAction } from '@/actions/categories'
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -10,37 +11,56 @@ import {
   ResponsiveDialogTitle,
   ResponsiveDialogTrigger,
 } from '@/components/responsive-dialog'
-import { createCategory } from '@/lib/actions/categories'
+import {
+  CreateCategorySchema,
+  type CreateCategoryInput,
+} from '@/lib/validators/categories'
+import { LoadingButton } from '@/components/loading-button'
 
 import { Button } from '@yomu/ui/components/button'
 import { Input } from '@yomu/ui/components/input'
-import { Label } from '@yomu/ui/components/label'
 import { toast } from '@yomu/ui/components/sonner'
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from '@yomu/ui/components/form'
 
-import { useAction } from 'next-safe-action/hooks'
-import { useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useServerAction } from 'zsa-react'
 
 function CreateNewCategory() {
   const [open, setOpen] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  const { execute: createNewCategory, status: createStatus } = useAction(
-    createCategory,
-    {
-      onSettled(result) {
-        const { data } = result
-        if (data?.success) {
-          toast.success(data.success)
-          setOpen(false)
-        } else if (data?.error) {
-          toast.error(data.error)
-        }
-      },
-      onError(error) {
-        toast.error(error.serverError || error.fetchError)
-      },
+  const form = useForm<CreateCategoryInput>({
+    resolver: zodResolver(CreateCategorySchema),
+    defaultValues: {
+      name: '',
     },
-  )
+  })
+
+  const { execute, isPending } = useServerAction(createCategoryAction, {
+    onSuccess() {
+      toast.success('Category Created', {
+        description: 'Category has been created. You can add novels to it.',
+      })
+      setOpen(false)
+    },
+    onError({ err }) {
+      toast.error(err.message)
+    },
+  })
+
+  const onSubmit = (data: CreateCategoryInput) => {
+    const { name } = data
+
+    form.reset()
+    execute({ name })
+  }
 
   return (
     <div>
@@ -56,19 +76,27 @@ function CreateNewCategory() {
             <ResponsiveDialogTitle>Create new category</ResponsiveDialogTitle>
           </ResponsiveDialogHeader>
           <ResponsiveDialogBody>
-            <div className="grid gap-4">
-              <Label htmlFor="name">Name</Label>
-              <Input ref={inputRef} name="name" type="text" />
-              <Button
-                onClick={() => {
-                  const name = inputRef.current?.value
-                  if (!name) return
-                  createNewCategory({ name: name })
-                }}
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="grid gap-4"
               >
-                {createStatus === 'executing' ? 'Creating...' : 'Create'}
-              </Button>
-            </div>
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="on-hold" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <LoadingButton loading={isPending}>Create</LoadingButton>
+              </form>
+            </Form>
           </ResponsiveDialogBody>
           <ResponsiveDialogFooter>
             <ResponsiveDialogClose asChild>
