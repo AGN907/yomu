@@ -26,7 +26,7 @@ export async function registerUserUseCase(username: string, password: string) {
 
   setSession(user.id)
 
-  return { id: user.id }
+  return { id: user.id, username: user.username }
 }
 
 export async function loginUseCase(username: string, password: string) {

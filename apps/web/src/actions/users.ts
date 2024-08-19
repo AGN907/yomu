@@ -8,6 +8,7 @@ import {
   UpdatePasswordSchema,
   UpdateUsernameSchema,
 } from '@/lib/validators/users'
+import { createDefaultCategoryUseCase } from '@/use-cases/categories'
 import {
   loginUseCase,
   registerUserUseCase,
@@ -27,6 +28,7 @@ export const registerUserAction = publicAction
     const user = await registerUserUseCase(username, password)
 
     if (user) {
+      await createDefaultCategoryUseCase(user)
       redirect('/')
     }
   })
