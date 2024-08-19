@@ -1,6 +1,7 @@
 'use client'
 
-import { deleteCategory } from '@/lib/actions/categories'
+import { deleteCategoryAction } from '@/actions/categories'
+import { LoadingButton } from '@/components/loading-button'
 
 import {
   AlertDialog,
@@ -16,29 +17,23 @@ import { Button } from '@yomu/ui/components/button'
 import { Trash } from '@yomu/ui/components/icons'
 import { toast } from '@yomu/ui/components/sonner'
 
-import { useAction } from 'next-safe-action/hooks'
 import { useState } from 'react'
+import { useServerAction } from 'zsa-react'
 
 function DeleteCategoryItem({ categoryId }: { categoryId: number }) {
   const [open, setOpen] = useState(false)
 
-  const { execute: deleteCategoryItem, status: deleteStatus } = useAction(
-    deleteCategory,
-    {
-      onSettled(result) {
-        const { data } = result
-        if (data?.success) {
-          toast.info(data.success)
-          setOpen(false)
-        } else if (data?.error) {
-          toast.error(data.error)
-        }
-      },
-      onError(error) {
-        toast.error(error.serverError || error.fetchError)
-      },
+  const { execute, isPending } = useServerAction(deleteCategoryAction, {
+    onSuccess() {
+      toast.info('Category Deleted', {
+        description: 'Category has been deleted',
+      })
+      setOpen(false)
     },
-  )
+    onError({ err }) {
+      toast.error(err.message)
+    },
+  })
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -58,12 +53,13 @@ function DeleteCategoryItem({ categoryId }: { categoryId: number }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Button
-            onClick={() => deleteCategoryItem({ categoryId })}
+          <LoadingButton
+            loading={isPending}
+            onClick={() => execute({ categoryId })}
             variant="destructive"
           >
-            {deleteStatus === 'executing' ? 'Deleting...' : 'Delete'}
-          </Button>
+            Delete
+          </LoadingButton>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
