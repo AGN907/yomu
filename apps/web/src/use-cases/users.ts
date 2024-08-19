@@ -41,6 +41,7 @@ export async function loginUseCase(username: string, password: string) {
     throw new PublicError('Invalid username or password')
   }
 
+  setSession(user.id)
   return { id: user.id }
 }
 
