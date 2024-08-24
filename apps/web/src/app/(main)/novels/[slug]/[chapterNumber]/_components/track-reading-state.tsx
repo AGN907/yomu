@@ -1,8 +1,7 @@
 'use client'
 
-import { updateReadState } from '@/lib/actions/chapters'
+import { markChapterAsReadAction } from '@/actions/chapters'
 
-import { useAction } from 'next-safe-action/hooks'
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 
@@ -11,16 +10,14 @@ type TrackReadingStateProps = {
 }
 
 function TrackReadingState({ chapterId }: TrackReadingStateProps) {
-  const { execute } = useAction(updateReadState)
-
   const { ref, inView } = useInView({ triggerOnce: true })
 
   useEffect(() => {
     const markAsRead = () => {
-      execute({ chapterIds: [chapterId], read: true })
+      markChapterAsReadAction({ chapterIds: [chapterId] })
     }
     if (inView) markAsRead()
-  }, [inView, chapterId, execute])
+  }, [inView, chapterId])
 
   return <div ref={ref}></div>
 }

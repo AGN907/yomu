@@ -1,4 +1,7 @@
-import { updateReadState } from '@/lib/actions/chapters'
+import {
+  markChapterAsReadAction,
+  markChapterAsUnreadAction,
+} from '@/actions/chapters'
 import { getQueryClient } from '@/providers'
 
 import { Chapter } from '@yomu/core/database/schema/web'
@@ -20,14 +23,24 @@ function ActionsBar({
   selectedIds,
   onSelectedChange,
 }: ActionsBarProps) {
-  const readStateMutation = useMutation({
-    mutationFn: updateReadState,
+  const markAsReadMutation = useMutation({
+    mutationFn: markChapterAsReadAction,
     onSuccess: () => {
       const queryClient = getQueryClient()
       queryClient.invalidateQueries({
-        queryKey: ['chapters'],
+        queryKey: ['chapters', chapters[0].novelId],
       })
       onSelectedChange(new Set())
+    },
+  })
+
+  const markAsUnreadMutation = useMutation({
+    mutationFn: markChapterAsUnreadAction,
+    onSuccess() {
+      const queryClient = getQueryClient()
+      queryClient.invalidateQueries({
+        queryKey: ['chapters', chapters[0].novelId],
+      })
     },
   })
 
@@ -46,9 +59,8 @@ function ActionsBar({
         <Button
           className="gap-2"
           onClick={() =>
-            readStateMutation.mutate({
+            markAsReadMutation.mutate({
               chapterIds: unreadSelectedChapters,
-              read: true,
             })
           }
           variant="outline"
@@ -72,9 +84,8 @@ function ActionsBar({
         <Button
           className="gap-2"
           onClick={() =>
-            readStateMutation.mutate({
+            markAsUnreadMutation.mutate({
               chapterIds: readSelectedChapters,
-              read: false,
             })
           }
           variant="outline"
@@ -86,7 +97,7 @@ function ActionsBar({
       )
     }
     return actionsList
-  }, [selectedIds, chapters, readStateMutation])
+  }, [selectedIds, chapters, markAsReadMutation, markAsUnreadMutation])
 
   const numberOfSelected = selectedIds.size
 

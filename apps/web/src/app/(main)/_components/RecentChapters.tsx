@@ -1,5 +1,6 @@
 import { CardContainer } from '@/components/card-container'
-import { getLatestUpdatedChapters } from '@/lib/actions/chapters'
+import { assertAuthenticated } from '@/lib/session'
+import { getLatestUpdatedChaptersUseCase } from '@/use-cases/chapters'
 
 import { formatReleaseDate } from '@yomu/core/utils/dates'
 
@@ -7,13 +8,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export async function RecentChapters() {
-  const { data: recentChapters = [] } = await getLatestUpdatedChapters({
+  const user = await assertAuthenticated()
+  const recentChapters = await getLatestUpdatedChaptersUseCase(user, {
     limit: 5,
   })
 
   const isRecentChaptersEmpty = recentChapters.length === 0
 
-  const renderItem = (item: (typeof recentChapters)[0], index: number) => {
+  const renderItem = (item: (typeof recentChapters)[0]) => {
     const {
       sourceId,
       novelTitle,

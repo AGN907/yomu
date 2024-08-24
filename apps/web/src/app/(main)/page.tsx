@@ -1,10 +1,10 @@
-import { CardContainer } from '@/components/card-container'
 import Spinner from '@/components/spinner'
-import { getUserOrRedirect } from '@/lib/actions/auth'
-import { getGenresStats } from '@/lib/actions/stats'
-import { RecentChapters } from './_components/RecentChapters'
 import { CurrentlyReadingNovels } from './_components/currently-reading-novels'
+import { getGenresDataUseCase } from '@/use-cases/novels'
+import { assertAuthenticated } from '@/lib/session'
+import { CardContainer } from '@/components/card-container'
 import { StatsList } from './_components/stats-list'
+import { RecentChapters } from './_components/RecentChapters'
 
 import dynamic from 'next/dynamic'
 
@@ -17,8 +17,8 @@ const GenresGraph = dynamic(
 )
 
 async function Home() {
-  const user = await getUserOrRedirect()
-  const genresStats = await getGenresStats()
+  const user = await assertAuthenticated()
+  const genresStats = await getGenresDataUseCase(user)
 
   return (
     <div className="container flex flex-1 flex-col gap-4 md:gap-6">
@@ -26,7 +26,7 @@ async function Home() {
         <h1 className="text-2xl md:text-lg">Hi {user.username},</h1>
         <p className="text-3xl font-medium md:text-2xl">Welcome back!</p>
       </div>
-      <StatsList />
+      <StatsList user={user} />
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
         <CurrentlyReadingNovels />
         <CardContainer title={'Favorite Genres'}>

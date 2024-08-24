@@ -1,30 +1,13 @@
 import { z } from 'zod'
 
-export const UpdateReadStateSchema = z.object({
-  read: z.boolean(),
+export const GetNovelChaptersSchema = z.object({
+  novelId: z.number(),
+})
+
+export const MarkChapterAsReadSchema = z.object({
   chapterIds: z.array(z.number()),
 })
 
-export const GetChapterSchema = z.object({
+export const GetNextAndPreviousChaptersSchema = z.object({
   chapterId: z.number(),
-  chapterNumber: z.number(),
-})
-
-export const LatestUpdatedChaptersSchema = z.object({
-  limit: z.number().optional(),
-})
-
-export const FetchChapterContentSchema = z.object({
-  sourceId: z.string(),
-  chapterUrl: z.string(),
-})
-
-export const GetNextAndPreviousChapters = z.object({
-  currentChapterNumber: z.number(),
-  novelId: z.number(),
-})
-
-export const GetNovelChaptersSchema = z.object({
-  novelId: z.number(),
-  sort: z.string().optional(),
 })

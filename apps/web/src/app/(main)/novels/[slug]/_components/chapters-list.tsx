@@ -1,25 +1,19 @@
 'use client'
 
-import { getNovelChapters } from '@/lib/actions/chapters'
 import { ActionsBar } from './actions-bar'
 import { ChapterItem } from './chapter-item'
 
 import Spinner from '@/components/spinner'
 
-import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+import { useNovelChapters } from './use-novel-chapters'
 
 type ChaptersListProps = {
   novelId: number
 }
 
 function ChaptersList({ novelId }: ChaptersListProps) {
-  const { data, isLoading } = useQuery({
-    queryKey: ['chapters', novelId],
-    queryFn: () => getNovelChapters({ novelId }),
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    refetchOnWindowFocus: false,
-  })
+  const { data: chapters, isPending } = useNovelChapters(novelId)
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
 
   const handleCheck = (id: number) => {
@@ -33,7 +27,6 @@ function ChaptersList({ novelId }: ChaptersListProps) {
     setSelectedIds(newCheckedIds)
   }
 
-  const chapters = data?.data ?? []
   const numberOfChapters = chapters.length
 
   return (
@@ -48,7 +41,7 @@ function ChaptersList({ novelId }: ChaptersListProps) {
           onSelectedChange={(newSet) => setSelectedIds(newSet)}
         />
 
-        {isLoading ? (
+        {isPending ? (
           <Spinner size={48} />
         ) : (
           <div className="space-y-1">
