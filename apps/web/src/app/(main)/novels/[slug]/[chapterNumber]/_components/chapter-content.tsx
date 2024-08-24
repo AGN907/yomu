@@ -1,5 +1,7 @@
+import { addChapterToHistoryUseCase } from '@/use-cases/history'
 import { TrackReadingState } from './track-reading-state'
 import { fetchChapterContentUseCase } from '@/use-cases/sources'
+import { assertAuthenticated } from '@/lib/session'
 
 import type { Chapter } from '@yomu/core/database/schema/web'
 
@@ -9,11 +11,14 @@ type ChapterContentProps = {
 }
 
 async function ChapterContent({ sourceId, chapter }: ChapterContentProps) {
-  const { id, url: chapterUrl } = chapter
+  const { id: chapterId, url: chapterUrl } = chapter
 
   const content = await fetchChapterContentUseCase(sourceId, {
     chapterUrl,
   })
+
+  const user = await assertAuthenticated()
+  await addChapterToHistoryUseCase(user, { chapterId })
 
   return (
     <div>
@@ -23,7 +28,7 @@ async function ChapterContent({ sourceId, chapter }: ChapterContentProps) {
           <p key={i}>{paragraph}</p>
         ))}
       </div>
-      <TrackReadingState chapterId={id} />
+      <TrackReadingState chapterId={chapterId} />
     </div>
   )
 }

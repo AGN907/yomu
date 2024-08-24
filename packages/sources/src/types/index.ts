@@ -44,6 +44,8 @@ export interface HistoryItem {
   chapterNumber: number
   novelThumbnail: string
   sourceId: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export type UpdateItem = HistoryItem

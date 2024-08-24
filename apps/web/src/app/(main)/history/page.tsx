@@ -1,16 +1,17 @@
 import { PageLayout } from '@/components/page-layout'
-import {
-  getHistoryChapters,
-  type HistoryItemWithTimestamps,
-} from '@/lib/actions/history'
 import { HistoryItemsList } from './_components/history-items-list'
+import { assertAuthenticated } from '@/lib/session'
+import { getUserHistoryUseCase } from '@/use-cases/history'
+
+import type { HistoryItem } from '@yomu/sources/types'
 
 export const metadata = {
   title: 'History - Yomu',
 }
 
 async function HistoryPage() {
-  const historyChapters = await getHistoryChapters()
+  const user = await assertAuthenticated()
+  const historyChapters = await getUserHistoryUseCase(user)
 
   const groupedByDateArray = Object.entries(
     historyChapters.reduce(
@@ -22,7 +23,7 @@ async function HistoryPage() {
         acc?.[date]?.push(chapter)
         return acc
       },
-      {} as Record<string, HistoryItemWithTimestamps[]>,
+      {} as Record<string, HistoryItem[]>,
     ),
   )
 

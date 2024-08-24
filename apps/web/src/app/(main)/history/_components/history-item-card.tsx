@@ -1,12 +1,11 @@
-import type { HistoryItemWithTimestamps } from '@/lib/actions/history'
-
 import { dayjs } from '@yomu/core/utils/dates'
+import type { HistoryItem } from '@yomu/sources/types'
 
 import Image from 'next/image'
 import Link from 'next/link'
 
 export type HistoryItemCardProps = {
-  item: HistoryItemWithTimestamps
+  item: HistoryItem
 }
 
 function HistoryItemCard({ item }: HistoryItemCardProps) {
