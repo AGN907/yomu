@@ -1,6 +1,6 @@
 'use client'
 
-import { fetchNovelsByFilter, fetchNovelsByQuery } from '@/lib/actions/novels'
+import { fetchSourceNovelsAction } from '@/actions/sources'
 
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -10,6 +10,8 @@ type NovelsQueryOptions = {
   initialIsLatest: boolean
   initialQuery: string
 }
+
+const STALETIME_IN_MILLISECONDS = 1000 * 60 * 10 // 10 Minutes
 
 export function useNovelsInfiniteQuery(options: NovelsQueryOptions) {
   const { sourceId, initialIsLatest = true, initialQuery } = options
@@ -27,13 +29,12 @@ export function useNovelsInfiniteQuery(options: NovelsQueryOptions) {
   } = useInfiniteQuery({
     queryKey: ['novels', sourceId, isLatest, query],
     queryFn: async ({ pageParam }) => {
-      const { data } = query
-        ? await fetchNovelsByQuery({ sourceId, page: pageParam, query })
-        : await fetchNovelsByFilter({
-            sourceId,
-            page: pageParam,
-            latest: isLatest,
-          })
+      const [data] = await fetchSourceNovelsAction({
+        sourceId,
+        page: pageParam,
+        isLatest,
+        query,
+      })
 
       return {
         novels: data?.novels || [],
@@ -43,7 +44,7 @@ export function useNovelsInfiniteQuery(options: NovelsQueryOptions) {
     getNextPageParam: (lastPage, _, currentPage) =>
       lastPage?.hasNextPage ? currentPage + 1 : undefined,
     initialPageParam: 1,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: STALETIME_IN_MILLISECONDS,
     refetchOnWindowFocus: false,
     retry: 3,
   })
