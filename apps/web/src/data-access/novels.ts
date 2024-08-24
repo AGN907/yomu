@@ -120,10 +120,8 @@ export async function getLatestReadNovels(userId: string) {
 }
 
 export async function getGenres(userId: string) {
-  const genres = await db
+  return await db
     .select({ genres: novels.genres })
     .from(novels)
     .where(and(eq(novels.userId, userId), eq(novels.inLibrary, true)))
-
-  return genres.map((genres) => genres.genres).flat()
 }

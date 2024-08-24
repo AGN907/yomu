@@ -5,6 +5,7 @@ import {
 import {
   countLibraryNovels,
   createNovel,
+  getGenres,
   getLatestReadNovels,
   getNovelById,
   getNovelBySourceAndUrl,
@@ -266,4 +267,27 @@ export async function getNovelsByCategoryIdUseCase(
   }
 
   return await getNovelsByCategoryId(categoryId)
+}
+
+export async function getGenresDataUseCase(user: UserSession) {
+  const genres = await getGenres(user.id)
+
+  const allGenres = genres.map((genres) => genres.genres).flat()
+
+  return allGenres
+    .reduce(
+      (acc, genre) => {
+        if (!acc.find((g) => g.name === genre)) {
+          acc.push({ name: genre, value: 1 })
+        } else {
+          return acc.map((g) =>
+            g.name === genre ? { ...g, value: g.value + 1 } : g,
+          )
+        }
+        return acc
+      },
+      [] as { name: string; value: number }[],
+    )
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5)
 }
