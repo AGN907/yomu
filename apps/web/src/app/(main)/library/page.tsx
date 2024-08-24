@@ -7,7 +7,14 @@ export const metadata = {
   title: 'Library - Yomu',
 }
 
-async function LibraryPage() {
+type PageParams = {
+  searchParams: {
+    categoryId?: string
+  }
+}
+
+async function LibraryPage({ searchParams }: PageParams) {
+  const selectedCategoryId = Number(searchParams.categoryId)
   const user = await assertAuthenticated()
   const categories = await getCategoriesUseCase(user)
 
@@ -20,7 +27,11 @@ async function LibraryPage() {
       }
     >
       <div className="flex flex-col space-y-8">
-        <LibrarySection initialCategories={categories} />
+        <LibrarySection
+          user={user}
+          initialCategories={categories}
+          initialCategoryId={selectedCategoryId}
+        />
       </div>
     </PageLayout>
   )

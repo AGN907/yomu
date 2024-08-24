@@ -1,11 +1,13 @@
 import { CardContainer } from '@/components/card-container'
 import { NovelCard } from '@/components/novel-card'
-import { getLatestReadNovels } from '@/lib/actions/novels'
+import { assertAuthenticated } from '@/lib/session'
+import { getLatestReadNovelsUseCase } from '@/use-cases/novels'
 
 import { Progress } from '@yomu/ui/components/progress'
 
 async function CurrentlyReadingNovels() {
-  const latestReadNovels = await getLatestReadNovels()
+  const user = await assertAuthenticated()
+  const latestReadNovels = await getLatestReadNovelsUseCase(user)
 
   const isEmpty = latestReadNovels.length === 0
 
@@ -13,12 +15,14 @@ async function CurrentlyReadingNovels() {
     const novel = item.novel
     const chapters = item.chapters
 
+    const { title, sourceId, thumbnail, url } = novel
+
     const totalChapters = chapters.length
     const readChapters = chapters.filter((chapter) => chapter.read).length
 
     return (
-      <div key={novel.id} className="space-y-2">
-        <NovelCard novel={novel} />
+      <div key={title} className="space-y-2">
+        <NovelCard novel={{ title, sourceId, thumbnail, url }} />
         <div className="space-y-1 px-2">
           <div className="flex justify-end">
             <span className="text-muted-foreground text-xs">

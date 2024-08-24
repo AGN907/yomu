@@ -9,7 +9,10 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/responsive-dialog'
-import { addNovelToLibrary } from '@/lib/actions/novels'
+import {
+  addNovelToLibraryAction,
+  removeNovelFromLibraryAction,
+} from '@/actions/novels'
 
 import { Category } from '@yomu/core/database/schema/web'
 import { capitalize } from '@yomu/core/utils/string'
@@ -25,8 +28,9 @@ import {
 import { toast } from '@yomu/ui/components/sonner'
 import { cn } from '@yomu/ui/utils'
 
-import { useAction } from 'next-safe-action/hooks'
+import { useServerAction } from 'zsa-react'
 import { useState } from 'react'
+import { LoadingButton } from '@/components/loading-button'
 
 type ToggleInLibraryProps = {
   novelId: number
@@ -40,52 +44,52 @@ function ToggleInLibrary({
   categories,
 }: ToggleInLibraryProps) {
   const [open, setOpen] = useState(false)
-  const defaultCategory = categories.find(
-    (category) => category.default,
-  ) as Category
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState(
-    defaultCategory.id,
-  )
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    number | undefined
+  >()
 
-  const { execute: toggleNovelInLibrary, status: addStatus } = useAction(
-    addNovelToLibrary,
+  const { execute: addNovelToLibrary, isPending } = useServerAction(
+    addNovelToLibraryAction,
     {
-      onSettled(result) {
-        const { data } = result
-        if (data?.success) {
-          toast.success(data.success)
-          setOpen(false)
-        } else if (data?.error) {
-          toast.error(data.error)
-        }
+      onSuccess() {
+        setOpen(false)
+        toast.success('Novel Added', {
+          description: 'You can now find it in your library',
+        })
       },
-      onError(error) {
-        toast.error(error.serverError || error.fetchError)
+      onError({ err }) {
+        toast.error(err.message)
       },
     },
   )
-  const isDefaultCategory = categories.length === 1
+
+  const { execute: removeNovelFromLibrary } = useServerAction(
+    removeNovelFromLibraryAction,
+    {
+      onSuccess() {
+        toast.success('Novel Removed', {
+          description: "Novel won't appear in your library anymore",
+        })
+      },
+    },
+  )
+
+  const onlyDefaultCategory = categories.length === 1
+
+  const handleToggle = () => {
+    if (!inLibrary && onlyDefaultCategory) {
+      addNovelToLibrary({ novelId })
+    } else if (inLibrary) {
+      removeNovelFromLibrary({ novelId })
+    } else {
+      setOpen(true)
+    }
+  }
 
   return (
     <ResponsiveDialog open={open} onOpenChange={setOpen}>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => {
-          if (inLibrary) {
-            toggleNovelInLibrary({ novelId, inLibrary: false })
-          } else if (!inLibrary && isDefaultCategory) {
-            toggleNovelInLibrary({
-              novelId,
-              inLibrary: true,
-              categoryId: defaultCategory.id,
-            })
-          } else {
-            setOpen(true)
-          }
-        }}
-      >
+      <Button variant="outline" size="icon" onClick={handleToggle}>
         <Bookmark
           className={cn(
             'size-6',
@@ -119,17 +123,17 @@ function ToggleInLibrary({
                 ))}
               </SelectContent>
             </Select>
-            <Button
+            <LoadingButton
+              loading={isPending}
               onClick={() =>
-                toggleNovelInLibrary({
+                addNovelToLibrary({
                   novelId,
-                  inLibrary: true,
                   categoryId: selectedCategoryId,
                 })
               }
             >
-              {addStatus === 'executing' ? 'Adding...' : 'Add'}
-            </Button>
+              Add
+            </LoadingButton>
           </div>
         </ResponsiveDialogBody>
         <ResponsiveDialogFooter>

@@ -1,6 +1,10 @@
-import { count, db, eq } from '@/lib/database'
+import { and, count, db, eq } from '@/lib/database'
 
-import { categories, type NewCategory } from '@yomu/core/database/schema/web'
+import {
+  Category,
+  categories,
+  type NewCategory,
+} from '@yomu/core/database/schema/web'
 
 export async function createCategory(newCategory: NewCategory) {
   const [category] = await db.insert(categories).values(newCategory).returning()
@@ -24,6 +28,14 @@ export async function getCategoryByName(categoryName: string) {
   return await db.query.categories.findFirst({
     where: eq(categories.name, categoryName),
   })
+}
+
+export async function getUserDefaultCategory(
+  userId: string,
+): Promise<Category> {
+  return (await db.query.categories.findFirst({
+    where: and(eq(categories.userId, userId), eq(categories.default, true)),
+  })) as Category
 }
 
 export async function updateCategory(

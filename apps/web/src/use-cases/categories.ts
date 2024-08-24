@@ -1,4 +1,5 @@
 import {
+  countUserCategories,
   createCategory,
   deleteCategory,
   getCategoryById,
@@ -9,40 +10,43 @@ import {
 import { AuthorizationError, PublicError } from '@/lib/errors'
 import { UserSession } from '@/lib/safe-action'
 
-export async function getCategoriesUseCase(UserSession: UserSession) {
-  return await getUserCategories(UserSession.id)
+export async function getCategoriesUseCase(user: UserSession) {
+  return await getUserCategories(user.id)
 }
 
 export async function createCategoryUseCase(
-  UserSession: UserSession,
-  {name, default = false} : {
+  user: UserSession,
+  {
+    name,
+    isDefault = false,
+  }: {
     name: string
-    default?: boolean
-  }
+    isDefault?: boolean
+  },
 ) {
   const category = await getCategoryByName(name)
 
-  if (category && category.userId === UserSession.id) {
+  if (category && category.userId === user.id) {
     throw new PublicError('Category already exist!')
   }
 
   const newCategory = {
-    userId: UserSession.id,
+    userId: user.id,
     name,
+    default: isDefault,
   }
   await createCategory(newCategory)
 }
 
-export async function createDefaultCategoryUseCase(UserSession: UserSession) {
-  await createCategoryUseCase(UserSession, {
-    name: "default",
-    default: true
+export async function createDefaultCategoryUseCase(user: UserSession) {
+  await createCategoryUseCase(user, {
+    name: 'default',
+    isDefault: true,
   })
-  
 }
 
 export async function updateCategoryNameUseCase(
-  UserSession: UserSession,
+  user: UserSession,
   {
     categoryId,
     name,
@@ -57,7 +61,7 @@ export async function updateCategoryNameUseCase(
     throw new PublicError('Category not found')
   }
 
-  if (category.userId !== UserSession.id) {
+  if (category.userId !== user.id) {
     throw new AuthorizationError()
   }
 
@@ -67,7 +71,7 @@ export async function updateCategoryNameUseCase(
 }
 
 export async function deleteCategoryUseCase(
-  UserSession: UserSession,
+  user: UserSession,
   {
     categoryId,
   }: {
@@ -80,9 +84,13 @@ export async function deleteCategoryUseCase(
     throw new PublicError('Category not found')
   }
 
-  if (category.userId !== UserSession.id) {
+  if (category.userId !== user.id) {
     throw new AuthorizationError()
   }
 
   await deleteCategory(categoryId)
+}
+
+export async function countUserCategoriesUseCase(user: UserSession) {
+  return await countUserCategories(user.id)
 }

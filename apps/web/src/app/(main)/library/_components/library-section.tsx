@@ -1,50 +1,37 @@
 'use client'
 
 import Spinner from '@/components/spinner'
-import { getNovelsByCategory } from '@/lib/actions/novels'
 import { LibraryList } from './library-list'
-import { UpdateCategoryNovels } from './update-category-novels'
+import { useLibraryNovels } from './use-library-novels'
+import type { UserSession } from '@/lib/safe-action'
 
-import { Category } from '@yomu/core/database/schema/web'
+import type { Category } from '@yomu/core/database/schema/web'
 import { capitalize } from '@yomu/core/utils/string'
 import { ScrollArea, ScrollBar } from '@yomu/ui/components/scroll-area'
 import { ToggleGroup, ToggleGroupItem } from '@yomu/ui/components/toggle-group'
 
-import { useAction } from 'next-safe-action/hooks'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
 
 type LibrarySectionProps = {
+  user: UserSession
   initialCategories: Category[]
+  initialCategoryId?: number
 }
 
 function LibrarySection(props: LibrarySectionProps) {
-  const { initialCategories } = props
-  const {
-    execute: getNovels,
-    status: getNovelsStatus,
-    result: { data = [] },
-  } = useAction(getNovelsByCategory)
-
-  const searchParams = useSearchParams()
-  const category = searchParams.get('categoryId')
+  const { user, initialCategories, initialCategoryId } = props
 
   const defaultCategory = initialCategories.find((c) => c.default) as Category
-  const defaultCategoryId = Number(category) || defaultCategory.id
+  const defaultCategoryId = initialCategoryId || defaultCategory.id
 
-  useEffect(() => {
-    getNovels({ categoryId: defaultCategoryId })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const isPending =
-    getNovelsStatus === 'executing' || getNovelsStatus === 'idle'
+  const { data, isPending, setSelectedCategory } = useLibraryNovels({
+    user,
+    categoryId: defaultCategoryId,
+  })
 
   return (
     <>
       <div className="flex flex-row-reverse items-center gap-2 whitespace-nowrap md:flex-row">
-        <UpdateCategoryNovels categoryId={defaultCategoryId} />
         <ScrollArea>
           <div className="py-4">
             <ToggleGroup
@@ -53,7 +40,7 @@ function LibrarySection(props: LibrarySectionProps) {
               type="single"
               defaultValue={`${defaultCategoryId}`}
               onValueChange={(value) =>
-                value && getNovels({ categoryId: Number(value) })
+                value && setSelectedCategory(Number(value))
               }
             >
               {initialCategories.map((category) => (
@@ -81,7 +68,7 @@ function LibrarySection(props: LibrarySectionProps) {
         </div>
       ) : (
         <div className="grid grid-cols-1 place-items-center gap-8 sm:grid-cols-2 md:place-items-start lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-          <LibraryList novels={data} />
+          <LibraryList novels={data || []} />
         </div>
       )}
     </>

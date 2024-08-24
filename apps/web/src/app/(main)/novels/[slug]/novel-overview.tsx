@@ -1,7 +1,8 @@
-import { getNovelInfo } from '@/lib/actions/novels'
 import { assertAuthenticated } from '@/lib/session'
 import { sourceManager } from '@/lib/source-manager'
 import { getCategoriesUseCase } from '@/use-cases/categories'
+import { getOrFetchNovelUseCase } from '@/use-cases/novels'
+
 import { ChaptersList } from './_components/chapters-list'
 import { NovelMetadata } from './_components/novel-metadata'
 import { NovelSummary } from './_components/novel-summary'
@@ -21,14 +22,10 @@ type NovelOverviewProps = {
 
 async function NovelOverview({ sourceId, novelUrl }: NovelOverviewProps) {
   const user = await assertAuthenticated()
-  const [{ data: novel }, categories] = await Promise.all([
-    getNovelInfo({ sourceId, url: novelUrl }),
+  const [novel, categories] = await Promise.all([
+    getOrFetchNovelUseCase(user, { sourceId, novelUrl }),
     getCategoriesUseCase(user),
   ])
-
-  if (!novel) {
-    throw new Error('Novel not found')
-  }
 
   const {
     id,
