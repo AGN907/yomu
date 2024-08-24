@@ -1,3 +1,6 @@
+import { countUserCategories } from '@/data-access/categories'
+import { countReadChapters, countUnreadChapters } from '@/data-access/chapters'
+import { countLibraryNovels } from '@/data-access/novels'
 import {
   createUser,
   getUserByUsername,
@@ -82,4 +85,25 @@ export async function updatePasswordUseCase(
 
   const hashedPassword = await hashPassword(newPassword)
   await updateUser(user.id, { hashedPassword })
+}
+
+export async function getUserStatsUseCase(user: UserSession) {
+  const [
+    totalLibraryNovels,
+    totalReadChapters,
+    totalUnreadChapters,
+    totalCategories,
+  ] = await Promise.all([
+    countLibraryNovels(user.id),
+    countReadChapters(user.id),
+    countUnreadChapters(user.id),
+    countUserCategories(user.id),
+  ])
+
+  return {
+    totalLibraryNovels,
+    totalReadChapters,
+    totalUnreadChapters,
+    totalCategories,
+  }
 }
