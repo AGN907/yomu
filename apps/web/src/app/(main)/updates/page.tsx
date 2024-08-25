@@ -1,6 +1,7 @@
 import { PageLayout } from '@/components/page-layout'
-import { getUpdatedChapters } from '@/lib/actions/updates'
+import { getUserUpdatesUseCase } from '@/use-cases/updates'
 import { UpdatesList } from './_components/update-items-list'
+import { assertAuthenticated } from '@/lib/session'
 
 import type { UpdateItem } from '@yomu/sources/types'
 
@@ -9,7 +10,8 @@ export const metadata = {
 }
 
 async function UpdatesPage() {
-  const updatesChapters = await getUpdatedChapters()
+  const user = await assertAuthenticated()
+  const updatesChapters = await getUserUpdatesUseCase(user)
 
   const groupedByDateArray = Object.entries(
     updatesChapters.reduce(
