@@ -41,6 +41,8 @@ function ActionsBar({
       queryClient.invalidateQueries({
         queryKey: ['chapters', chapters[0].novelId],
       })
+
+      onSelectedChange(new Set())
     },
   })
 
