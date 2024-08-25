@@ -1,4 +1,4 @@
-import { SQL, and, count, db, desc, eq, sql } from '@/lib/database'
+import { and, count, db, desc, eq } from '@/lib/database'
 
 import {
   type Novel,

@@ -1,7 +1,6 @@
 import { getNovelById } from '@/data-access/novels'
 import { getSourceById } from '@/data-access/sources'
-import { AuthorizationError, PublicError } from '@/lib/errors'
-import { UserSession } from '@/lib/safe-action'
+import { PublicError } from '@/lib/errors'
 
 export async function fetchSourceNovelUseCase({
   sourceId,
