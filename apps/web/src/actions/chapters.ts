@@ -37,18 +37,18 @@ export const getOrFetchNovelChapters = authenticatedAction
     )
   })
 
-export const getNextAndPrevChaptersAction = authenticatedAction
+export const getPrevAndNextChaptersAction = authenticatedAction
   .input(GetNextAndPreviousChaptersSchema)
   .handler(async ({ input, ctx }) => {
     const { chapterId } = input
     const { user } = ctx
 
-    const [nextChapter, previousChapter] = await Promise.all([
-      getNextChapterUseCase(user, { chapterId }),
+    const [previousChapter, nextChapter] = await Promise.all([
       getPreviousChapterUseCase(user, { chapterId }),
+      getNextChapterUseCase(user, { chapterId }),
     ])
 
-    return { nextChapter, previousChapter }
+    return { previousChapter, nextChapter }
   })
 
 export const markChapterAsReadAction = authenticatedAction

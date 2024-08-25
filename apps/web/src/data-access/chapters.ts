@@ -67,22 +67,22 @@ export async function bulkUpdateChapters(
     .returning()
 }
 
-export async function getNextChapter(chapterId: number, chapterNumber: number) {
+export async function getNextChapter(novelId: number, chapterNumber: number) {
   return await db.query.chapters.findFirst({
     where: and(
-      eq(chapters.id, chapterId),
+      eq(chapters.novelId, novelId),
       eq(chapters.number, chapterNumber + 1),
     ),
   })
 }
 
 export async function getPreviousChapter(
-  chapterId: number,
+  novelId: number,
   chapterNumber: number,
 ) {
   return await db.query.chapters.findFirst({
     where: and(
-      eq(chapters.id, chapterId),
+      eq(chapters.novelId, novelId),
       eq(chapters.number, chapterNumber - 1),
     ),
   })

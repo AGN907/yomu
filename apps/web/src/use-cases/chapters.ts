@@ -111,7 +111,7 @@ export async function getNextChapterUseCase(
     throw new AuthorizationError()
   }
 
-  return await getNextChapter(chapterId, chapter.number)
+  return await getNextChapter(chapter.novelId, chapter.number)
 }
 
 export async function getPreviousChapterUseCase(
@@ -127,7 +127,7 @@ export async function getPreviousChapterUseCase(
     throw new AuthorizationError()
   }
 
-  return await getPreviousChapter(chapterId, chapter.number)
+  return await getPreviousChapter(chapter.novelId, chapter.number)
 }
 
 export async function getLatestUpdatedChaptersUseCase(

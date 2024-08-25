@@ -18,6 +18,7 @@ type ActionsBarProps = {
   onSelectedChange: (ids: Set<number>) => void
 }
 
+// FIXME: fix type errors with useMutation hook
 function ActionsBar({
   chapters,
   selectedIds,

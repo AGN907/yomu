@@ -1,16 +1,16 @@
 import { ChapterNavigationButton } from './chapter-navigation-item'
-import { getNextAndPrevChaptersAction } from '@/actions/chapters'
+import { getPrevAndNextChaptersAction } from '@/actions/chapters'
 
 type BottomChapterBarProps = {
   chapterId: number
 }
 
 async function BottomChapterSection({ chapterId }: BottomChapterBarProps) {
-  const [data, err] = await getNextAndPrevChaptersAction({
+  const [data, err] = await getPrevAndNextChaptersAction({
     chapterId,
   })
 
-  if (!data && err) return
+  if (err) return
 
   const { previousChapter, nextChapter } = data
 
