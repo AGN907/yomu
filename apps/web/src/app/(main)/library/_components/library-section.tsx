@@ -3,7 +3,6 @@
 import Spinner from '@/components/spinner'
 import { LibraryList } from './library-list'
 import { useLibraryNovels } from './use-library-novels'
-import type { UserSession } from '@/lib/safe-action'
 
 import type { Category } from '@yomu/core/database/schema/web'
 import { capitalize } from '@yomu/core/utils/string'
@@ -13,19 +12,17 @@ import { ToggleGroup, ToggleGroupItem } from '@yomu/ui/components/toggle-group'
 import Link from 'next/link'
 
 type LibrarySectionProps = {
-  user: UserSession
   initialCategories: Category[]
   initialCategoryId?: number
 }
 
 function LibrarySection(props: LibrarySectionProps) {
-  const { user, initialCategories, initialCategoryId } = props
+  const { initialCategories, initialCategoryId } = props
 
   const defaultCategory = initialCategories.find((c) => c.default) as Category
   const defaultCategoryId = initialCategoryId || defaultCategory.id
 
   const { data, isPending, setSelectedCategory } = useLibraryNovels({
-    user,
     categoryId: defaultCategoryId,
   })
 

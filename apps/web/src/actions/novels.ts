@@ -20,7 +20,6 @@ import { fetchSourceNovelUseCase } from '@/use-cases/sources'
 import { slugify } from '@yomu/core/utils/string'
 
 import { revalidatePath } from 'next/cache'
-import { QueryClient } from '@tanstack/react-query'
 
 export const getOrFetchNovelAction = authenticatedAction
   .input(GetNovelSchema)
@@ -49,13 +48,14 @@ export const addNovelToLibraryAction = authenticatedAction
     const { novelId, categoryId } = input
     const { user } = ctx
 
-    await addNovelToLibraryUseCase(user, { novelId, categoryId })
+    const addedCategoryId = await addNovelToLibraryUseCase(user, {
+      novelId,
+      categoryId,
+    })
 
     revalidatePath('/novels/[slug]', 'page')
 
-    // Clear only library cache with the same categoryId
-    const queryClient = new QueryClient()
-    queryClient.invalidateQueries({ queryKey: ['library_novels', categoryId] })
+    return addedCategoryId
   })
 
 export const removeNovelFromLibraryAction = authenticatedAction
@@ -64,9 +64,13 @@ export const removeNovelFromLibraryAction = authenticatedAction
     const { novelId } = input
     const { user } = ctx
 
-    await removeNovelFromLibraryUseCase(user, { novelId })
+    const removedCategoryId = await removeNovelFromLibraryUseCase(user, {
+      novelId,
+    })
 
     revalidatePath('/novels/[slug]', 'page')
+
+    return removedCategoryId
   })
 
 export const updateNovelDetailsAction = authenticatedAction

@@ -28,7 +28,6 @@ async function LibraryPage({ searchParams }: PageParams) {
     >
       <div className="flex flex-col space-y-8">
         <LibrarySection
-          user={user}
           initialCategories={categories}
           initialCategoryId={selectedCategoryId}
         />

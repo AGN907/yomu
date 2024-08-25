@@ -13,6 +13,8 @@ import {
   addNovelToLibraryAction,
   removeNovelFromLibraryAction,
 } from '@/actions/novels'
+import { LoadingButton } from '@/components/loading-button'
+import { getQueryClient } from '@/providers'
 
 import { Category } from '@yomu/core/database/schema/web'
 import { capitalize } from '@yomu/core/utils/string'
@@ -30,7 +32,6 @@ import { cn } from '@yomu/ui/utils'
 
 import { useServerAction } from 'zsa-react'
 import { useState } from 'react'
-import { LoadingButton } from '@/components/loading-button'
 
 type ToggleInLibraryProps = {
   novelId: number
@@ -52,10 +53,14 @@ function ToggleInLibrary({
   const { execute: addNovelToLibrary, isPending } = useServerAction(
     addNovelToLibraryAction,
     {
-      onSuccess() {
+      onSuccess({ data: addedCategoryId }) {
         setOpen(false)
         toast.success('Novel Added', {
           description: 'You can now find it in your library',
+        })
+        const queryClient = getQueryClient()
+        queryClient.invalidateQueries({
+          queryKey: ['library_novels', addedCategoryId],
         })
       },
       onError({ err }) {
@@ -67,9 +72,13 @@ function ToggleInLibrary({
   const { execute: removeNovelFromLibrary } = useServerAction(
     removeNovelFromLibraryAction,
     {
-      onSuccess() {
+      onSuccess({ data: removedCategoryId }) {
         toast.success('Novel Removed', {
           description: "Novel won't appear in your library anymore",
+        })
+        const queryClient = getQueryClient()
+        queryClient.invalidateQueries({
+          queryKey: ['library_novels', removedCategoryId],
         })
       },
     },
