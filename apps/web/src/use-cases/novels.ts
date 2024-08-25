@@ -2,6 +2,7 @@ import {
   getCategoryById,
   getUserDefaultCategory,
 } from '@/data-access/categories'
+import { createChapters, getLastNovelChapter } from '@/data-access/chapters'
 import {
   countLibraryNovels,
   createNovel,
@@ -13,6 +14,7 @@ import {
   updateNovel,
 } from '@/data-access/novels'
 import { getSourceById } from '@/data-access/sources'
+import { createdUpdatedChapters } from '@/data-access/updates'
 import { AuthorizationError, PublicError } from '@/lib/errors'
 import { type UserSession } from '@/lib/safe-action'
 import { sourceManager } from '@/lib/source-manager'
@@ -130,10 +132,12 @@ export async function addNovelToLibraryUseCase(
     throw new AuthorizationError()
   }
 
-  return await updateNovel(novelId, {
+  await updateNovel(novelId, {
     inLibrary: true,
     categoryId: category.id,
   })
+
+  return categoryId
 }
 
 export async function removeNovelFromLibraryUseCase(
@@ -153,10 +157,12 @@ export async function removeNovelFromLibraryUseCase(
     throw new PublicError('Novel is not in library')
   }
 
-  return await updateNovel(novelId, {
+  await updateNovel(novelId, {
     inLibrary: false,
     categoryId: null,
   })
+
+  return novel.categoryId as number
 }
 
 export async function countLibraryNovelsUseCase(user: UserSession) {
@@ -224,16 +230,47 @@ export async function updateNovelDetailsUseCase(
     throw new AuthorizationError()
   }
 
-  const source = sourceManager.getSource(novel.sourceId)
-  const fetchedNovelDetails = await source.fetchNovel(novel.url)
+  const { sourceId, url, sourceNovelId } = novel
+  const source = sourceManager.getSource(sourceId)
+  const [fetchedNovelDetails, fetchedNovelChapters] = await Promise.all([
+    source.fetchNovel(url),
+    source.fetchNovelChapters(novel.url, sourceNovelId),
+  ])
 
   if (!fetchedNovelDetails) {
     throw new PublicError('Failed to fetch novel details')
   }
 
-  return await updateNovel(novelId, {
+  if (!fetchedNovelChapters) {
+    throw new PublicError('Failed to fetch novel chapters')
+  }
+
+  await updateNovel(novelId, {
     ...fetchedNovelDetails,
   })
+
+  const lastNovelchapter = await getLastNovelChapter(user.id, { novelId })
+  if (!lastNovelchapter) {
+    throw new PublicError('Failed to fetch last novel chapter')
+  }
+
+  const newChapters = fetchedNovelChapters
+    .filter(({ number }) => number > lastNovelchapter.number)
+    .map((chapter) => ({
+      ...chapter,
+      novelId,
+      userId: user.id,
+    }))
+
+  const insertedChapters = await createChapters(newChapters)
+
+  await createdUpdatedChapters(
+    insertedChapters.map(({ id, novelId, userId }) => ({
+      chapterId: id,
+      novelId,
+      userId,
+    })),
+  )
 }
 
 export async function getNovelUrlPathUseCase(novelId: number) {

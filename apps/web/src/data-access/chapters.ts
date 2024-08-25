@@ -153,3 +153,13 @@ export async function getLatestUpdatedChapters(
 
   return await query
 }
+
+export async function getLastNovelChapter(
+  userId: string,
+  { novelId }: { novelId: number },
+) {
+  return await db.query.chapters.findFirst({
+    where: and(eq(chapters.userId, userId), eq(chapters.novelId, novelId)),
+    orderBy: desc(chapters.number),
+  })
+}

@@ -2,6 +2,7 @@
 
 import Spinner from '@/components/spinner'
 import { updateNovelDetailsAction } from '@/actions/novels'
+import { getQueryClient } from '@/providers'
 
 import { Button } from '@yomu/ui/components/button'
 import { RefreshCw } from '@yomu/ui/components/icons'
@@ -15,22 +16,25 @@ type UpdateNovelDataProps = {
 
 function UpdateNovelData({ novelId }: UpdateNovelDataProps) {
   const { execute, isPending } = useServerAction(updateNovelDetailsAction, {
-    onStart() {
+    onStart: () => {
       toast.loading('Updating novel', {
         id: 'update-novel-toast',
       })
     },
+    onFinish: () => {
+      const queryClient = getQueryClient()
+      queryClient.invalidateQueries({ queryKey: ['chapters', novelId] })
+    },
     onSuccess: () => {
+      toast.dismiss('update-novel-toast')
       toast.success('Novel Update', {
         description: 'Novel was successfully updated',
-        id: 'update-novel-data',
       })
     },
     onError: ({ err }) => {
-      toast.dismiss('update-novel-data')
+      toast.dismiss('update-novel-toast')
       toast.error('Novel Update', {
         description: err.message,
-        id: 'update-novel-data',
       })
     },
   })
